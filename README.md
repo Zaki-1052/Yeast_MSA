@@ -1,5 +1,7 @@
 # Yeast Genomic Analysis Project
 
+See [the project summary](project_summary.md) and [additional documentation](documentation.md) for more details (API generated).
+
 ## Overview
 
 This repository contains a comprehensive bioinformatics pipeline and analysis of genetic mutations in *Saccharomyces cerevisiae* (baker's yeast) under four experimental treatments (WT, WTA, STC, and CAS). The project involves whole-genome sequencing, variant calling, and extensive downstream analyses to characterize mutation patterns and their biological implications. A reference-guided multiple sequence alignment was performed where the whole genomic sequence of the yeast cells were aligned with the reference genome from [here](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_000766475.2/)
