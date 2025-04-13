@@ -1,0 +1,67 @@
+Scaffold Distribution Analysis Summary
+=====================================
+
+Overall Statistics:
+-----------------
+WT Treatment:
+  Total Variants: 187
+  Scaffolds with Variants: 72
+  Global Variant Density: 0.0522 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000325.1: 0.9625 variants/kb (Count: 1, Length: 1039bp)
+    JRIU01000042.1: 0.7042 variants/kb (Count: 1, Length: 1420bp)
+    JRIU01000148.1: 0.6210 variants/kb (Count: 9, Length: 14492bp)
+    JRIU01000195.1: 0.5208 variants/kb (Count: 9, Length: 17280bp)
+    JRIU01000378.1: 0.4165 variants/kb (Count: 1, Length: 2401bp)
+
+STC Treatment:
+  Total Variants: 79
+  Scaffolds with Variants: 50
+  Global Variant Density: 0.0259 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000179.1: 1.7322 variants/kb (Count: 7, Length: 4041bp)
+    JRIU01000260.1: 0.9320 variants/kb (Count: 1, Length: 1073bp)
+    JRIU01000397.1: 0.5602 variants/kb (Count: 1, Length: 1785bp)
+    JRIU01000375.1: 0.4057 variants/kb (Count: 1, Length: 2465bp)
+    JRIU01000396.1: 0.2471 variants/kb (Count: 1, Length: 4047bp)
+
+CAS Treatment:
+  Total Variants: 147
+  Scaffolds with Variants: 68
+  Global Variant Density: 0.0520 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000323.1: 0.9443 variants/kb (Count: 1, Length: 1059bp)
+    JRIU01000260.1: 0.9320 variants/kb (Count: 1, Length: 1073bp)
+    JRIU01000408.1: 0.8921 variants/kb (Count: 1, Length: 1121bp)
+    JRIU01000081.1: 0.8772 variants/kb (Count: 1, Length: 1140bp)
+    JRIU01000243.1: 0.7389 variants/kb (Count: 7, Length: 9473bp)
+
+WTA Treatment:
+  Total Variants: 156
+  Scaffolds with Variants: 67
+  Global Variant Density: 0.0435 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000223.1: 1.1242 variants/kb (Count: 2, Length: 1779bp)
+    JRIU01000292.1: 0.6866 variants/kb (Count: 2, Length: 2913bp)
+    JRIU01000087.1: 0.5701 variants/kb (Count: 1, Length: 1754bp)
+    JRIU01000243.1: 0.5278 variants/kb (Count: 5, Length: 9473bp)
+    JRIU01000195.1: 0.5208 variants/kb (Count: 9, Length: 17280bp)
+
+Treatment Correlation Summary:
+----------------------------
+  Most Similar Treatments: WT and WTA (ρ = 0.3913)
+  Most Different Treatments: STC and WTA (ρ = -0.1917)
+
+  Full Correlation Matrix:
+            WT     STC     CAS     WTA
+  WT    1.0000 -0.0957 -0.0812  0.3913
+  STC  -0.0957  1.0000 -0.1896 -0.1917
+  CAS  -0.0812 -0.1896  1.0000 -0.0670
+  WTA   0.3913 -0.1917 -0.0670  1.0000
+
+Main Conclusions:
+---------------
+1. This analysis identifies scaffolds with high variant densities across treatments.
+2. Several scaffolds show treatment-specific enrichment.
+3. The pattern of variant distribution provides insights into potential functional regions.
+4. Further sequence analysis of enriched scaffolds may reveal treatment-specific effects.
