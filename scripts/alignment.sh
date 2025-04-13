@@ -5,7 +5,10 @@ mkdir -p results/bam
 mkdir -p results/stats
 
 # Path to reference genome
+
 REF="reference/yeast_w303.fasta"
+
+#REF="new_reference/sequence.fasta"
 
 # Process each sample
 for R1 in data/processed_data/*_R1_cleaned.fastq.gz; do
