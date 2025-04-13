@@ -1,0 +1,73 @@
+Regional Enrichment Analysis Summary
+==================================
+
+Overall Statistics:
+-----------------
+Total enriched regions identified: 325
+
+Treatment-Specific Statistics:
+--------------------------
+
+WT Treatment:
+  Enriched regions: 93
+  Average fold enrichment: 110.38
+  Maximum fold enrichment: 559.90
+
+  Top 5 most enriched regions:
+    JRIU01000148.1:13000-14000, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000031.1:5000-6000, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000195.1:16000-17000, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000031.1:5500-6500, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000031.1:126500-127500, Fold enrichment: 497.69, Q-value: 0.00e+00
+
+STC Treatment:
+  Enriched regions: 63
+  Average fold enrichment: 191.67
+  Maximum fold enrichment: 1030.82
+
+  Top 5 most enriched regions:
+    JRIU01000179.1:1500-2500, Fold enrichment: 1030.82, Q-value: 0.00e+00
+    JRIU01000179.1:1000-2000, Fold enrichment: 1030.82, Q-value: 0.00e+00
+    JRIU01000031.1:126500-127500, Fold enrichment: 589.04, Q-value: 1.39e-09
+    JRIU01000031.1:126000-127000, Fold enrichment: 589.04, Q-value: 1.39e-09
+    JRIU01000163.1:102500-103500, Fold enrichment: 294.52, Q-value: 2.89e-04
+
+CAS Treatment:
+  Enriched regions: 86
+  Average fold enrichment: 151.84
+  Maximum fold enrichment: 1028.82
+
+  Top 5 most enriched regions:
+    JRIU01000033.1:62000-63000, Fold enrichment: 1028.82, Q-value: 0.00e+00
+    JRIU01000033.1:61500-62500, Fold enrichment: 1028.82, Q-value: 0.00e+00
+    JRIU01000031.1:126500-127500, Fold enrichment: 949.68, Q-value: 0.00e+00
+    JRIU01000031.1:126000-127000, Fold enrichment: 870.54, Q-value: 0.00e+00
+    JRIU01000031.1:45000-46000, Fold enrichment: 712.26, Q-value: 0.00e+00
+
+WTA Treatment:
+  Enriched regions: 83
+  Average fold enrichment: 129.38
+  Maximum fold enrichment: 671.17
+
+  Top 5 most enriched regions:
+    JRIU01000195.1:16000-17000, Fold enrichment: 671.17, Q-value: 0.00e+00
+    JRIU01000031.1:126500-127500, Fold enrichment: 596.59, Q-value: 0.00e+00
+    JRIU01000031.1:45500-46500, Fold enrichment: 522.02, Q-value: 0.00e+00
+    JRIU01000070.1:70000-71000, Fold enrichment: 522.02, Q-value: 0.00e+00
+    JRIU01000031.1:45000-46000, Fold enrichment: 522.02, Q-value: 0.00e+00
+
+Cross-Treatment Comparison:
+------------------------
+
+Number of enriched regions by treatment:
+  WT: 93
+  STC: 63
+  CAS: 86
+  WTA: 83
+
+Main Conclusions:
+---------------
+1. This analysis identifies regions with statistically significant variant enrichment.
+2. Treatment-specific patterns of regional enrichment have been identified.
+3. Some regions show consistent enrichment across multiple treatments.
+4. The distribution of enriched regions varies between treatments.

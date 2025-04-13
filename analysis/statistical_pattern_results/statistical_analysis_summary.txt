@@ -6,37 +6,67 @@ Basic Statistics:
 Total Variants: 569.0
 Unique Scaffolds: 148.0
 Average Ti/Tv Ratio: 1.6363984674329501
+Low Oxygen Adaptation Variants: 235.0
+Temperature Adaptation Variants: 334.0
+Variants in Gene-Modified Strains: 226.0
+Variants in Non-Modified Strains: 343.0
 
 Regression Analysis Results:
 --------------------------
 
-WT Treatment:
+WT-37 Treatment (Temperature adaptation):
   R-squared: 0.4356
   Coefficients:
     const: 43.3401 ***
     Log_Length: -9.1006 ***
   Sample size: 72
 
-WTA Treatment:
+WTA Treatment (Low Oxygen adaptation):
   R-squared: 0.3710
   Coefficients:
     const: 42.0760 ***
     Log_Length: -8.8134 ***
   Sample size: 67
 
-CAS Treatment:
+CAS Treatment (Temperature adaptation with gene modification):
   R-squared: 0.3439
   Coefficients:
     const: 41.8009 ***
     Log_Length: -9.0418 ***
   Sample size: 68
 
-STC Treatment:
+STC Treatment (Low Oxygen adaptation with gene modification):
   R-squared: 0.3001
   Coefficients:
     const: 34.8665 ***
     Log_Length: -7.1596 ***
   Sample size: 50
+
+Regression Analysis by Adaptation Type:
+-----------------------------------
+
+Low Oxygen Adaptation:
+  R-squared: 0.3494
+  Coefficients:
+    const: 36.0387 ***
+    Log_Length: -7.5424 ***
+  Sample size: 101
+
+Temperature Adaptation:
+  R-squared: 0.3528
+  Coefficients:
+    const: 36.0078 ***
+    Log_Length: -7.6265 ***
+  Sample size: 109
+
+Biological Context Summary:
+-------------------------
+This analysis examines mutation patterns in yeast strains under different conditions:
+
+  WT-37: Temperature-adapted wild type - Temperature adaptation
+  WTA: Low oxygen-adapted wild type - Low Oxygen adaptation
+  STC: STC gene with low oxygen adaptation - Low Oxygen adaptation with STC gene insertion
+  CAS: CAS gene with temperature adaptation - Temperature adaptation with CAS gene insertion
 
 Main Conclusions:
 ---------------
@@ -45,3 +75,7 @@ Main Conclusions:
 3. Correlation analysis reveals relationships between mutation types and treatments.
 4. Regression models evaluate the relationship between genomic features and variant density.
 5. Clustering analysis identifies groups of scaffolds with similar variant patterns.
+6. Comparisons between adaptation types (temperature vs. low oxygen) reveal
+   differences in mutation patterns and genomic distributions.
+7. Gene-modified strains (STC, CAS) show specific mutation characteristics
+   compared to their non-modified counterparts (WTA, WT-37).

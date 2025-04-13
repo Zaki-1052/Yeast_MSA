@@ -1,0 +1,45 @@
+Chi-square test for differences in mutation patterns:
+Chi-square value: 6.5357
+p-value: 0.9693
+Degrees of freedom: 15
+
+Interpretation:
+No significant difference detected in mutation patterns between treatments (p >= 0.05).
+
+Biological Context:
+------------------
+WT-37: Temperature-adapted wild type
+  Adaptation type: Temperature
+  Gene modification: None
+  Ti/Tv ratio: 2.88
+  Most common mutation: T>C (74 occurrences)
+
+WTA: Low oxygen-adapted wild type
+  Adaptation type: Low Oxygen
+  Gene modification: None
+  Ti/Tv ratio: 2.94
+  Most common mutation: T>C (62 occurrences)
+
+STC: STC gene with low oxygen adaptation
+  Adaptation type: Low Oxygen
+  Gene modification: STC
+  Ti/Tv ratio: 2.93
+  Most common mutation: T>C (26 occurrences)
+
+CAS: CAS gene with temperature adaptation
+  Adaptation type: Temperature
+  Gene modification: CAS
+  Ti/Tv ratio: 2.28
+  Most common mutation: T>C (50 occurrences)
+
+
+Comparison by Adaptation Type:
+----------------------------
+Low Oxygen adaptation:
+  Average Ti/Tv ratio: 2.94
+  Treatments: WTA, STC
+
+Temperature adaptation:
+  Average Ti/Tv ratio: 2.58
+  Treatments: WT-37, CAS
+

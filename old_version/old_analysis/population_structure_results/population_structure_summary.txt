@@ -1,0 +1,43 @@
+Population Structure Analysis Summary
+===================================
+
+Overall Statistics:
+-----------------
+Total samples analyzed: 15
+Samples by treatment:
+  CAS: 4 samples
+  STC: 4 samples
+  WT: 4 samples
+  WTA: 3 samples
+
+Variant Statistics:
+-----------------
+Average variant count by treatment:
+  CAS: 138.75 variants (range: 0-213)
+  STC: 95.25 variants (range: 0-131)
+  WT: 167.00 variants (range: 0-243)
+  WTA: 200.67 variants (range: 182-216)
+
+Genetic Distance Statistics:
+-------------------------
+Average within-treatment genetic distances:
+  CAS: 0.8725
+  STC: 0.9167
+  WT: 0.8419
+  WTA: 0.7096
+
+Average between-treatment genetic distances:
+  CAS vs STC: 0.8951
+  CAS vs WT: 0.8739
+  CAS vs WTA: 0.9255
+  STC vs WT: 0.8874
+  STC vs WTA: 0.9303
+  WT vs WTA: 0.7896
+
+Main Conclusions:
+---------------
+1. This analysis examines the genetic relationships between samples based on their variant profiles.
+2. Principal Component Analysis (PCA) reveals the major axes of variation in the dataset.
+3. Hierarchical clustering identifies sample groups based on genetic similarity.
+4. The distance heatmap visualizes the genetic relationships between all samples.
+5. Treatment-specific patterns may provide insights into the effects of different conditions.

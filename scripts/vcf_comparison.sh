@@ -210,7 +210,7 @@ bcftools view -i "$FILTER_EXPR" "results/merged/analysis/${GROUP}_group.vcf.gz" 
 
 # Run comparisons for each treatment group with explicit parameter passing
 # Order is GROUP, CONTROL, TREATMENT_SAMPLES
-compare_treatment_control "WT" "WT-CTRL" "WT-37-55-1,WT-37-55-2,WT-37-55-3"
+compare_treatment_control "WT-37" "WT-CTRL" "WT-37-55-1,WT-37-55-2,WT-37-55-3"
 compare_treatment_control "STC" "STC-CTRL" "STC-55-1,STC-55-2,STC-55-3"
 compare_treatment_control "CAS" "CAS-CTRL" "CAS-55-1,CAS-55-2,CAS-55-3"
 compare_treatment_control "WTA" "WT-CTRL" "WTA-55-1,WTA-55-2,WTA-55-3"

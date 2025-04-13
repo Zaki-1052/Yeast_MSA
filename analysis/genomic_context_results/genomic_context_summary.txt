@@ -3,44 +3,84 @@ Genomic Context Analysis Summary
 
 Overall Statistics:
 -----------------
-Total variants analyzed: 488
+Total variants analyzed: 569
 Variants by treatment:
-  WT: 167 variants
-  STC: 59 variants
-  CAS: 128 variants
-  WTA: 134 variants
+  WT-37: 187 variants - Temperature-adapted wild type (Temperature adaptation)
+  WTA: 156 variants - Low oxygen-adapted wild type (Low Oxygen adaptation)
+  STC: 79 variants - STC gene with low oxygen adaptation (Low Oxygen adaptation with STC gene)
+  CAS: 147 variants - CAS gene with temperature adaptation (Temperature adaptation with CAS gene)
+
+Variants by adaptation type:
+  Temperature: 334 variants
+  Low Oxygen: 235 variants
+
+Variants by gene modification status:
+  Non-modified: 343 variants
+  Gene-modified: 226 variants
 
 GC Content Analysis:
 -------------------
-Mean GC content in variant regions: 0.3958
-Mean GC content in control regions: 0.3827
+Mean GC content in variant regions: 0.3810
+Mean GC content in control regions: 0.3821
 GC content by treatment:
-  WT: 0.4037
-  STC: 0.3909
-  CAS: 0.3886
-  WTA: 0.3951
+  WT-37: 0.3933
+  WTA: 0.3802
+  STC: 0.3655
+  CAS: 0.3744
+
+GC content by adaptation type:
+  Temperature: 0.3850
+  Low Oxygen: 0.3753
+
+GC content by gene modification status:
+  Non-modified: 0.3874
+  Gene-modified: 0.3713
 
 Local Sequence Features:
 ----------------------
-Fraction of variants near homopolymers: 0.9016
-Fraction of control sites near homopolymers: 0.9350
+Fraction of variants near homopolymers: 0.9104
+Fraction of control sites near homopolymers: 0.9310
 Homopolymer presence by treatment:
-  WT: 0.8802
-  STC: 0.8305
-  CAS: 0.9219
-  WTA: 0.9403
+  WT-37: 0.8877
+  WTA: 0.9423
+  STC: 0.8734
+  CAS: 0.9252
 
-Fraction of variants near dinucleotide repeats: 0.8197
-Fraction of control sites near dinucleotide repeats: 0.8950
+Homopolymer presence by adaptation type:
+  Temperature: 0.9042
+  Low Oxygen: 0.9191
+
+Homopolymer presence by gene modification status:
+  Non-modified: 0.9125
+  Gene-modified: 0.9071
+
+Fraction of variants near dinucleotide repeats: 0.8348
+Fraction of control sites near dinucleotide repeats: 0.8960
 Dinucleotide repeat presence by treatment:
-  WT: 0.8084
-  STC: 0.8136
-  CAS: 0.8047
-  WTA: 0.8507
+  WT-37: 0.8235
+  WTA: 0.8654
+  STC: 0.8481
+  CAS: 0.8095
+
+Dinucleotide repeat presence by adaptation type:
+  Temperature: 0.8174
+  Low Oxygen: 0.8596
+
+Dinucleotide repeat presence by gene modification status:
+  Non-modified: 0.8426
+  Gene-modified: 0.8230
+
+Mean purine/pyrimidine ratio in variant regions: 0.4832
+Mean purine/pyrimidine ratio in control regions: 0.5000
 
 Main Conclusions:
 ---------------
 1. This analysis examines the local sequence context around mutation sites.
 2. We analyze GC content, homopolymer regions, and repetitive elements near variants.
-3. The sequence logos reveal nucleotide preferences around different mutation types.
-4. Treatment-specific context patterns may provide insights into mutation mechanisms.
+3. Adaptation types (Temperature vs Low Oxygen) show different patterns
+   in their local sequence contexts.
+4. Gene modifications (STC/CAS) influence the genomic context of mutations.
+5. Temperature adaptation shows distinct patterns in sequence composition
+   compared to low oxygen adaptation.
+6. Gene-modified strains exhibit different local sequence features compared
+   to non-modified strains, suggesting specific mutational mechanisms.

@@ -1,0 +1,46 @@
+Genomic Context Analysis Summary
+===============================
+
+Overall Statistics:
+-----------------
+Total variants analyzed: 488
+Variants by treatment:
+  WT: 167 variants
+  STC: 59 variants
+  CAS: 128 variants
+  WTA: 134 variants
+
+GC Content Analysis:
+-------------------
+Mean GC content in variant regions: 0.3958
+Mean GC content in control regions: 0.3827
+GC content by treatment:
+  WT: 0.4037
+  STC: 0.3909
+  CAS: 0.3886
+  WTA: 0.3951
+
+Local Sequence Features:
+----------------------
+Fraction of variants near homopolymers: 0.9016
+Fraction of control sites near homopolymers: 0.9350
+Homopolymer presence by treatment:
+  WT: 0.8802
+  STC: 0.8305
+  CAS: 0.9219
+  WTA: 0.9403
+
+Fraction of variants near dinucleotide repeats: 0.8197
+Fraction of control sites near dinucleotide repeats: 0.8950
+Dinucleotide repeat presence by treatment:
+  WT: 0.8084
+  STC: 0.8136
+  CAS: 0.8047
+  WTA: 0.8507
+
+Main Conclusions:
+---------------
+1. This analysis examines the local sequence context around mutation sites.
+2. We analyze GC content, homopolymer regions, and repetitive elements near variants.
+3. The sequence logos reveal nucleotide preferences around different mutation types.
+4. Treatment-specific context patterns may provide insights into mutation mechanisms.

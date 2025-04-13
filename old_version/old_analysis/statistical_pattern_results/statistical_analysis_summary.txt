@@ -1,0 +1,47 @@
+Statistical Pattern Analysis Summary
+==================================
+
+Basic Statistics:
+-----------------
+Total Variants: 569.0
+Unique Scaffolds: 148.0
+Average Ti/Tv Ratio: 1.6363984674329501
+
+Regression Analysis Results:
+--------------------------
+
+WT Treatment:
+  R-squared: 0.4356
+  Coefficients:
+    const: 43.3401 ***
+    Log_Length: -9.1006 ***
+  Sample size: 72
+
+WTA Treatment:
+  R-squared: 0.3710
+  Coefficients:
+    const: 42.0760 ***
+    Log_Length: -8.8134 ***
+  Sample size: 67
+
+CAS Treatment:
+  R-squared: 0.3439
+  Coefficients:
+    const: 41.8009 ***
+    Log_Length: -9.0418 ***
+  Sample size: 68
+
+STC Treatment:
+  R-squared: 0.3001
+  Coefficients:
+    const: 34.8665 ***
+    Log_Length: -7.1596 ***
+  Sample size: 50
+
+Main Conclusions:
+---------------
+1. This analysis examines statistical patterns in the variant data.
+2. Principal Component Analysis identifies major axes of variation between treatments.
+3. Correlation analysis reveals relationships between mutation types and treatments.
+4. Regression models evaluate the relationship between genomic features and variant density.
+5. Clustering analysis identifies groups of scaffolds with similar variant patterns.

@@ -3,12 +3,12 @@ Regional Enrichment Analysis Summary
 
 Overall Statistics:
 -----------------
-Total enriched regions identified: 325
+Total enriched regions identified: 262
 
 Treatment-Specific Statistics:
 --------------------------
 
-WT Treatment:
+WT-37 Treatment (Temperature adaptation):
   Enriched regions: 93
   Average fold enrichment: 110.38
   Maximum fold enrichment: 559.90
@@ -20,31 +20,7 @@ WT Treatment:
     JRIU01000031.1:5500-6500, Fold enrichment: 559.90, Q-value: 0.00e+00
     JRIU01000031.1:126500-127500, Fold enrichment: 497.69, Q-value: 0.00e+00
 
-STC Treatment:
-  Enriched regions: 63
-  Average fold enrichment: 191.67
-  Maximum fold enrichment: 1030.82
-
-  Top 5 most enriched regions:
-    JRIU01000179.1:1500-2500, Fold enrichment: 1030.82, Q-value: 0.00e+00
-    JRIU01000179.1:1000-2000, Fold enrichment: 1030.82, Q-value: 0.00e+00
-    JRIU01000031.1:126500-127500, Fold enrichment: 589.04, Q-value: 1.39e-09
-    JRIU01000031.1:126000-127000, Fold enrichment: 589.04, Q-value: 1.39e-09
-    JRIU01000163.1:102500-103500, Fold enrichment: 294.52, Q-value: 2.89e-04
-
-CAS Treatment:
-  Enriched regions: 86
-  Average fold enrichment: 151.84
-  Maximum fold enrichment: 1028.82
-
-  Top 5 most enriched regions:
-    JRIU01000033.1:62000-63000, Fold enrichment: 1028.82, Q-value: 0.00e+00
-    JRIU01000033.1:61500-62500, Fold enrichment: 1028.82, Q-value: 0.00e+00
-    JRIU01000031.1:126500-127500, Fold enrichment: 949.68, Q-value: 0.00e+00
-    JRIU01000031.1:126000-127000, Fold enrichment: 870.54, Q-value: 0.00e+00
-    JRIU01000031.1:45000-46000, Fold enrichment: 712.26, Q-value: 0.00e+00
-
-WTA Treatment:
+WTA Treatment (Low Oxygen adaptation):
   Enriched regions: 83
   Average fold enrichment: 129.38
   Maximum fold enrichment: 671.17
@@ -56,18 +32,85 @@ WTA Treatment:
     JRIU01000070.1:70000-71000, Fold enrichment: 522.02, Q-value: 0.00e+00
     JRIU01000031.1:45000-46000, Fold enrichment: 522.02, Q-value: 0.00e+00
 
-Cross-Treatment Comparison:
-------------------------
+CAS Treatment (Temperature adaptation with CAS gene):
+  Enriched regions: 86
+  Average fold enrichment: 151.84
+  Maximum fold enrichment: 1028.82
 
-Number of enriched regions by treatment:
-  WT: 93
-  STC: 63
-  CAS: 86
-  WTA: 83
+  Top 5 most enriched regions:
+    JRIU01000033.1:62000-63000, Fold enrichment: 1028.82, Q-value: 0.00e+00
+    JRIU01000033.1:61500-62500, Fold enrichment: 1028.82, Q-value: 0.00e+00
+    JRIU01000031.1:126500-127500, Fold enrichment: 949.68, Q-value: 0.00e+00
+    JRIU01000031.1:126000-127000, Fold enrichment: 870.54, Q-value: 0.00e+00
+    JRIU01000031.1:45000-46000, Fold enrichment: 712.26, Q-value: 0.00e+00
+
+Adaptation-Specific Statistics:
+----------------------------
+
+Temperature Adaptation:
+  Enriched regions: 158
+  Average fold enrichment: 72.75
+  Maximum fold enrichment: 696.62
+
+  Top 3 most enriched regions:
+    JRIU01000031.1:126500-127500, Fold enrichment: 696.62
+    JRIU01000031.1:126000-127000, Fold enrichment: 626.96
+    JRIU01000031.1:45500-46500, Fold enrichment: 557.30
+
+Low Oxygen Adaptation:
+  Enriched regions: 134
+  Average fold enrichment: 83.49
+  Maximum fold enrichment: 594.05
+
+  Top 3 most enriched regions:
+    JRIU01000031.1:126500-127500, Fold enrichment: 594.05
+    JRIU01000031.1:126000-127000, Fold enrichment: 544.55
+    JRIU01000195.1:16000-17000, Fold enrichment: 445.54
+
+Gene Modification Statistics:
+--------------------------
+
+Non-Modified Strains:
+  Enriched regions: 125
+  Average fold enrichment: 83.84
+  Maximum fold enrichment: 610.51
+
+Gene-Modified Strains:
+  Enriched regions: 137
+  Average fold enrichment: 92.81
+  Maximum fold enrichment: 823.62
+
+Shared Regions Statistics:
+------------------------
+  Total shared regions (in multiple treatments): 59
+  Regions in exactly 2 treatments: 42
+  Regions in exactly 3 treatments: 17
+
+  Top 3 most consistently enriched regions:
+    JRIU01000031.1:126500-127500, Treatments: 3, Avg enrichment: 681.32
+    JRIU01000031.1:126000-127000, Treatments: 3, Avg enrichment: 609.35
+    JRIU01000031.1:45500-46500, Treatments: 3, Avg enrichment: 556.59
+
+Adaptation-Specific Region Statistics:
+----------------------------------
+
+Temperature Adaptation-Specific Regions:
+  Total specific regions: 21
+  Average enrichment: 219.29
+  Top 3 most enriched regions:
+    JRIU01000031.1:126500-127500, Avg enrichment: 723.69
+    JRIU01000031.1:126000-127000, Avg enrichment: 653.01
+    JRIU01000031.1:45000-46000, Avg enrichment: 573.87
 
 Main Conclusions:
 ---------------
 1. This analysis identifies regions with statistically significant variant enrichment.
 2. Treatment-specific patterns of regional enrichment have been identified.
-3. Some regions show consistent enrichment across multiple treatments.
-4. The distribution of enriched regions varies between treatments.
+3. Adaptation-specific enrichment patterns highlight genomic regions associated with
+   temperature or low oxygen adaptation mechanisms.
+4. Gene modifications appear to influence the pattern of regional enrichment,
+   suggesting potential functional impacts of inserted genes.
+5. Regions shared across multiple treatments may represent mutational hotspots
+   or regions under selection pressure in multiple conditions.
+6. For a detailed view of enriched regions, refer to the individual analysis files
+   in the output directory.
