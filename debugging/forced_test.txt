@@ -1,0 +1,5 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##bcftoolsVersion=1.21+htslib-1.21
+##bcftoolsCommand=mpileup -f reference/yeast_w303.fasta -a DP,AD results/bam/CAS-55-1.final.bam
+##reference=file://reference/yeast_w303.fasta
