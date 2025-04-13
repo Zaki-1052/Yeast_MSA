@@ -444,12 +444,12 @@
 ##bcftools_normVersion=1.21+htslib-1.21
 ##bcftools_normCommand=norm -f reference/yeast_w303.fasta -Ov -o results/vcf/individual/CAS-55-1.norm.vcf results/vcf/individual/CAS-55-1.vcf; Date=Fri Apr 11 02:51:09 2025
 ##bcftools_filterVersion=1.21+htslib-1.21
-##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/CAS-55-1.filtered.vcf results/vcf/individual/CAS-55-1.norm.vcf; Date=Sat Apr 12 23:33:34 2025
+##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/CAS-55-1.filtered.vcf results/vcf/individual/CAS-55-1.norm.vcf; Date=Sun Apr 13 01:31:07 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-1.filtered.vcf.gz; Date=Sun Apr 13 01:01:34 2025
+##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-1.filtered.vcf.gz; Date=Sun Apr 13 01:39:53 2025
 ##bcftools_mergeVersion=1.21+htslib-1.21
-##bcftools_mergeCommand=merge -l results/merged/fixed/vcf_list.txt -Oz -o results/merged/fixed/all_samples.vcf.gz; Date=Sun Apr 13 01:01:34 2025
-##bcftools_viewCommand=view -s WT-CTRL -o results/merged/fixed/test_selection.vcf results/merged/fixed/all_samples.vcf.gz; Date=Sun Apr 13 01:01:34 2025
+##bcftools_mergeCommand=merge -l results/merged/fixed/vcf_list.txt -Oz -o results/merged/fixed/all_samples.vcf.gz; Date=Sun Apr 13 01:39:53 2025
+##bcftools_viewCommand=view -s WT-CTRL -o results/merged/fixed/test_selection.vcf results/merged/fixed/all_samples.vcf.gz; Date=Sun Apr 13 01:39:53 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	WT-CTRL
 JRIU01000367.1	140	.	T	C	181.077	PASS	VDB=0.812842;SGB=-0.683931;RPBZ=-0.538931;MQBZ=-1.22679;MQSBZ=2.55377;BQBZ=-0.496139;SCBZ=-0.927547;MQ0F=0;MQ=56;DP=185;DP4=28,20,64,50;AN=1;AC=1	GT:PL:DP:AD	1:229,86:14:4,10
 JRIU01000351.1	69	.	G	A	70.3468	PASS	VDB=0.00773249;SGB=-0.69168;RPBZ=1.84695;MQBZ=-1.41752;MQSBZ=-1.81022;BQBZ=1.42481;SCBZ=0.948221;MQ0F=0;MQ=48;DP=34;DP4=12,0,14,5;AN=0;AC=0	GT:PL:DP:AD	.:.:.:.

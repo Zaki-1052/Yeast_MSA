@@ -288,6 +288,170 @@ awk 'NR>1 && ($5==0 && $6==0 && $7==0 && $8==1) {count++} \
      "results/merged/summary/treatment_comparison.tsv" >> \
      "results/merged/summary/unique_variants.txt"
 
+# Function for direct comparison of VCFs (more reliable approach)
+compare_treatment_to_control_direct() {
+    GROUP=$1
+    CONTROL_VCF=$2
+    TREATMENT_VCF_PREFIX=$3
+    
+    echo "  Direct comparison for $GROUP treatments vs control"
+    
+    # Create output directory
+    OUT_DIR="results/merged/direct_comparison/${GROUP}"
+    mkdir -p "$OUT_DIR"
+    
+    # Find treatment VCF files - CORRECTED PATH
+    TREATMENT_VCFS=$(ls results/merged/filtered/${TREATMENT_VCF_PREFIX}*.filtered.vcf.gz 2>/dev/null)
+    
+    # Check if we found any files
+    if [ -z "$TREATMENT_VCFS" ]; then
+        echo "    No treatment VCF files found for pattern: results/merged/filtered/${TREATMENT_VCF_PREFIX}*.filtered.vcf.gz"
+        echo "    Trying alternative path: results/merged/fixed/${TREATMENT_VCF_PREFIX}*.fixed.vcf.gz"
+        
+        # Try alternative path with fixed files
+        TREATMENT_VCFS=$(ls results/merged/fixed/${TREATMENT_VCF_PREFIX}*.fixed.vcf.gz 2>/dev/null)
+        
+        if [ -z "$TREATMENT_VCFS" ]; then
+            echo "    Still no files found. Skipping direct comparison for $GROUP"
+            echo "0" > "results/merged/summary/${GROUP}_direct_highconf_count.txt"
+            return
+        fi
+    fi
+    
+    # Also correct the control VCF path
+    if [ ! -f "$CONTROL_VCF" ]; then
+        # Try to find the control in the filtered directory
+        ALT_CONTROL=$(basename "$CONTROL_VCF")
+        if [ -f "results/merged/filtered/$ALT_CONTROL" ]; then
+            CONTROL_VCF="results/merged/filtered/$ALT_CONTROL"
+        elif [ -f "results/merged/fixed/${ALT_CONTROL%.filtered.vcf.gz}.fixed.vcf.gz" ]; then
+            CONTROL_VCF="results/merged/fixed/${ALT_CONTROL%.filtered.vcf.gz}.fixed.vcf.gz"
+        else
+            echo "    Control VCF not found: $CONTROL_VCF"
+            echo "    Skipping direct comparison for $GROUP"
+            echo "0" > "results/merged/summary/${GROUP}_direct_highconf_count.txt"
+            return
+        fi
+    fi
+    
+    echo "    Using control: $CONTROL_VCF"
+    echo "    Using treatment files: $TREATMENT_VCFS"
+    
+    # Compare each treatment sample with control
+    for TREAT_VCF in $TREATMENT_VCFS; do
+        SAMPLE=$(basename "$TREAT_VCF" | sed 's/\.filtered\.vcf\.gz$\|\.fixed\.vcf\.gz$//')
+        echo "    Processing $SAMPLE"
+        
+        # Create a directory for this comparison
+        ISEC_DIR="${OUT_DIR}/${SAMPLE}_vs_control"
+        mkdir -p "$ISEC_DIR"
+        
+        # Find variants present in treatment but not in control
+        bcftools isec -p "$ISEC_DIR" \
+                     -n =1 -c none \
+                     "$TREAT_VCF" "$CONTROL_VCF"
+        
+        # Count treatment-specific variants
+        if [ -f "${ISEC_DIR}/0000.vcf" ]; then
+            COUNT=$(grep -v "^#" "${ISEC_DIR}/0000.vcf" | wc -l)
+            echo "    $SAMPLE specific variants: $COUNT"
+            
+            # Copy the result file to a clearer name
+            cp "${ISEC_DIR}/0000.vcf" "${OUT_DIR}/${SAMPLE}_specific.vcf"
+        else
+            echo "    No treatment-specific variants found for $SAMPLE"
+        fi
+    done
+    
+    # Find high-confidence variants (present in at least 2 of 3 replicates)
+    if ls "${OUT_DIR}/"*_specific.vcf > /dev/null 2>&1; then
+        echo "    Finding high-confidence variants for $GROUP"
+        
+        # Extract positions and count occurrences
+        cat "${OUT_DIR}/"*_specific.vcf | grep -v "^#" | awk '{print $1":"$2":"$4":"$5}' | sort | uniq -c | sort -nr > "${OUT_DIR}/variant_counts.txt"
+        
+        # Extract variants that appear in at least 2 samples
+        HIGH_CONF=$(awk '$1 >= 2' "${OUT_DIR}/variant_counts.txt" | wc -l)
+        echo "    $GROUP high-confidence direct-comparison variants: $HIGH_CONF"
+        
+        # Save to summary
+        echo "$HIGH_CONF" > "results/merged/summary/${GROUP}_direct_highconf_count.txt"
+    else
+        echo "    No treatment-specific variants to analyze for $GROUP"
+        echo "0" > "results/merged/summary/${GROUP}_direct_highconf_count.txt"
+    fi
+}
+
+# Run direct comparisons for all groups - WITH CORRECTED PATHS
+compare_treatment_to_control_direct "WT" "results/merged/filtered/WT-CTRL.filtered.vcf.gz" "WT-37-55"
+compare_treatment_to_control_direct "STC" "results/merged/filtered/STC-CTRL.filtered.vcf.gz" "STC-55"
+compare_treatment_to_control_direct "CAS" "results/merged/filtered/CAS-CTRL.filtered.vcf.gz" "CAS-55"
+compare_treatment_to_control_direct "WTA" "results/merged/filtered/WT-CTRL.filtered.vcf.gz" "WTA-55"
+# 8b. Analyze consistency of variants within replicates
+echo -e "\nStep 8b: Analyzing consistency within treatment replicates..."
+
+# Function to analyze replicate consistency
+analyze_group_consistency() {
+    GROUP=$1
+    SAMPLES=$2
+    
+    echo "  Analyzing consistency for $GROUP group"
+    
+    # Create output directory
+    OUT_DIR="results/merged/consistency/${GROUP}"
+    mkdir -p "$OUT_DIR"
+    
+    # Extract samples from merged VCF
+    bcftools view $FORCE_FLAG -s $SAMPLES results/merged/fixed/all_samples.vcf.gz -Oz -o "${OUT_DIR}/samples.vcf.gz"
+    bcftools index "${OUT_DIR}/samples.vcf.gz"
+    
+    # Count variants present in all replicates
+    NUM_SAMPLES=$(echo "$SAMPLES" | tr -cd ',' | wc -c)
+    NUM_SAMPLES=$((NUM_SAMPLES + 1))
+    
+    bcftools view -s $SAMPLES -c $NUM_SAMPLES "${OUT_DIR}/samples.vcf.gz" -Oz -o "${OUT_DIR}/all_replicates.vcf.gz"
+    ALL=$(bcftools view -H "${OUT_DIR}/all_replicates.vcf.gz" | wc -l)
+    
+    # Count variants present in at least 2 replicates
+    AT_LEAST_2=$(bcftools view -s $SAMPLES -c 2 "${OUT_DIR}/samples.vcf.gz" | bcftools view -H | wc -l)
+    
+    # Count variants present in only 1 replicate
+    ONLY_1=$(bcftools view -s $SAMPLES -c 1 -C 2 "${OUT_DIR}/samples.vcf.gz" | bcftools view -H | wc -l)
+    
+    echo "  $GROUP consistency results:"
+    echo "    Variants in all $NUM_SAMPLES replicates: $ALL"
+    echo "    Variants in at least 2 replicates: $AT_LEAST_2"
+    echo "    Variants in only 1 replicate: $ONLY_1"
+    echo "    Total variants: $((ALL + ONLY_1))"
+    
+    # Save results to summary
+    echo "$GROUP consistency:" > "results/merged/summary/${GROUP}_consistency.txt"
+    echo "  Variants in all $NUM_SAMPLES replicates: $ALL" >> "results/merged/summary/${GROUP}_consistency.txt"
+    echo "  Variants in exactly 2 replicates: $((AT_LEAST_2 - ALL))" >> "results/merged/summary/${GROUP}_consistency.txt"
+    echo "  Variants in only 1 replicate: $ONLY_1" >> "results/merged/summary/${GROUP}_consistency.txt"
+    echo "  Total variants: $((AT_LEAST_2 + ONLY_1))" >> "results/merged/summary/${GROUP}_consistency.txt"
+}
+
+# Analyze consistency for each treatment group
+analyze_group_consistency "WT" "WT-37-55-1,WT-37-55-2,WT-37-55-3"
+analyze_group_consistency "STC" "STC-55-1,STC-55-2,STC-55-3"
+analyze_group_consistency "CAS" "CAS-55-1,CAS-55-2,CAS-55-3"
+analyze_group_consistency "WTA" "WTA-55-1,WTA-55-2,WTA-55-3"
+
+# 8c. Add method comparison to the summary
+echo -e "\nStep 8c: Comparing analysis methods..."
+
+echo "Method Comparison:" > "results/merged/summary/method_comparison.txt"
+for GROUP in WT STC CAS WTA; do
+    if [ -f "results/merged/summary/${GROUP}_highconf_count.txt" ] && [ -f "results/merged/summary/${GROUP}_direct_highconf_count.txt" ]; then
+        MERGED_COUNT=$(cat "results/merged/summary/${GROUP}_highconf_count.txt")
+        DIRECT_COUNT=$(cat "results/merged/summary/${GROUP}_direct_highconf_count.txt")
+        echo "  $GROUP: $MERGED_COUNT high-conf variants (merged), $DIRECT_COUNT high-conf variants (direct)" >> "results/merged/summary/method_comparison.txt"
+    else
+        echo "  $GROUP: Incomplete data" >> "results/merged/summary/method_comparison.txt"
+    fi
+done
+
 # 9. Generate a summary report
 echo -e "\nStep 9: Generating final summary report..."
 
@@ -309,6 +473,20 @@ done
 echo "" >> "results/merged/summary/analysis_report.txt"
 echo "Treatment-Unique Variants:" >> "results/merged/summary/analysis_report.txt"
 cat "results/merged/summary/unique_variants.txt" | sed 's/^/  /' >> "results/merged/summary/analysis_report.txt"
+
+# Add consistency information to the report
+echo "" >> "results/merged/summary/analysis_report.txt"
+echo "Variant Consistency Within Replicates:" >> "results/merged/summary/analysis_report.txt"
+for GROUP in WT STC CAS WTA; do
+    if [ -f "results/merged/summary/${GROUP}_consistency.txt" ]; then
+        cat "results/merged/summary/${GROUP}_consistency.txt" | sed 's/^/  /' >> "results/merged/summary/analysis_report.txt"
+        echo "" >> "results/merged/summary/analysis_report.txt"
+    fi
+done
+
+# Add method comparison to the report
+echo "Variant Analysis Method Comparison:" >> "results/merged/summary/analysis_report.txt"
+cat "results/merged/summary/method_comparison.txt" | sed 's/^/  /' >> "results/merged/summary/analysis_report.txt"
 
 echo -e "\nMerged VCF analysis complete with contig fix! Results in results/merged/ directory."
 echo "Summary report available at: results/merged/summary/analysis_report.txt"

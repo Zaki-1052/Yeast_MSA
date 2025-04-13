@@ -444,7 +444,7 @@
 ##bcftools_normVersion=1.21+htslib-1.21
 ##bcftools_normCommand=norm -f reference/yeast_w303.fasta -Ov -o results/vcf/individual/CAS-55-2.norm.vcf results/vcf/individual/CAS-55-2.vcf; Date=Fri Apr 11 02:51:44 2025
 ##bcftools_filterVersion=1.21+htslib-1.21
-##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/CAS-55-2.filtered.vcf results/vcf/individual/CAS-55-2.norm.vcf; Date=Sat Apr 12 23:33:34 2025
+##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/CAS-55-2.filtered.vcf results/vcf/individual/CAS-55-2.norm.vcf; Date=Sun Apr 13 01:31:07 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-2.filtered.vcf.gz; Date=Sun Apr 13 01:01:34 2025
+##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-2.filtered.vcf.gz; Date=Sun Apr 13 01:39:53 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	CAS-55-2
