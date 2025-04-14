@@ -387,8 +387,15 @@ def extract_from_vcf(treatment):
     return pd.DataFrame()
 
 # Function to filter data for single nucleotide variants
-def filter_snvs(data, debug=True):
-    """Filter data to include only single nucleotide variants."""
+def filter_snvs(data, debug=True, include_mnvs=False):
+    """
+    Filter data to include only single nucleotide variants.
+    
+    Args:
+        data: DataFrame containing variant data
+        debug: Whether to print debug info
+        include_mnvs: Whether to include decomposed multi-nucleotide variants
+    """
     if debug:
         print(f"Initial variant count: {len(data)}")
         if len(data) > 0:
@@ -404,41 +411,99 @@ def filter_snvs(data, debug=True):
         data['REF'] = data['REF'].astype(str)
         data['ALT'] = data['ALT'].astype(str)
     
-    # First filtering step: length check
-    length_filter = (data['REF'].str.len() == 1) & (data['ALT'].str.len() == 1)
-    snv_data = data[length_filter]
+    # Create a copy of the data to avoid modification warnings
+    processed_data = data.copy()
+    
+    # First separate SNVs and MNVs
+    length_filter = (processed_data['REF'].str.len() == 1) & (processed_data['ALT'].str.len() == 1)
+    snv_data = processed_data[length_filter].copy()
+    mnv_data = processed_data[~length_filter].copy()
     
     if debug:
-        print(f"After length filter: {len(snv_data)} variants remain")
-        print(f"Removed {len(data) - len(snv_data)} multi-nucleotide variants")
-        if len(data) > 0 and len(snv_data) == 0:
-            # Show some examples of what's being filtered out
-            print("Examples of filtered variants:")
-            multi_nt = data[~length_filter].head(5)
-            for _, row in multi_nt.iterrows():
+        print(f"Found {len(snv_data)} single-nucleotide variants")
+        print(f"Found {len(mnv_data)} multi-nucleotide variants")
+    
+    # Handle MNVs if requested
+    decomposed_mnvs = pd.DataFrame()
+    if include_mnvs and len(mnv_data) > 0:
+        decomposed_rows = []
+        
+        for _, row in mnv_data.iterrows():
+            ref = row['REF']
+            alt = row['ALT']
+            
+            # Skip cases where ref or alt are completely different lengths
+            # as they're likely indels rather than substitutions
+            if abs(len(ref) - len(alt)) > 2:
+                continue
+            
+            # Handle several common MNV patterns:
+            
+            # Case 1: One base change within a multi-base sequence (e.g., AT>AG)
+            if len(ref) == len(alt) and len(ref) > 1:
+                # Find positions where bases differ
+                diff_positions = [i for i in range(len(ref)) if i < len(alt) and ref[i] != alt[i]]
+                
+                # Create a separate SNV for each position that differs
+                for pos in diff_positions:
+                    new_row = row.copy()
+                    new_row['REF'] = ref[pos]
+                    new_row['ALT'] = alt[pos]
+                    new_row['POS'] = int(row['POS']) + pos  # Adjust position
+                    new_row['MNV_Source'] = f"{ref}>{alt}"  # Track the source MNV
+                    decomposed_rows.append(new_row)
+            
+            # Case 2: Deletion (e.g., ATG>A)
+            elif len(ref) > len(alt):
+                # We'll skip these as they're deletions
+                continue
+            
+            # Case 3: Insertion (e.g., A>ATG)
+            elif len(ref) < len(alt):
+                # We'll skip these as they're insertions
+                continue
+        
+        if decomposed_rows:
+            decomposed_mnvs = pd.DataFrame(decomposed_rows)
+            if debug:
+                print(f"Decomposed {len(decomposed_mnvs)} SNVs from multi-nucleotide variants")
+    
+    # Combine SNVs and decomposed MNVs if needed
+    if include_mnvs and not decomposed_mnvs.empty:
+        combined_data = pd.concat([snv_data, decomposed_mnvs])
+    else:
+        combined_data = snv_data
+    
+    if debug:
+        print(f"After length filter: {len(combined_data)} variants remain")
+        print(f"Skipped {len(data) - len(combined_data)} variants that couldn't be processed as SNVs")
+        
+        if len(mnv_data) > 0:
+            print("Examples of multi-nucleotide variants:")
+            for _, row in mnv_data.head(5).iterrows():
                 print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
     
     # Second filtering step: valid bases
     # Make case-insensitive by converting to uppercase
-    if len(snv_data) > 0:
-        snv_data = snv_data.copy()
-        snv_data['REF'] = snv_data['REF'].str.upper()
-        snv_data['ALT'] = snv_data['ALT'].str.upper()
+    if len(combined_data) > 0:
+        combined_data['REF'] = combined_data['REF'].str.upper()
+        combined_data['ALT'] = combined_data['ALT'].str.upper()
         
-        valid_bases = snv_data['REF'].isin(['A', 'C', 'G', 'T']) & snv_data['ALT'].isin(['A', 'C', 'G', 'T'])
-        final_data = snv_data[valid_bases]
+        valid_bases = combined_data['REF'].isin(['A', 'C', 'G', 'T']) & combined_data['ALT'].isin(['A', 'C', 'G', 'T'])
+        final_data = combined_data[valid_bases].copy()
         
         if debug:
             print(f"After ACGT filter: {len(final_data)} variants remain")
-            print(f"Removed {len(snv_data) - len(final_data)} variants with non-ACGT bases")
-            if len(snv_data) > 0 and len(final_data) == 0:
+            print(f"Removed {len(combined_data) - len(final_data)} variants with non-ACGT bases")
+            if len(combined_data) > 0 and len(final_data) == 0:
                 print("Examples of non-ACGT bases:")
-                non_acgt = snv_data[~valid_bases].head(5)
+                non_acgt = combined_data[~valid_bases].head(5)
                 for _, row in non_acgt.iterrows():
                     print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
     else:
-        final_data = snv_data
+        final_data = combined_data
     
+    print(f"Filtered to {len(final_data)} single nucleotide variants")
     return final_data
 
 # Function to classify mutations
@@ -924,7 +989,8 @@ def main():
     # Filter for SNVs and classify mutations
     all_data = {}
     for treatment, data in all_raw_data.items():
-        snv_data = filter_snvs(data)
+        # Include decomposed multi-nucleotide variants
+        snv_data = filter_snvs(data, include_mnvs=True)
         all_data[treatment] = classify_mutations(snv_data)
         print(f"{treatment}: Found {len(snv_data)} SNVs")
     

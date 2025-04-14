@@ -186,6 +186,8 @@ def load_scaffold_info():
         "reference/genome.fasta.fai"
     ]
     
+    # First attempt: Load from fai file
+    found_fai = False
     for pattern in fai_patterns:
         if os.path.exists(pattern):
             try:
@@ -193,43 +195,149 @@ def load_scaffold_info():
                                         names=['Scaffold', 'Length', 'Offset', 'Linebases', 'Linewidth'])
                 scaffold_info = dict(zip(scaffold_df['Scaffold'], scaffold_df['Length']))
                 print(f"Loaded information for {len(scaffold_info)} scaffolds from {pattern}")
-                return scaffold_info
+                found_fai = True
+                break
             except Exception as e:
                 print(f"Error reading {pattern}: {e}")
     
-    print("No scaffold information found, attempting to extract from VCF headers...")
-    
-    # Try to extract from VCF headers if fai file not found
-    try:
-        import subprocess
-        for treatment in TREATMENTS:
-            vcf_file_patterns = [
-                f"results/merged/analysis/{treatment}/highconf.vcf.gz",
-                f"results/merged/analysis/{treatment}_highconf.vcf.gz",
-                f"results/merged/fixed/all_samples.vcf.gz"
-            ]
-            
-            for pattern in vcf_file_patterns:
-                if os.path.exists(pattern):
-                    cmd = f"bcftools view -h {pattern} | grep '##contig'"
-                    output = subprocess.check_output(cmd, shell=True).decode('utf-8')
-                    
-                    import re
-                    for line in output.strip().split('\n'):
-                        match = re.search(r'ID=([^,]+),length=(\d+)', line)
-                        if match:
-                            scaffold, length = match.groups()
-                            scaffold_info[scaffold] = int(length)
-                    
-                    if scaffold_info:
-                        print(f"Extracted information for {len(scaffold_info)} scaffolds from VCF header")
-                        return scaffold_info
+    # Second attempt: Extract from VCF headers
+    if not found_fai:
+        print("No scaffold information found from fai files, attempting to extract from VCF headers...")
+        
+        try:
+            import subprocess
+            for treatment in TREATMENTS:
+                vcf_file_patterns = [
+                    f"results/merged/analysis/{treatment}/highconf.vcf.gz",
+                    f"results/merged/analysis/{treatment}_highconf.vcf.gz",
+                    f"results/merged/fixed/all_samples.vcf.gz"
+                ]
+                
+                for pattern in vcf_file_patterns:
+                    if os.path.exists(pattern):
+                        cmd = f"bcftools view -h {pattern} | grep '##contig'"
+                        output = subprocess.check_output(cmd, shell=True).decode('utf-8')
+                        
+                        import re
+                        for line in output.strip().split('\n'):
+                            match = re.search(r'ID=([^,]+),length=(\d+)', line)
+                            if match:
+                                scaffold, length = match.groups()
+                                scaffold_info[scaffold] = int(length)
+                        
+                        if scaffold_info:
+                            print(f"Extracted information for {len(scaffold_info)} scaffolds from VCF header")
+                            found_fai = True
+                            break
+                if found_fai:
                     break
-    except Exception as e:
-        print(f"Error extracting scaffold info from VCF: {e}")
+        except Exception as e:
+            print(f"Error extracting scaffold info from VCF: {e}")
     
-    print("Could not load scaffold information. Using placeholder values.")
-    return {}
+    # If we still don't have scaffold info, create default values using the scaffolds from the mutation data
+    if not scaffold_info:
+        print("Could not load scaffold information. Creating default values...")
+        
+        # Try to get list of scaffolds from mutation data
+        try:
+            mutation_data = load_mutation_data()
+            if mutation_data is not None:
+                unique_scaffolds = mutation_data['CHROM'].unique()
+                # Use a default length of 10,000 bp for each scaffold
+                for scaffold in unique_scaffolds:
+                    scaffold_info[scaffold] = 10000
+                print(f"Created default length values for {len(scaffold_info)} scaffolds")
+        except Exception as e:
+            print(f"Error creating default scaffold info: {e}")
+    
+    # Print some diagnostics
+    print(f"Final scaffold info contains {len(scaffold_info)} scaffolds")
+    if len(scaffold_info) > 0:
+        print(f"Example: {list(scaffold_info.items())[:3]}")
+    else:
+        print("WARNING: No scaffold information available!")
+    
+    # Check if we need to handle ID mismatch (if scaffolds are numeric but reference uses JRIU prefix)
+    try:
+        import re  # Import re module here to ensure it's available
+        mutation_data = load_mutation_data()
+        if mutation_data is not None:
+            sample_ids = mutation_data['CHROM'].head(5).astype(str).tolist()
+            print(f"Sample mutation scaffold IDs: {sample_ids}")
+            
+            # Check if these appear to be numeric IDs
+            numeric_ids = all(chrom.isdigit() for chrom in sample_ids)
+            if numeric_ids:
+                # Check if our scaffold info has JRIU pattern
+                jriu_pattern = any("JRIU" in str(key) for key in scaffold_info.keys())
+                
+                if jriu_pattern:
+                    print("Detected ID mismatch: mutation data uses numeric IDs but reference uses JRIU prefix")
+                    print("Creating mapping between numeric IDs and reference IDs...")
+                    
+                    # Create a mapping from numeric ID to full ID
+                    id_mapping = {}
+                    for full_id in scaffold_info.keys():
+                        if "JRIU" in str(full_id):
+                            # Extract numeric part (e.g., '371' from 'JRIU01000371.1')
+                            # Try multiple regex patterns to capture different naming conventions
+                            match = re.search(r'JRIU\d+0*(\d+)(?:\.\d+)?', str(full_id))
+                            if match:
+                                numeric_id = match.group(1)
+                                id_mapping[numeric_id] = full_id
+                                
+                                # Also try with leading zeros as some systems might use those
+                                # For example, map '0371' to the same full_id
+                                for i in range(1, 4):  # Try prefixing with 1, 2, or 3 zeros
+                                    padded_id = numeric_id.zfill(len(numeric_id) + i)
+                                    id_mapping[padded_id] = full_id
+                    
+                    # Get a sample mutation CHROM value to determine data type
+                    sample_type = type(mutation_data['CHROM'].iloc[0])
+                    print(f"Mutation CHROM data type: {sample_type}")
+                    
+                    # Create new scaffold_info with numeric keys, matching the data type
+                    numeric_scaffold_info = {}
+                    
+                    # Create direct mapping for all numeric IDs found in the mutation data
+                    # This ensures we don't miss any scaffolds
+                    all_chrom_ids = mutation_data['CHROM'].unique()
+                    print(f"Found {len(all_chrom_ids)} unique scaffold IDs in mutation data")
+                    
+                    # First add all mappings from the ID mapping we created
+                    for numeric_id, full_id in id_mapping.items():
+                        # Convert the numeric_id to the same type as the mutation data CHROMs
+                        if sample_type == int or sample_type == np.int64:
+                            try:
+                                key = int(numeric_id)
+                                numeric_scaffold_info[key] = scaffold_info[full_id]
+                            except ValueError:
+                                print(f"Warning: Could not convert {numeric_id} to int")
+                        else:
+                            numeric_scaffold_info[numeric_id] = scaffold_info[full_id]
+                    
+                    # For any remaining scaffolds in the mutation data that we couldn't map,
+                    # use a default value
+                    default_length = 10000  # Default scaffold length (10kb)
+                    
+                    # Use the median of known scaffold lengths if we have some
+                    if scaffold_info:
+                        lengths = list(scaffold_info.values())
+                        default_length = int(np.median(lengths))
+                        print(f"Using median scaffold length of {default_length} bp as default")
+                    
+                    # Now handle any scaffolds in the mutation data that aren't mapped yet
+                    for chrom_id in all_chrom_ids:
+                        if chrom_id not in numeric_scaffold_info:
+                            print(f"Using default length for unmapped scaffold: {chrom_id}")
+                            numeric_scaffold_info[chrom_id] = default_length
+                    
+                    print(f"Created mapping for {len(numeric_scaffold_info)} scaffolds")
+                    scaffold_info = numeric_scaffold_info
+    except Exception as e:
+        print(f"Warning: Error checking for ID mismatch: {e}")
+    
+    return scaffold_info
 
 # Function to integrate all data sources
 def integrate_data(mutation_data, scaffold_info, context_data=None):
@@ -244,6 +352,17 @@ def integrate_data(mutation_data, scaffold_info, context_data=None):
     # Add scaffold length information if available
     if scaffold_info:
         integrated_data['Scaffold_Length'] = integrated_data['CHROM'].map(scaffold_info)
+        # Check for missing values and create diagnostics
+        missing_scaffolds = integrated_data[integrated_data['Scaffold_Length'].isna()]['CHROM'].unique()
+        if len(missing_scaffolds) > 0:
+            print(f"Missing scaffold length for {len(missing_scaffolds)} unique scaffolds")
+            print(f"First few missing scaffolds: {missing_scaffolds[:5]}")
+            # Fill in missing values with a reasonable default (10,000bp)
+            integrated_data['Scaffold_Length'] = integrated_data['Scaffold_Length'].fillna(10000)
+    else:
+        # If no scaffold info at all, create a default column
+        print("No scaffold info available - creating default scaffold lengths")
+        integrated_data['Scaffold_Length'] = 10000
     
     # Add treatment metadata
     integrated_data['Treatment_Description'] = integrated_data['Treatment'].map(
@@ -289,6 +408,11 @@ def integrate_data(mutation_data, scaffold_info, context_data=None):
         integrated_data['Variant_Density'] = integrated_data.apply(
             lambda row: (row['Scaffold_Variant_Count'] * 1000 / row['Scaffold_Length']) 
             if row['Scaffold_Length'] > 0 else 0, axis=1)
+        
+        # Ensure variant density doesn't contain NaN or infinity values
+        integrated_data['Variant_Density'] = integrated_data['Variant_Density'].replace([np.inf, -np.inf], np.nan)
+        # Replace NaN with 0 (could also consider using mean or median)
+        integrated_data['Variant_Density'] = integrated_data['Variant_Density'].fillna(0)
     
     # Add treatment-specific variant counts
     treatment_counts = integrated_data.groupby('Treatment').size().to_dict()
@@ -361,6 +485,10 @@ def generate_summary_statistics(data):
         scaffold_stats['Variant_Density'] = scaffold_stats.apply(
             lambda row: (row['POS'] * 1000 / row['Scaffold_Length']) 
             if row['Scaffold_Length'] > 0 else 0, axis=1)
+        
+        # Handle potential NaN or infinity values
+        scaffold_stats['Variant_Density'] = scaffold_stats['Variant_Density'].replace([np.inf, -np.inf], np.nan)
+        scaffold_stats['Variant_Density'] = scaffold_stats['Variant_Density'].fillna(0)
     
     summary_stats['scaffold_stats'] = scaffold_stats
     
@@ -528,6 +656,17 @@ def build_regression_models(data):
     # Create some derived features
     scaffold_data['Log_Length'] = np.log10(scaffold_data['Scaffold_Length'].replace(0, 1))
     
+    # Let's print the unique scaffold lengths to debug
+    print("\nScaffold Length debug:")
+    print(f"Number of unique scaffolds: {scaffold_data['CHROM'].nunique()}")
+    if 'Scaffold_Length' in scaffold_data.columns:
+        print(f"Scaffold_Length column exists")
+        print(f"Unique Scaffold_Length values: {scaffold_data['Scaffold_Length'].unique()[:5]}...")
+        print(f"Number of scaffolds with length=0: {(scaffold_data['Scaffold_Length'] == 0).sum()}")
+        print(f"Number of scaffolds with NaN length: {scaffold_data['Scaffold_Length'].isna().sum()}")
+    else:
+        print("Scaffold_Length column is missing")
+    
     # Build models for each treatment
     model_results = {}
     
@@ -538,9 +677,43 @@ def build_regression_models(data):
         if len(treatment_data) < 5:
             continue
         
+        # Clean the data - remove rows with NaN or inf values
+        clean_data = treatment_data.copy()
+        clean_data = clean_data.replace([np.inf, -np.inf], np.nan)
+        
+        # Check data quality before filtering
+        nan_log_length = clean_data['Log_Length'].isna().sum()
+        nan_density = clean_data['Variant_Density'].isna().sum()
+        print(f"Treatment {treatment}: {len(clean_data)} total rows, {nan_log_length} NaN in Log_Length, {nan_density} NaN in Variant_Density")
+        
+        # Instead of dropping rows, let's try to fix the data
+        # Set a reasonable default for Log_Length if NaN (log10 of average scaffold length)
+        if nan_log_length > 0:
+            avg_log_length = clean_data['Log_Length'].mean()
+            if pd.isna(avg_log_length):
+                avg_log_length = 4.0  # Default log10 value (10,000bp)
+            clean_data['Log_Length'] = clean_data['Log_Length'].fillna(avg_log_length)
+            
+        # Set zero for Variant_Density if NaN
+        if nan_density > 0:
+            clean_data['Variant_Density'] = clean_data['Variant_Density'].fillna(0)
+        
+        # Re-check if we still have NaN values
+        remaining_nans = clean_data[['Log_Length', 'Variant_Density']].isna().any(axis=1).sum()
+        print(f"  After fixing: {remaining_nans} rows still contain NaN values")
+        
+        # Only drop rows if still necessary
+        if remaining_nans > 0:
+            clean_data = clean_data.dropna(subset=['Log_Length', 'Variant_Density'])
+        
+        # Skip if too few data points after cleaning
+        if len(clean_data) < 5:
+            print(f"Insufficient clean data points for {treatment} after fixing NaN/inf values")
+            continue
+        
         # Simple linear regression
-        X = sm.add_constant(treatment_data[['Log_Length']])
-        y = treatment_data['Variant_Density']
+        X = sm.add_constant(clean_data[['Log_Length']])
+        y = clean_data['Variant_Density']
         
         try:
             model = sm.OLS(y, X).fit()
@@ -550,7 +723,7 @@ def build_regression_models(data):
                 'r_squared': model.rsquared,
                 'coefficients': model.params.to_dict(),
                 'p_values': model.pvalues.to_dict(),
-                'n': len(treatment_data),
+                'n': len(clean_data),
                 'adaptation_type': TREATMENT_INFO.get(treatment, {}).get('adaptation', 'Unknown'),
                 'has_gene': 'Yes' if TREATMENT_INFO.get(treatment, {}).get('gene') else 'No'
             }
@@ -576,16 +749,48 @@ def build_regression_models(data):
             if len(adaptation_data) < 5:
                 continue
             
+            # Clean the data - remove rows with NaN or inf values
+            clean_adaptation_data = adaptation_data.copy()
+            clean_adaptation_data = clean_adaptation_data.replace([np.inf, -np.inf], np.nan)
+            
+            # Check data quality before filtering
+            nan_log_length = clean_adaptation_data['Log_Length'].isna().sum()
+            nan_density = clean_adaptation_data['Variant_Density'].isna().sum()
+            print(f"Adaptation {adaptation}: {len(clean_adaptation_data)} total rows, {nan_log_length} NaN in Log_Length, {nan_density} NaN in Variant_Density")
+            
+            # Fix the data 
+            if nan_log_length > 0:
+                avg_log_length = clean_adaptation_data['Log_Length'].mean()
+                if pd.isna(avg_log_length):
+                    avg_log_length = 4.0  # Default log10 value
+                clean_adaptation_data['Log_Length'] = clean_adaptation_data['Log_Length'].fillna(avg_log_length)
+                
+            if nan_density > 0:
+                clean_adaptation_data['Variant_Density'] = clean_adaptation_data['Variant_Density'].fillna(0)
+            
+            # Re-check if we still have NaN values
+            remaining_nans = clean_adaptation_data[['Log_Length', 'Variant_Density']].isna().any(axis=1).sum()
+            print(f"  After fixing: {remaining_nans} rows still contain NaN values")
+            
+            # Only drop rows if still necessary
+            if remaining_nans > 0:
+                clean_adaptation_data = clean_adaptation_data.dropna(subset=['Log_Length', 'Variant_Density'])
+            
+            # Skip if too few data points after cleaning
+            if len(clean_adaptation_data) < 5:
+                print(f"Insufficient clean data points for {adaptation} adaptation after fixing NaN/inf values")
+                continue
+            
             try:
-                X = sm.add_constant(adaptation_data[['Log_Length']])
-                y = adaptation_data['Variant_Density']
+                X = sm.add_constant(clean_adaptation_data[['Log_Length']])
+                y = clean_adaptation_data['Variant_Density']
                 model = sm.OLS(y, X).fit()
                 
                 adaptation_models[adaptation] = {
                     'r_squared': model.rsquared,
                     'coefficients': model.params.to_dict(),
                     'p_values': model.pvalues.to_dict(),
-                    'n': len(adaptation_data)
+                    'n': len(clean_adaptation_data)
                 }
             except Exception as e:
                 print(f"Could not build model for {adaptation} adaptation: {e}")

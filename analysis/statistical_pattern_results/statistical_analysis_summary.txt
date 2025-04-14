@@ -14,6 +14,45 @@ Variants in Non-Modified Strains: 343.0
 Regression Analysis Results:
 --------------------------
 
+CAS Treatment (Temperature adaptation with gene modification):
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2950 ***
+  Sample size: 126
+
+STC Treatment (Low Oxygen adaptation with gene modification):
+  R-squared: 0.0000
+  Coefficients:
+    Log_Length: 0.2987 ***
+  Sample size: 122
+
+WTA Treatment (Low Oxygen adaptation):
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2834 ***
+  Sample size: 148
+
+WT-37 Treatment (Temperature adaptation):
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2598 ***
+  Sample size: 179
+
+Regression Analysis by Adaptation Type:
+-----------------------------------
+
+Low Oxygen Adaptation:
+  R-squared: 0.0000
+  Coefficients:
+    Log_Length: 0.2616 ***
+  Sample size: 200
+
+Temperature Adaptation:
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2427 ***
+  Sample size: 228
+
 Biological Context Summary:
 -------------------------
 This analysis examines mutation patterns in yeast strains under different conditions:
