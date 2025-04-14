@@ -140,9 +140,15 @@ def parse_mutation_data(treatment):
     if mutation_file:
         try:
             # Read the already extracted mutation data
-            data = pd.read_csv(mutation_file, sep='\t', header=None, 
-                               names=['CHROM', 'POS', 'REF', 'ALT'])
-            data['Treatment'] = treatment
+            data = pd.read_csv(mutation_file, sep='\t', header=None)
+            
+            # Check the number of columns and handle appropriately
+            if len(data.columns) == 5:  # File already has Treatment column
+                data.columns = ['CHROM', 'POS', 'REF', 'ALT', 'Treatment']
+            else:  # Original format with 4 columns
+                data.columns = ['CHROM', 'POS', 'REF', 'ALT']
+                data['Treatment'] = treatment
+                
             # Add biological context
             data['Adaptation'] = TREATMENT_INFO.get(treatment, {}).get('adaptation', 'Unknown')
             data['Has_Gene'] = 'Yes' if TREATMENT_INFO.get(treatment, {}).get('gene') else 'No'
@@ -320,29 +326,55 @@ def plot_variant_density(densities, treatment, output_dir, top_n=20):
 # Function to generate comparative density heat map
 def plot_comparative_heatmap(all_densities, output_dir, top_n=30):
     """Generate a heatmap comparing variant densities across treatments."""
-    # Find top scaffolds across all treatments
-    all_scaffold_densities = {}
-    
-    for treatment, densities in all_densities.items():
-        for scaffold, density in densities.items():
-            if scaffold not in all_scaffold_densities:
-                all_scaffold_densities[scaffold] = 0
-            all_scaffold_densities[scaffold] += density
-    
-    # Sort scaffolds by total density
-    top_scaffolds = sorted(all_scaffold_densities.items(), key=lambda x: x[1], reverse=True)[:top_n]
-    top_scaffold_names = [s[0] for s in top_scaffolds]
-    
-    # Create a dataframe for the heatmap
-    data = []
-    for scaffold in top_scaffold_names:
-        row = {'Scaffold': scaffold}
+    # Check if all_densities is empty or has no treatments
+    if not all_densities:
+        print("Warning: No density data available for heatmap visualization")
+        # Create empty dataframe
+        df = pd.DataFrame({'scaffold_name': [], 'density': []})
+        df.set_index('scaffold_name', inplace=True)
+        top_scaffold_names = []
+    else:
+        # Find top scaffolds across all treatments
+        all_scaffold_densities = {}
+        
         for treatment, densities in all_densities.items():
-            row[treatment] = densities.get(scaffold, 0)
-        data.append(row)
-    
-    df = pd.DataFrame(data)
-    df.set_index('Scaffold', inplace=True)
+            for scaffold, density in densities.items():
+                if scaffold not in all_scaffold_densities:
+                    all_scaffold_densities[scaffold] = 0
+                all_scaffold_densities[scaffold] += density
+        
+        # Check if we have any scaffolds
+        if not all_scaffold_densities:
+            print("Warning: No scaffold density data available")
+            df = pd.DataFrame({'scaffold_name': [], 'density': []})
+            df.set_index('scaffold_name', inplace=True)
+            top_scaffold_names = []
+        else:
+            # Sort scaffolds by total density
+            top_scaffolds = sorted(all_scaffold_densities.items(), key=lambda x: x[1], reverse=True)[:top_n]
+            top_scaffold_names = [s[0] for s in top_scaffolds]
+            
+            # Create a dataframe for the heatmap
+            data = []
+            for scaffold in top_scaffold_names:
+                row = {'scaffold_name': scaffold}
+                for treatment, densities in all_densities.items():
+                    row[treatment] = densities.get(scaffold, 0)
+                data.append(row)
+            
+            df = pd.DataFrame(data)
+            
+            # Check if 'scaffold_name' column exists before trying to set as index
+            if len(data) > 0 and 'scaffold_name' in df.columns:
+                df.set_index('scaffold_name', inplace=True)
+            else:
+                # Handle the case when the column doesn't exist - print columns for debugging
+                print(f"Warning: Expected 'scaffold_name' column not found. Available columns: {df.columns.tolist()}")
+                # In case all_densities is empty or doesn't have the expected structure
+                if len(df.columns) == 0:
+                    print("Creating empty dataframe with scaffold column")
+                    df = pd.DataFrame({'scaffold_name': [], 'density': []})
+                    df.set_index('scaffold_name', inplace=True)
     
     # Create truncated scaffold names for better display
     df.index = [s[:20] + '...' if len(s) > 20 else s for s in df.index]
@@ -350,21 +382,68 @@ def plot_comparative_heatmap(all_densities, output_dir, top_n=30):
     # Create the heatmap
     plt.figure(figsize=(12, 10))
     
+    # Check if we have enough data for meaningful visualization
+    if len(df) == 0 or len(df.columns) < 2:
+        print("Warning: Not enough data for heatmap visualization")
+        
+        # Create a simple message image
+        plt.figure(figsize=(10, 8))
+        plt.text(0.5, 0.5, "Insufficient data for heatmap visualization", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=14)
+        plt.axis('off')
+        plt.savefig(os.path.join(output_dir, f"comparative_density_heatmap_top{top_n}.png"), dpi=300)
+        plt.close()
+        
+        # Create placeholder for treatment correlation
+        plt.figure(figsize=(10, 8))
+        plt.text(0.5, 0.5, "Insufficient data for correlation analysis", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=14)
+        plt.axis('off')
+        plt.savefig(os.path.join(output_dir, "treatment_correlation_heatmap.png"), dpi=300)
+        plt.close()
+        
+        return
+    
     # Create column colors based on adaptation type
     column_colors = [TREATMENT_COLORS.get(t, '#333333') for t in all_densities.keys()]
     
-    # Create heatmap with clustered columns
-    g = sns.clustermap(
-        df,
-        cmap='viridis',
-        col_colors=[column_colors],
-        annot=True,
-        fmt='.2f',
-        linewidths=.5,
-        figsize=(14, 12),
-        dendrogram_ratio=(.1, .2),
-        row_cluster=False  # Keep scaffolds in order of density
-    )
+    try:
+        # Create heatmap with clustered columns
+        g = sns.clustermap(
+            df,
+            cmap='viridis',
+            col_colors=[column_colors],
+            annot=True,
+            fmt='.2f',
+            linewidths=.5,
+            figsize=(14, 12),
+            dendrogram_ratio=(.1, .2),
+            row_cluster=False  # Keep scaffolds in order of density
+        )
+    except Exception as e:
+        print(f"Warning: Could not create clustered heatmap: {e}")
+        
+        # Fall back to a simple heatmap
+        plt.figure(figsize=(12, 10))
+        sns.heatmap(df, cmap='viridis', annot=True, fmt='.2f', linewidths=.5)
+        plt.title('Comparative Variant Density Across Treatments')
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, f"comparative_density_heatmap_top{top_n}.png"), dpi=300)
+        plt.close()
+        
+        # Create placeholder for treatment correlation
+        plt.figure(figsize=(10, 8))
+        if len(df.columns) >= 2:
+            sns.heatmap(df.corr(), annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+            plt.title('Treatment Correlation Based on Scaffold Variant Density')
+        else:
+            plt.text(0.5, 0.5, "Insufficient data for correlation analysis", 
+                    horizontalalignment='center', verticalalignment='center', fontsize=14)
+            plt.axis('off')
+        plt.savefig(os.path.join(output_dir, "treatment_correlation_heatmap.png"), dpi=300)
+        plt.close()
+        
+        return
     
     # Improve the column dendrogram
     g.ax_col_dendrogram.set_visible(True)
@@ -446,9 +525,26 @@ def plot_bubble_chart(counts, scaffold_lengths, treatment, output_dir, top_n=50)
                 'Density': density
             })
     
+    # Check if we have data
+    if not data:
+        print(f"Warning: No valid scaffold data for {treatment}, creating placeholder visualization")
+        plt.figure(figsize=(10, 8))
+        plt.text(0.5, 0.5, f"No significant variant density for {treatment}", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=14)
+        plt.axis('off')
+        plt.savefig(os.path.join(output_dir, f"{treatment}_bubble_chart.png"), dpi=300)
+        plt.close()
+        return
+    
     # Convert to dataframe and sort by density
     df = pd.DataFrame(data)
-    df = df.sort_values('Density', ascending=False).head(top_n)
+    
+    # Check if Density column exists
+    if 'Density' in df.columns and len(df) > 0:
+        df = df.sort_values('Density', ascending=False).head(top_n)
+    else:
+        # Just take the first n rows if we can't sort by density
+        df = df.head(top_n)
     
     # Get treatment metadata
     description = TREATMENT_INFO.get(treatment, {}).get('description', '')
@@ -491,21 +587,63 @@ def plot_bubble_chart(counts, scaffold_lengths, treatment, output_dir, top_n=50)
 # Function to calculate correlation between treatments
 def calculate_treatment_correlations(all_densities, output_dir):
     """Calculate and visualize correlations between treatments based on scaffold density."""
+    # Check if we have enough data for correlation analysis
+    if len(all_densities) < 2:
+        print("Warning: Not enough treatments for correlation analysis")
+        # Create placeholder images
+        plt.figure(figsize=(10, 8))
+        plt.text(0.5, 0.5, "Insufficient data for correlation analysis", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=14)
+        plt.axis('off')
+        plt.savefig(os.path.join(output_dir, "treatment_correlation_heatmap.png"), dpi=300)
+        plt.close()
+        
+        # Create empty dataframes to return
+        empty_corr = pd.DataFrame(columns=TREATMENTS, index=TREATMENTS)
+        empty_adapt = pd.DataFrame(columns=['Temperature', 'Low Oxygen'], index=['Temperature', 'Low Oxygen'])
+        return empty_corr, empty_adapt
+    
     # Get all unique scaffolds across treatments
     all_scaffolds = set()
     for densities in all_densities.values():
         all_scaffolds.update(densities.keys())
     
+    # If no scaffolds, return empty correlation matrices
+    if not all_scaffolds:
+        print("Warning: No scaffold data available for correlation analysis")
+        # Create placeholder images
+        plt.figure(figsize=(10, 8))
+        plt.text(0.5, 0.5, "No scaffold data for correlation analysis", 
+                 horizontalalignment='center', verticalalignment='center', fontsize=14)
+        plt.axis('off')
+        plt.savefig(os.path.join(output_dir, "treatment_correlation_heatmap.png"), dpi=300)
+        plt.close()
+        
+        # Create empty dataframes to return
+        empty_corr = pd.DataFrame(columns=TREATMENTS, index=TREATMENTS)
+        empty_adapt = pd.DataFrame(columns=['Temperature', 'Low Oxygen'], index=['Temperature', 'Low Oxygen'])
+        return empty_corr, empty_adapt
+    
     # Create a dataframe with scaffold densities for each treatment
     data = []
     for scaffold in all_scaffolds:
-        row = {'Scaffold': scaffold}
+        row = {'scaffold_name': scaffold}
         for treatment, densities in all_densities.items():
             row[treatment] = densities.get(scaffold, 0)
         data.append(row)
     
+    # Create DataFrame
     df = pd.DataFrame(data)
-    df.set_index('Scaffold', inplace=True)
+    
+    # Check if we have the expected column
+    if 'scaffold_name' in df.columns:
+        df.set_index('scaffold_name', inplace=True)
+    else:
+        print(f"Warning: Expected column 'scaffold_name' not found. Columns: {df.columns.tolist()}")
+        # If no proper columns, return empty correlation matrices
+        empty_corr = pd.DataFrame(columns=TREATMENTS, index=TREATMENTS)
+        empty_adapt = pd.DataFrame(columns=['Temperature', 'Low Oxygen'], index=['Temperature', 'Low Oxygen'])
+        return empty_corr, empty_adapt
     
     # Calculate correlation matrix
     corr_matrix = df.corr(method='spearman')

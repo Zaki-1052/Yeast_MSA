@@ -328,7 +328,7 @@ def create_treatment_control_visualizations(results_df):
 if __name__ == "__main__":
     # Load results and print initial debug info
     try:
-        results_df = pd.read_csv('treatment_control_analysis/treatment_vs_control_statistics.csv')
+        results_df = pd.read_csv('analysis/treatment_control_analysis/treatment_vs_control_statistics.csv')
         print("Initial data shape:", results_df.shape)
         print("Columns:", results_df.columns.tolist())
         

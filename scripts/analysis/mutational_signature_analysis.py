@@ -130,21 +130,57 @@ def parse_mutation_data(treatment):
     
     if mutation_file:
         try:
-            # Read the extracted mutation data
-            data = pd.read_csv(mutation_file, sep='\t', header=None, 
-                               names=['CHROM', 'POS', 'REF', 'ALT'])
+            # First, let's read the raw content to examine the actual structure
+            with open(mutation_file, 'r') as f:
+                first_line = f.readline().strip()
+                columns = first_line.split('\t')
+                print(f"First line has {len(columns)} columns: {columns}")
+                
+            # Based on file inspection, we know it has line number, CHROM, POS, REF, ALT, Treatment
+            # But we'll read it carefully to handle any variation
+            raw_data = pd.read_csv(mutation_file, sep='\t', header=None)
+            
+            # Check how many columns we have and adjust accordingly
+            if len(raw_data.columns) == 6:  # Line num, CHROM, POS, REF, ALT, Treatment
+                data = raw_data.iloc[:, 1:].copy()  # Skip the first column (line number)
+                data.columns = ['CHROM', 'POS', 'REF', 'ALT', 'Treatment']
+            elif len(raw_data.columns) == 5:  # CHROM, POS, REF, ALT, Treatment
+                data = raw_data.copy()
+                data.columns = ['CHROM', 'POS', 'REF', 'ALT', 'Treatment']
+            else:
+                # If neither 5 nor 6 columns, try to guess based on content
+                print(f"Unexpected column count: {len(raw_data.columns)}. Attempting to adapt.")
+                # If last column has treatment names, assume it's Treatment
+                if raw_data.iloc[:, -1].str.contains('|'.join(TREATMENTS), regex=True).any():
+                    # Extract the main columns we need
+                    if len(raw_data.columns) > 4:
+                        data = raw_data.iloc[:, -5:-1].copy()  # Last 5 columns except the last one
+                        data['Treatment'] = raw_data.iloc[:, -1]
+                        data.columns = ['CHROM', 'POS', 'REF', 'ALT', 'Treatment']
+                    else:
+                        raise ValueError(f"Cannot extract required columns from data with {len(raw_data.columns)} columns")
+                else:
+                    raise ValueError(f"Cannot identify Treatment column in data with {len(raw_data.columns)} columns")
+            
+            # Set Treatment column explicitly to the current treatment
             data['Treatment'] = treatment
             
-            # Add biological context
+            # Add biological context columns
             data['Adaptation'] = TREATMENT_INFO.get(treatment, {}).get('adaptation', 'Unknown')
             data['Has_Gene'] = 'Yes' if TREATMENT_INFO.get(treatment, {}).get('gene') else 'No'
+            
+            # Ensure POS is integer
+            data['POS'] = data['POS'].astype(int)
+            
+            # Print sample data for debugging
+            print(f"Sample data:\n{data.head()}")
             
             print(f"Loaded {len(data)} mutations for {treatment}")
             return data
         except Exception as e:
             print(f"Error reading {mutation_file}: {e}")
     
-    # If no mutation file found, try to extract from VCF
+    # If no mutation file found or error occurred, try to extract from VCF
     return extract_from_vcf(treatment)
 
 # Function to extract mutation data from VCF if data file not found
@@ -200,16 +236,60 @@ def extract_from_vcf(treatment):
     return pd.DataFrame()
 
 # Function to filter data for single nucleotide variants
-def filter_snvs(data):
+# Modified filter_snvs function for mutational_signature_analysis.py
+def filter_snvs(data, debug=True):
     """Filter data to include only single nucleotide variants."""
-    # Keep only rows where REF and ALT are single nucleotides
-    snv_data = data[(data['REF'].str.len() == 1) & (data['ALT'].str.len() == 1)]
+    if debug:
+        print(f"Initial variant count: {len(data)}")
+        if len(data) > 0:
+            print(f"REF column type: {type(data['REF'].iloc[0])}")
+            print(f"Sample REF values: {data['REF'].head().tolist()}")
+            print(f"Sample ALT values: {data['ALT'].head().tolist()}")
     
-    # Keep only ACGT bases (filter out N or other ambiguous bases)
-    valid_bases = snv_data['REF'].isin(['A', 'C', 'G', 'T']) & snv_data['ALT'].isin(['A', 'C', 'G', 'T'])
-    snv_data = snv_data[valid_bases]
+    # Check for non-string data types
+    if not pd.api.types.is_string_dtype(data['REF']) or not pd.api.types.is_string_dtype(data['ALT']):
+        if debug:
+            print("Converting REF/ALT to string types")
+        data = data.copy()
+        data['REF'] = data['REF'].astype(str)
+        data['ALT'] = data['ALT'].astype(str)
     
-    return snv_data
+    # First filtering step: length check
+    length_filter = (data['REF'].str.len() == 1) & (data['ALT'].str.len() == 1)
+    snv_data = data[length_filter]
+    
+    if debug:
+        print(f"After length filter: {len(snv_data)} variants remain")
+        print(f"Removed {len(data) - len(snv_data)} multi-nucleotide variants")
+        if len(data) > 0 and len(snv_data) == 0:
+            # Show some examples of what's being filtered out
+            print("Examples of filtered variants:")
+            multi_nt = data[~length_filter].head(5)
+            for _, row in multi_nt.iterrows():
+                print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
+    
+    # Second filtering step: valid bases
+    # Make case-insensitive by converting to uppercase
+    if len(snv_data) > 0:
+        snv_data = snv_data.copy()
+        snv_data['REF'] = snv_data['REF'].str.upper()
+        snv_data['ALT'] = snv_data['ALT'].str.upper()
+        
+        valid_bases = snv_data['REF'].isin(['A', 'C', 'G', 'T']) & snv_data['ALT'].isin(['A', 'C', 'G', 'T'])
+        final_data = snv_data[valid_bases]
+        
+        if debug:
+            print(f"After ACGT filter: {len(final_data)} variants remain")
+            print(f"Removed {len(snv_data) - len(final_data)} variants with non-ACGT bases")
+            if len(snv_data) > 0 and len(final_data) == 0:
+                print("Examples of non-ACGT bases:")
+                non_acgt = snv_data[~valid_bases].head(5)
+                for _, row in non_acgt.iterrows():
+                    print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
+    else:
+        final_data = snv_data
+    
+    return final_data
 
 # Function to extract sequence context around a variant
 def extract_context_sequence(chrom, pos, ref, alt, reference_genome, context_size=5):
@@ -1814,6 +1894,22 @@ def main():
     # Filter for SNVs
     snv_data = filter_snvs(all_data)
     print(f"Filtered to {len(snv_data)} single nucleotide variants")
+    
+    # Check if we have any SNVs before continuing
+    if len(snv_data) == 0:
+        print("Warning: No single nucleotide variants found after filtering.")
+        print("Creating empty results and skipping analysis.")
+        
+        # Create an empty summary report
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        with open(os.path.join(OUTPUT_DIR, "mutational_signatures_summary.txt"), 'w') as f:
+            f.write("Mutational Signatures Analysis Summary\n")
+            f.write("=====================================\n\n")
+            f.write("No single nucleotide variants found after filtering.\n")
+            f.write("Please check your input data format.\n")
+        
+        print(f"Analysis complete! Empty summary saved to {OUTPUT_DIR}/")
+        return
     
     # Extract context sequences
     contexts_df = extract_all_contexts(snv_data, reference_genome)

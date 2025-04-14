@@ -16,6 +16,7 @@ from scipy.cluster import hierarchy
 from scipy.spatial.distance import pdist, squareform
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+import re
 import warnings
 warnings.filterwarnings('ignore')
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,7 +13,8 @@ import random
 import subprocess
 import logomaker
 from scipy.stats import fisher_exact, chi2_contingency
-import re
+from scipy.cluster import hierarchy
+from scipy.spatial.distance import pdist, squareform
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -53,7 +55,7 @@ ADAPTATION_COLORS = {
 # Define nucleotide complements
 COMPLEMENT = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
 
-# Reference genome path
+# Reference genome path - adjust as needed
 REFERENCE_GENOME = "reference/yeast_w303.fasta"
 
 # Function to find a file trying multiple locations
@@ -120,10 +122,31 @@ def parse_mutation_data(treatment):
     
     if mutation_file:
         try:
-            # Read the extracted mutation data
-            data = pd.read_csv(mutation_file, sep='\t', header=None, 
-                               names=['CHROM', 'POS', 'REF', 'ALT'])
-            data['Treatment'] = treatment
+            # First, let's read the raw content to examine the actual structure
+            with open(mutation_file, 'r') as f:
+                first_line = f.readline().strip()
+                columns = first_line.split('\t')
+                print(f"File structure: {len(columns)} columns in first line")
+                
+            # Based on file inspection, we'll determine the column structure
+            if len(columns) == 5:  # 5-column format: CHROM, POS, REF, ALT, Treatment
+                data = pd.read_csv(mutation_file, sep='\t', header=None)
+                
+                # Assign column names based on position
+                data.columns = ['CHROM', 'POS', 'REF', 'ALT', 'Treatment']
+                
+                # Convert column types
+                data['POS'] = data['POS'].astype(int)
+                
+                # Validate that Treatment column matches expected treatment
+                actual_treatment = data['Treatment'].iloc[0]
+                if actual_treatment != treatment:
+                    print(f"Warning: Treatment in file ({actual_treatment}) doesn't match expected treatment ({treatment})")
+                
+            else:  # Assume 4-column format: CHROM, POS, REF, ALT
+                data = pd.read_csv(mutation_file, sep='\t', header=None, 
+                                  names=['CHROM', 'POS', 'REF', 'ALT'])
+                data['Treatment'] = treatment
             
             # Add biological context
             data['Adaptation'] = TREATMENT_INFO.get(treatment, {}).get('adaptation', 'Unknown')
@@ -177,8 +200,8 @@ def extract_from_vcf(treatment):
                 data['Has_Gene'] = 'Yes' if TREATMENT_INFO.get(treatment, {}).get('gene') else 'No'
                 
                 # Save extracted data for future use
-                os.makedirs("mutation_spectrum_analysis", exist_ok=True)
-                data.to_csv(f"mutation_spectrum_analysis/{treatment}_mutations.txt", 
+                os.makedirs("analysis/mutation_spectrum_analysis", exist_ok=True)
+                data.to_csv(f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt", 
                           sep='\t', index=False, header=False)
                 
                 print(f"Extracted and saved {len(data)} mutations for {treatment}")
@@ -190,6 +213,7 @@ def extract_from_vcf(treatment):
     return pd.DataFrame()
 
 # Function to filter data for single nucleotide variants
+# Modified filter_snvs function for genomic_context_analysis.py
 def filter_snvs(data, debug=True):
     """Filter data to include only single nucleotide variants."""
     if debug:
@@ -244,7 +268,7 @@ def filter_snvs(data, debug=True):
     
     return final_data
 
-# Function to extract sequence context around a variant
+# Function to extract context sequence around a variant
 def extract_context_sequence(chrom, pos, ref, reference_genome, context_size=100):
     """Extract sequence context around a variant position."""
     if chrom not in reference_genome:
@@ -264,12 +288,6 @@ def extract_context_sequence(chrom, pos, ref, reference_genome, context_size=100
     left_offset = pos - 1 - start
     right_offset = end - pos
     
-    # Check if the reference base matches what's in the sequence
-    if left_offset >= 0 and left_offset < len(context):
-        seq_ref = context[left_offset]
-        if seq_ref != ref:
-            print(f"Warning: Reference base mismatch at {chrom}:{pos}. Expected {ref}, found {seq_ref}")
-    
     return {
         'context': context,
         'variant_index': left_offset,
@@ -287,6 +305,7 @@ def extract_all_context_sequences(data, reference_genome, context_size=100):
             row['CHROM'], row['POS'], row['REF'], reference_genome, context_size)
         
         if context_data:
+            # Keep adaptation and gene status information
             contexts.append({
                 'CHROM': row['CHROM'],
                 'POS': row['POS'],
@@ -314,7 +333,7 @@ def generate_control_contexts(reference_genome, num_controls=1000, context_size=
             continue
         
         # Add all valid positions
-        for pos in range(context_size, len(sequence) - context_size, 1000):  # Sample every 1000bp to speed up
+        for pos in range(context_size, len(sequence) - context_size):
             ref_base = sequence[pos]
             if ref_base in 'ACGT':  # Skip ambiguous bases
                 all_positions.append((scaffold, pos, ref_base))
@@ -449,6 +468,7 @@ def extract_immediate_contexts(contexts_df, context_size=5):
         
         # Ensure we have the reference base at the variant position
         if rel_var_idx < len(immediate_context) and immediate_context[rel_var_idx] == row['REF']:
+            # Preserve adaptation and gene status information
             immediate_contexts.append({
                 'CHROM': row['CHROM'],
                 'POS': row['POS'],
@@ -462,6 +482,265 @@ def extract_immediate_contexts(contexts_df, context_size=5):
             })
     
     return pd.DataFrame(immediate_contexts)
+
+# Function to standardize mutation context
+def standardize_mutation_context(context, var_idx, ref, alt):
+    """Standardize mutation context to use pyrimidine reference."""
+    if ref in 'CT':  # Reference is already a pyrimidine
+        return context, var_idx, ref, alt
+    
+    # Reference is a purine, need to complement
+    comp_context = ''.join(COMPLEMENT.get(base, 'N') for base in context)
+    comp_ref = COMPLEMENT.get(ref, 'N')
+    comp_alt = COMPLEMENT.get(alt, 'N')
+    
+    return comp_context, var_idx, comp_ref, comp_alt
+
+# Function to create position-specific context matrix
+def create_context_matrix(contexts_df, window=5):
+    """Create a position-specific nucleotide frequency matrix."""
+    # Initialize matrix dimensions (positions x nucleotides)
+    positions = range(-window, window + 1)
+    nucleotides = ['A', 'C', 'G', 'T']
+    
+    # Create empty matrix
+    matrix = {pos: {nt: 0 for nt in nucleotides} for pos in positions}
+    
+    # Group by treatment and mutation type
+    grouped = contexts_df.groupby(['Treatment', 'REF', 'ALT'])
+    
+    # Process each group separately
+    context_matrices = {}
+    
+    for (treatment, ref, alt), group in grouped:
+        # Skip if too few contexts
+        if len(group) < 5:
+            continue
+        
+        # Reset matrix counts
+        for pos in positions:
+            for nt in nucleotides:
+                matrix[pos][nt] = 0
+        
+        # Count nucleotides at each position
+        for _, row in group.iterrows():
+            ctx = row['immediate_context']
+            var_idx = row['variant_index']
+            
+            # Standardize context if needed
+            std_ctx, std_idx, std_ref, std_alt = standardize_mutation_context(
+                ctx, var_idx, ref, alt)
+            
+            # Count nucleotides at each position relative to variant
+            for i, pos in enumerate(range(-window, window + 1)):
+                abs_pos = std_idx + pos
+                if 0 <= abs_pos < len(std_ctx):
+                    nt = std_ctx[abs_pos]
+                    if nt in nucleotides:
+                        matrix[pos][nt] += 1
+        
+        # Create a copy of the matrix for this group
+        mutation_key = f"{treatment}:{ref}>{alt}"
+        context_matrices[mutation_key] = {pos: dict(nts) for pos, nts in matrix.items()}
+    
+    # Also create adaptation-specific matrices
+    adaptation_matrices = {}
+    adaptation_grouped = contexts_df.groupby(['Adaptation', 'REF', 'ALT'])
+    
+    for (adaptation, ref, alt), group in adaptation_grouped:
+        # Skip if too few contexts
+        if len(group) < 5:
+            continue
+        
+        # Reset matrix counts
+        for pos in positions:
+            for nt in nucleotides:
+                matrix[pos][nt] = 0
+        
+        # Count nucleotides at each position
+        for _, row in group.iterrows():
+            ctx = row['immediate_context']
+            var_idx = row['variant_index']
+            
+            # Standardize context if needed
+            std_ctx, std_idx, std_ref, std_alt = standardize_mutation_context(
+                ctx, var_idx, ref, alt)
+            
+            # Count nucleotides at each position relative to variant
+            for i, pos in enumerate(range(-window, window + 1)):
+                abs_pos = std_idx + pos
+                if 0 <= abs_pos < len(std_ctx):
+                    nt = std_ctx[abs_pos]
+                    if nt in nucleotides:
+                        matrix[pos][nt] += 1
+        
+        # Create a copy of the matrix for this adaptation group
+        adaptation_key = f"{adaptation}:{ref}>{alt}"
+        adaptation_matrices[adaptation_key] = {pos: dict(nts) for pos, nts in matrix.items()}
+    
+    # Also create gene-specific matrices
+    gene_matrices = {}
+    gene_grouped = contexts_df.groupby(['Has_Gene', 'REF', 'ALT'])
+    
+    for (has_gene, ref, alt), group in gene_grouped:
+        # Skip if too few contexts
+        if len(group) < 5:
+            continue
+        
+        # Reset matrix counts
+        for pos in positions:
+            for nt in nucleotides:
+                matrix[pos][nt] = 0
+        
+        # Count nucleotides at each position
+        for _, row in group.iterrows():
+            ctx = row['immediate_context']
+            var_idx = row['variant_index']
+            
+            # Standardize context if needed
+            std_ctx, std_idx, std_ref, std_alt = standardize_mutation_context(
+                ctx, var_idx, ref, alt)
+            
+            # Count nucleotides at each position relative to variant
+            for i, pos in enumerate(range(-window, window + 1)):
+                abs_pos = std_idx + pos
+                if 0 <= abs_pos < len(std_ctx):
+                    nt = std_ctx[abs_pos]
+                    if nt in nucleotides:
+                        matrix[pos][nt] += 1
+        
+        # Create a copy of the matrix for this gene status group
+        gene_key = f"{'Gene' if has_gene == 'Yes' else 'NoGene'}:{ref}>{alt}"
+        gene_matrices[gene_key] = {pos: dict(nts) for pos, nts in matrix.items()}
+    
+    return context_matrices, adaptation_matrices, gene_matrices
+
+# Function to plot sequence logos
+def plot_sequence_logos(context_matrices, output_dir):
+    """Generate sequence logo plots for mutation contexts."""
+    for mutation_key, matrix in context_matrices.items():
+        # Extract treatment and mutation type
+        parts = mutation_key.split(':')
+        if len(parts) != 2:
+            continue
+        
+        treatment, mut_type = parts
+        
+        # Get treatment metadata
+        description = TREATMENT_INFO.get(treatment, {}).get('description', '')
+        adaptation = TREATMENT_INFO.get(treatment, {}).get('adaptation', '')
+        has_gene = TREATMENT_INFO.get(treatment, {}).get('gene')
+        gene_text = f" with {has_gene} gene" if has_gene else ""
+        
+        # Create DataFrame for logomaker
+        df = pd.DataFrame(matrix).T
+        
+        # Normalize columns to get probabilities
+        for pos in df.index:
+            total = df.loc[pos].sum()
+            if total > 0:
+                df.loc[pos] = df.loc[pos] / total
+        
+        # Create sequence logo
+        try:
+            plt.figure(figsize=(10, 3))
+            logo = logomaker.Logo(df, color_scheme='classic')
+            
+            # Customize plot
+            logo.ax.set_xlabel('Position Relative to Mutation')
+            logo.ax.set_ylabel('Probability')
+            logo.ax.set_title(f'Sequence Context for {treatment}: {mut_type}\n{description} ({adaptation} adaptation{gene_text})')
+            
+            # Mark mutation position
+            logo.ax.axvline(x=0, color='red', linestyle='--', alpha=0.5)
+            
+            # Save plot
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_dir, f"logo_{treatment}_{mut_type.replace('>', '_to_')}.png"), dpi=300)
+            plt.close()
+        except Exception as e:
+            print(f"Error creating logo for {mutation_key}: {e}")
+
+# Function to plot adaptation-specific sequence logos
+def plot_adaptation_logos(adaptation_matrices, output_dir):
+    """Generate adaptation-specific sequence logo plots."""
+    for adaptation_key, matrix in adaptation_matrices.items():
+        # Extract adaptation and mutation type
+        parts = adaptation_key.split(':')
+        if len(parts) != 2:
+            continue
+        
+        adaptation, mut_type = parts
+        
+        # Create DataFrame for logomaker
+        df = pd.DataFrame(matrix).T
+        
+        # Normalize columns to get probabilities
+        for pos in df.index:
+            total = df.loc[pos].sum()
+            if total > 0:
+                df.loc[pos] = df.loc[pos] / total
+        
+        # Create sequence logo
+        try:
+            plt.figure(figsize=(10, 3))
+            logo = logomaker.Logo(df, color_scheme='classic')
+            
+            # Customize plot
+            logo.ax.set_xlabel('Position Relative to Mutation')
+            logo.ax.set_ylabel('Probability')
+            logo.ax.set_title(f'Sequence Context for {adaptation} Adaptation: {mut_type}')
+            
+            # Mark mutation position
+            logo.ax.axvline(x=0, color='red', linestyle='--', alpha=0.5)
+            
+            # Save plot
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_dir, f"logo_{adaptation}_{mut_type.replace('>', '_to_')}.png"), dpi=300)
+            plt.close()
+        except Exception as e:
+            print(f"Error creating logo for {adaptation_key}: {e}")
+
+# Function to plot gene-specific sequence logos
+def plot_gene_logos(gene_matrices, output_dir):
+    """Generate gene-specific sequence logo plots."""
+    for gene_key, matrix in gene_matrices.items():
+        # Extract gene status and mutation type
+        parts = gene_key.split(':')
+        if len(parts) != 2:
+            continue
+        
+        gene_status, mut_type = parts
+        display_status = "Gene-Modified" if gene_status == "Gene" else "Non-Modified"
+        
+        # Create DataFrame for logomaker
+        df = pd.DataFrame(matrix).T
+        
+        # Normalize columns to get probabilities
+        for pos in df.index:
+            total = df.loc[pos].sum()
+            if total > 0:
+                df.loc[pos] = df.loc[pos] / total
+        
+        # Create sequence logo
+        try:
+            plt.figure(figsize=(10, 3))
+            logo = logomaker.Logo(df, color_scheme='classic')
+            
+            # Customize plot
+            logo.ax.set_xlabel('Position Relative to Mutation')
+            logo.ax.set_ylabel('Probability')
+            logo.ax.set_title(f'Sequence Context for {display_status} Strains: {mut_type}')
+            
+            # Mark mutation position
+            logo.ax.axvline(x=0, color='red', linestyle='--', alpha=0.5)
+            
+            # Save plot
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_dir, f"logo_{gene_status}_{mut_type.replace('>', '_to_')}.png"), dpi=300)
+            plt.close()
+        except Exception as e:
+            print(f"Error creating logo for {gene_key}: {e}")
 
 # Function to plot GC content distribution
 def plot_gc_content(contexts_df, control_df, output_dir):
@@ -483,7 +762,7 @@ def plot_gc_content(contexts_df, control_df, output_dir):
     plt.savefig(os.path.join(output_dir, "gc_content_distribution.png"), dpi=300)
     plt.close()
     
-    # Plot GC content by treatment with biological context
+    # Plot GC content by treatment
     plt.figure(figsize=(12, 6))
     
     # Group by treatment
@@ -491,20 +770,7 @@ def plot_gc_content(contexts_df, control_df, output_dir):
     
     for treatment in treatments:
         treatment_data = contexts_df[contexts_df['Treatment'] == treatment]
-        adaptation = TREATMENT_INFO.get(treatment, {}).get('adaptation', 'Unknown')
-        gene = TREATMENT_INFO.get(treatment, {}).get('gene')
-        
-        label = f"{treatment} ({adaptation}"
-        if gene:
-            label += f", {gene} gene"
-        label += ")"
-        
-        # Use consistent treatment colors
-        sns.kdeplot(
-            treatment_data['gc_content'], 
-            label=label,
-            color=TREATMENT_COLORS.get(treatment, '#999999')
-        )
+        sns.kdeplot(treatment_data['gc_content'], label=f'{treatment}', color=TREATMENT_COLORS.get(treatment, '#333333'))
     
     # Add control
     sns.kdeplot(control_df['gc_content'], label='Control', linestyle='--', color='black')
@@ -524,15 +790,9 @@ def plot_gc_content(contexts_df, control_df, output_dir):
     plt.figure(figsize=(12, 6))
     
     # Group by adaptation
-    adaptation_groups = contexts_df.groupby('Adaptation')
-    
-    for adaptation, group in adaptation_groups:
-        # Use adaptation colors
-        sns.kdeplot(
-            group['gc_content'], 
-            label=f'{adaptation} Adaptation',
-            color=ADAPTATION_COLORS.get(adaptation, '#999999')
-        )
+    for adaptation in contexts_df['Adaptation'].unique():
+        adaptation_data = contexts_df[contexts_df['Adaptation'] == adaptation]
+        sns.kdeplot(adaptation_data['gc_content'], label=f'{adaptation}', color=ADAPTATION_COLORS.get(adaptation, '#333333'))
     
     # Add control
     sns.kdeplot(control_df['gc_content'], label='Control', linestyle='--', color='black')
@@ -552,15 +812,11 @@ def plot_gc_content(contexts_df, control_df, output_dir):
     plt.figure(figsize=(12, 6))
     
     # Group by gene status
-    gene_groups = contexts_df.groupby('Has_Gene')
-    
-    for has_gene, group in gene_groups:
-        status = "Gene-Modified" if has_gene == "Yes" else "Non-Modified"
-        sns.kdeplot(
-            group['gc_content'], 
-            label=f'{status} Strains',
-            color='#1b9e77' if has_gene == "Yes" else '#d95f02'
-        )
+    for has_gene in contexts_df['Has_Gene'].unique():
+        gene_data = contexts_df[contexts_df['Has_Gene'] == has_gene]
+        gene_label = "Gene-Modified" if has_gene == "Yes" else "Non-Modified"
+        gene_color = "#1b9e77" if has_gene == "Yes" else "#d95f02"
+        sns.kdeplot(gene_data['gc_content'], label=gene_label, color=gene_color)
     
     # Add control
     sns.kdeplot(control_df['gc_content'], label='Control', linestyle='--', color='black')
@@ -573,27 +829,41 @@ def plot_gc_content(contexts_df, control_df, output_dir):
     
     # Save plot
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "gc_content_by_gene.png"), dpi=300)
+    plt.savefig(os.path.join(output_dir, "gc_content_by_gene_status.png"), dpi=300)
     plt.close()
     
-    # Plot local GC content
-    plt.figure(figsize=(10, 6))
+    # Plot GC content by adaptation and gene status
+    plt.figure(figsize=(14, 6))
     
-    # Plot local GC content distribution
-    sns.kdeplot(contexts_df['local_gc_content'], label='Local Variant Regions')
+    # Group by adaptation and gene status
+    contexts_df['Group'] = contexts_df.apply(
+        lambda row: f"{row['Adaptation']} ({row['Has_Gene'] == 'Yes' and 'Gene' or 'No Gene'})",
+        axis=1
+    )
+    
+    for group in sorted(contexts_df['Group'].unique()):
+        group_data = contexts_df[contexts_df['Group'] == group]
+        adaptation = group.split()[0]
+        is_gene = "Gene" in group
+        color = ADAPTATION_COLORS.get(adaptation, '#333333')
+        style = '-' if is_gene else '--'
+        sns.kdeplot(group_data['gc_content'], label=group, color=color, linestyle=style)
+    
+    # Add control
+    sns.kdeplot(control_df['gc_content'], label='Control', linestyle=':', color='black')
     
     # Customize plot
-    plt.xlabel('Local GC Content (±10bp)')
+    plt.xlabel('GC Content')
     plt.ylabel('Density')
-    plt.title('Local GC Content Distribution Around Variants')
+    plt.title('GC Content Distribution by Adaptation Type and Gene Status')
     plt.legend()
     
     # Save plot
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "local_gc_content_distribution.png"), dpi=300)
+    plt.savefig(os.path.join(output_dir, "gc_content_by_adaptation_gene.png"), dpi=300)
     plt.close()
 
-# Function to plot sequence features
+# Function to plot local sequence features
 def plot_sequence_features(contexts_df, output_dir):
     """Plot local sequence features around variants."""
     # Group by treatment
@@ -603,24 +873,14 @@ def plot_sequence_features(contexts_df, output_dir):
     homopolymer_data = contexts_df.groupby('Treatment')['nearby_homopolymer'].mean()
     
     plt.figure(figsize=(10, 6))
-    bars = plt.bar(
-        homopolymer_data.index, 
-        homopolymer_data.values, 
-        color=[TREATMENT_COLORS.get(t, '#999999') for t in homopolymer_data.index]
-    )
+    bars = plt.bar(homopolymer_data.index, homopolymer_data.values, 
+                  color=[TREATMENT_COLORS.get(t, '#333333') for t in homopolymer_data.index])
     
     # Add value labels
     for bar in bars:
         height = bar.get_height()
         plt.text(bar.get_x() + bar.get_width()/2., height + 0.01,
                 f'{height:.2f}', ha='center', va='bottom')
-    
-    # Add treatment descriptions in x-labels
-    plt.xticks(
-        range(len(treatments)),
-        [f"{t}\n({TREATMENT_INFO.get(t, {}).get('adaptation', 'Unknown')})" for t in treatments],
-        rotation=0
-    )
     
     plt.xlabel('Treatment')
     plt.ylabel('Fraction with Nearby Homopolymer')
@@ -635,24 +895,14 @@ def plot_sequence_features(contexts_df, output_dir):
     dinucleotide_data = contexts_df.groupby('Treatment')['nearby_dinucleotide_repeat'].mean()
     
     plt.figure(figsize=(10, 6))
-    bars = plt.bar(
-        dinucleotide_data.index, 
-        dinucleotide_data.values, 
-        color=[TREATMENT_COLORS.get(t, '#999999') for t in dinucleotide_data.index]
-    )
+    bars = plt.bar(dinucleotide_data.index, dinucleotide_data.values, 
+                  color=[TREATMENT_COLORS.get(t, '#333333') for t in dinucleotide_data.index])
     
     # Add value labels
     for bar in bars:
         height = bar.get_height()
         plt.text(bar.get_x() + bar.get_width()/2., height + 0.01,
                 f'{height:.2f}', ha='center', va='bottom')
-    
-    # Add treatment descriptions in x-labels
-    plt.xticks(
-        range(len(treatments)),
-        [f"{t}\n({TREATMENT_INFO.get(t, {}).get('adaptation', 'Unknown')})" for t in treatments],
-        rotation=0
-    )
     
     plt.xlabel('Treatment')
     plt.ylabel('Fraction with Nearby Dinucleotide Repeat')
@@ -662,19 +912,13 @@ def plot_sequence_features(contexts_df, output_dir):
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, "dinucleotide_repeat_by_treatment.png"), dpi=300)
     plt.close()
-
-# Function to plot sequence features by adaptation type
-def plot_sequence_features_by_adaptation(contexts_df, output_dir):
-    """Plot sequence features grouped by adaptation type."""
-    # Plot homopolymer presence by adaptation
-    homopolymer_data = contexts_df.groupby('Adaptation')['nearby_homopolymer'].mean()
     
-    plt.figure(figsize=(8, 6))
-    bars = plt.bar(
-        homopolymer_data.index, 
-        homopolymer_data.values, 
-        color=[ADAPTATION_COLORS.get(a, '#999999') for a in homopolymer_data.index]
-    )
+    # Plot by adaptation type
+    homopolymer_adaptation = contexts_df.groupby('Adaptation')['nearby_homopolymer'].mean()
+    
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(homopolymer_adaptation.index, homopolymer_adaptation.values, 
+                  color=[ADAPTATION_COLORS.get(a, '#333333') for a in homopolymer_adaptation.index])
     
     # Add value labels
     for bar in bars:
@@ -685,67 +929,19 @@ def plot_sequence_features_by_adaptation(contexts_df, output_dir):
     plt.xlabel('Adaptation Type')
     plt.ylabel('Fraction with Nearby Homopolymer')
     plt.title('Homopolymer Presence Near Variants by Adaptation Type')
-    plt.ylim(0, max(homopolymer_data.values) * 1.1)
+    plt.ylim(0, max(homopolymer_adaptation.values) * 1.1)
     
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, "homopolymer_by_adaptation.png"), dpi=300)
     plt.close()
     
-    # Plot dinucleotide repeat presence by adaptation
-    dinucleotide_data = contexts_df.groupby('Adaptation')['nearby_dinucleotide_repeat'].mean()
+    # Plot features by gene modification status
+    homopolymer_gene = contexts_df.groupby('Has_Gene')['nearby_homopolymer'].mean()
     
-    plt.figure(figsize=(8, 6))
-    bars = plt.bar(
-        dinucleotide_data.index, 
-        dinucleotide_data.values, 
-        color=[ADAPTATION_COLORS.get(a, '#999999') for a in dinucleotide_data.index]
-    )
-    
-    # Add value labels
-    for bar in bars:
-        height = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width()/2., height + 0.01,
-                f'{height:.2f}', ha='center', va='bottom')
-    
-    plt.xlabel('Adaptation Type')
-    plt.ylabel('Fraction with Nearby Dinucleotide Repeat')
-    plt.title('Dinucleotide Repeat Presence Near Variants by Adaptation Type')
-    plt.ylim(0, max(dinucleotide_data.values) * 1.1)
-    
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "dinucleotide_repeat_by_adaptation.png"), dpi=300)
-    plt.close()
-    
-    # Plot GC content by adaptation in a boxplot
-    plt.figure(figsize=(8, 6))
-    
-    sns.boxplot(
-        x='Adaptation', 
-        y='gc_content', 
-        data=contexts_df, 
-        palette=ADAPTATION_COLORS
-    )
-    
-    plt.xlabel('Adaptation Type')
-    plt.ylabel('GC Content')
-    plt.title('GC Content Distribution by Adaptation Type')
-    
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "gc_content_boxplot_by_adaptation.png"), dpi=300)
-    plt.close()
-
-# Function to plot sequence features by gene status
-def plot_sequence_features_by_gene(contexts_df, output_dir):
-    """Plot sequence features grouped by gene modification status."""
-    # Plot homopolymer presence by gene status
-    homopolymer_data = contexts_df.groupby('Has_Gene')['nearby_homopolymer'].mean()
-    
-    plt.figure(figsize=(8, 6))
-    bars = plt.bar(
-        ['Non-Modified', 'Gene-Modified'] if 'No' in homopolymer_data.index else ['Gene-Modified', 'Non-Modified'],
-        homopolymer_data.values,
-        color=['#d95f02', '#1b9e77'] if 'No' in homopolymer_data.index else ['#1b9e77', '#d95f02']
-    )
+    plt.figure(figsize=(10, 6))
+    gene_labels = ["Gene-Modified" if g == "Yes" else "Non-Modified" for g in homopolymer_gene.index]
+    bars = plt.bar(gene_labels, homopolymer_gene.values, 
+                  color=["#1b9e77" if g == "Yes" else "#d95f02" for g in homopolymer_gene.index])
     
     # Add value labels
     for bar in bars:
@@ -756,21 +952,30 @@ def plot_sequence_features_by_gene(contexts_df, output_dir):
     plt.xlabel('Gene Modification Status')
     plt.ylabel('Fraction with Nearby Homopolymer')
     plt.title('Homopolymer Presence Near Variants by Gene Modification Status')
-    plt.ylim(0, max(homopolymer_data.values) * 1.1)
+    plt.ylim(0, max(homopolymer_gene.values) * 1.1)
     
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "homopolymer_by_gene.png"), dpi=300)
+    plt.savefig(os.path.join(output_dir, "homopolymer_by_gene_status.png"), dpi=300)
     plt.close()
     
-    # Plot dinucleotide repeat presence by gene status
-    dinucleotide_data = contexts_df.groupby('Has_Gene')['nearby_dinucleotide_repeat'].mean()
-    
-    plt.figure(figsize=(8, 6))
-    bars = plt.bar(
-        ['Non-Modified', 'Gene-Modified'] if 'No' in dinucleotide_data.index else ['Gene-Modified', 'Non-Modified'],
-        dinucleotide_data.values,
-        color=['#d95f02', '#1b9e77'] if 'No' in dinucleotide_data.index else ['#1b9e77', '#d95f02']
+    # Plot features by adaptation type and gene status combined
+    contexts_df['Group'] = contexts_df.apply(
+        lambda row: f"{row['Adaptation']} ({'Gene' if row['Has_Gene'] == 'Yes' else 'No Gene'})",
+        axis=1
     )
+    
+    homopolymer_combined = contexts_df.groupby('Group')['nearby_homopolymer'].mean().sort_values(ascending=False)
+    
+    plt.figure(figsize=(12, 6))
+    bars = plt.bar(homopolymer_combined.index, homopolymer_combined.values)
+    
+    # Color bars by adaptation type and pattern by gene status
+    for i, (group, _) in enumerate(homopolymer_combined.items()):
+        adaptation = group.split()[0]
+        is_gene = "Gene" in group
+        bars[i].set_color(ADAPTATION_COLORS.get(adaptation, '#333333'))
+        if not is_gene:
+            bars[i].set_hatch('//')
     
     # Add value labels
     for bar in bars:
@@ -778,362 +983,319 @@ def plot_sequence_features_by_gene(contexts_df, output_dir):
         plt.text(bar.get_x() + bar.get_width()/2., height + 0.01,
                 f'{height:.2f}', ha='center', va='bottom')
     
-    plt.xlabel('Gene Modification Status')
-    plt.ylabel('Fraction with Nearby Dinucleotide Repeat')
-    plt.title('Dinucleotide Repeat Presence Near Variants by Gene Modification Status')
-    plt.ylim(0, max(dinucleotide_data.values) * 1.1)
+    plt.xlabel('Adaptation Type and Gene Status')
+    plt.ylabel('Fraction with Nearby Homopolymer')
+    plt.title('Homopolymer Presence by Adaptation Type and Gene Status')
+    plt.xticks(rotation=45, ha='right')
+    plt.ylim(0, max(homopolymer_combined.values) * 1.1)
     
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "dinucleotide_repeat_by_gene.png"), dpi=300)
+    plt.savefig(os.path.join(output_dir, "homopolymer_by_adaptation_gene.png"), dpi=300)
+    plt.close()
+
+# Function to analyze immediate mutation context patterns
+def analyze_mutation_context_patterns(contexts_df, output_dir):
+    """Analyze and visualize immediate nucleotide context patterns around mutations."""
+    # Group by reference and alternate base
+    grouped = contexts_df.groupby(['REF', 'ALT'])
+    
+    # Process each mutation type
+    for (ref, alt), group in grouped:
+        # Skip if too few contexts
+        if len(group) < 10:
+            continue
+        
+        mutation_type = f"{ref}>{alt}"
+        
+        # Analyze -1 position
+        minus1_counts = Counter()
+        
+        for _, row in group.iterrows():
+            ctx = row['immediate_context']
+            var_idx = row['variant_index']
+            
+            # Get -1 position
+            if var_idx > 0:
+                minus1_base = ctx[var_idx - 1]
+                if minus1_base in 'ACGT':
+                    minus1_counts[minus1_base] += 1
+        
+        # Analyze +1 position
+        plus1_counts = Counter()
+        
+        for _, row in group.iterrows():
+            ctx = row['immediate_context']
+            var_idx = row['variant_index']
+            
+            # Get +1 position
+            if var_idx < len(ctx) - 1:
+                plus1_base = ctx[var_idx + 1]
+                if plus1_base in 'ACGT':
+                    plus1_counts[plus1_base] += 1
+        
+        # Plot -1 position distribution
+        plt.figure(figsize=(12, 5))
+        
+        plt.subplot(1, 2, 1)
+        bases = ['A', 'C', 'G', 'T']
+        values = [minus1_counts.get(base, 0) for base in bases]
+        plt.bar(bases, values, color=['green', 'blue', 'orange', 'red'])
+        plt.xlabel('Nucleotide at -1 Position')
+        plt.ylabel('Count')
+        plt.title(f'{mutation_type}: Base Before Mutation')
+        
+        # Plot +1 position distribution
+        plt.subplot(1, 2, 2)
+        values = [plus1_counts.get(base, 0) for base in bases]
+        plt.bar(bases, values, color=['green', 'blue', 'orange', 'red'])
+        plt.xlabel('Nucleotide at +1 Position')
+        plt.ylabel('Count')
+        plt.title(f'{mutation_type}: Base After Mutation')
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, f"adjacent_bases_{ref}_to_{alt}.png"), dpi=300)
+        plt.close()
+    
+    # Analyze by adaptation type
+    for adaptation in contexts_df['Adaptation'].unique():
+        adaptation_data = contexts_df[contexts_df['Adaptation'] == adaptation]
+        adaptation_grouped = adaptation_data.groupby(['REF', 'ALT'])
+        
+        for (ref, alt), group in adaptation_grouped:
+            # Skip if too few contexts
+            if len(group) < 10:
+                continue
+            
+            mutation_type = f"{ref}>{alt}"
+            
+            # Analyze -1 position
+            minus1_counts = Counter()
+            
+            for _, row in group.iterrows():
+                ctx = row['immediate_context']
+                var_idx = row['variant_index']
+                
+                # Get -1 position
+                if var_idx > 0:
+                    minus1_base = ctx[var_idx - 1]
+                    if minus1_base in 'ACGT':
+                        minus1_counts[minus1_base] += 1
+            
+            # Analyze +1 position
+            plus1_counts = Counter()
+            
+            for _, row in group.iterrows():
+                ctx = row['immediate_context']
+                var_idx = row['variant_index']
+                
+                # Get +1 position
+                if var_idx < len(ctx) - 1:
+                    plus1_base = ctx[var_idx + 1]
+                    if plus1_base in 'ACGT':
+                        plus1_counts[plus1_base] += 1
+            
+            # Plot -1 position distribution
+            plt.figure(figsize=(12, 5))
+            
+            plt.subplot(1, 2, 1)
+            bases = ['A', 'C', 'G', 'T']
+            values = [minus1_counts.get(base, 0) for base in bases]
+            plt.bar(bases, values, color=['green', 'blue', 'orange', 'red'])
+            plt.xlabel('Nucleotide at -1 Position')
+            plt.ylabel('Count')
+            plt.title(f'{adaptation} - {mutation_type}: Base Before Mutation')
+            
+            # Plot +1 position distribution
+            plt.subplot(1, 2, 2)
+            values = [plus1_counts.get(base, 0) for base in bases]
+            plt.bar(bases, values, color=['green', 'blue', 'orange', 'red'])
+            plt.xlabel('Nucleotide at +1 Position')
+            plt.ylabel('Count')
+            plt.title(f'{adaptation} - {mutation_type}: Base After Mutation')
+            
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_dir, f"adjacent_bases_{adaptation}_{ref}_to_{alt}.png"), dpi=300)
+            plt.close()
+    
+    # Analyze by gene modification status
+    for has_gene in contexts_df['Has_Gene'].unique():
+        gene_data = contexts_df[contexts_df['Has_Gene'] == has_gene]
+        gene_status = "Gene-Modified" if has_gene == "Yes" else "Non-Modified"
+        gene_grouped = gene_data.groupby(['REF', 'ALT'])
+        
+        for (ref, alt), group in gene_grouped:
+            # Skip if too few contexts
+            if len(group) < 10:
+                continue
+            
+            mutation_type = f"{ref}>{alt}"
+            
+            # Analyze -1 position
+            minus1_counts = Counter()
+            
+            for _, row in group.iterrows():
+                ctx = row['immediate_context']
+                var_idx = row['variant_index']
+                
+                # Get -1 position
+                if var_idx > 0:
+                    minus1_base = ctx[var_idx - 1]
+                    if minus1_base in 'ACGT':
+                        minus1_counts[minus1_base] += 1
+            
+            # Analyze +1 position
+            plus1_counts = Counter()
+            
+            for _, row in group.iterrows():
+                ctx = row['immediate_context']
+                var_idx = row['variant_index']
+                
+                # Get +1 position
+                if var_idx < len(ctx) - 1:
+                    plus1_base = ctx[var_idx + 1]
+                    if plus1_base in 'ACGT':
+                        plus1_counts[plus1_base] += 1
+            
+            # Plot -1 position distribution
+            plt.figure(figsize=(12, 5))
+            
+            plt.subplot(1, 2, 1)
+            bases = ['A', 'C', 'G', 'T']
+            values = [minus1_counts.get(base, 0) for base in bases]
+            plt.bar(bases, values, color=['green', 'blue', 'orange', 'red'])
+            plt.xlabel('Nucleotide at -1 Position')
+            plt.ylabel('Count')
+            plt.title(f'{gene_status} - {mutation_type}: Base Before Mutation')
+            
+            # Plot +1 position distribution
+            plt.subplot(1, 2, 2)
+            values = [plus1_counts.get(base, 0) for base in bases]
+            plt.bar(bases, values, color=['green', 'blue', 'orange', 'red'])
+            plt.xlabel('Nucleotide at +1 Position')
+            plt.ylabel('Count')
+            plt.title(f'{gene_status} - {mutation_type}: Base After Mutation')
+            
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_dir, f"adjacent_bases_{has_gene}_{ref}_to_{alt}.png"), dpi=300)
+            plt.close()
+
+# Function to analyze mutation context by treatment
+def analyze_context_by_treatment(contexts_df, output_dir):
+    """Analyze and compare sequence contexts between treatments."""
+    # Group by treatment and mutation type
+    grouped = contexts_df.groupby(['Treatment', 'REF', 'ALT'])
+    
+    # Count each mutation type by treatment
+    counts = {}
+    for (treatment, ref, alt), group in grouped:
+        mutation_type = f"{ref}>{alt}"
+        if treatment not in counts:
+            counts[treatment] = {}
+        counts[treatment][mutation_type] = len(group)
+    
+    # Create dataframe for heatmap
+    treatments = sorted(contexts_df['Treatment'].unique())
+    mutation_types = sorted(set(f"{ref}>{alt}" for ref, alt in 
+                            zip(contexts_df['REF'], contexts_df['ALT'])))
+    
+    data = []
+    for mt in mutation_types:
+        row = {'Mutation': mt}
+        for treatment in treatments:
+            row[treatment] = counts.get(treatment, {}).get(mt, 0)
+        data.append(row)
+    
+    df = pd.DataFrame(data)
+    df.set_index('Mutation', inplace=True)
+    
+    # Create heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(df, annot=True, fmt='d', cmap='YlGnBu')
+    plt.title('Mutation Types by Treatment')
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "mutation_type_by_treatment_heatmap.png"), dpi=300)
     plt.close()
     
-    # Plot GC content by gene status in a boxplot
-    plt.figure(figsize=(8, 6))
+    # Create clustermap with adaptation coloring
+    column_colors = [TREATMENT_COLORS.get(t, '#333333') for t in df.columns]
     
-    sns.boxplot(
-        x='Has_Gene', 
-        y='gc_content', 
-        data=contexts_df, 
-        palette={'Yes': '#1b9e77', 'No': '#d95f02'}
+    g = sns.clustermap(
+        df, 
+        annot=True, 
+        fmt='d', 
+        cmap='YlGnBu',
+        col_colors=[column_colors],
+        figsize=(12, 10),
+        dendrogram_ratio=(.1, .2)
     )
     
-    # Change x-axis labels to be more descriptive
-    plt.gca().set_xticklabels(['Non-Modified', 'Gene-Modified'])
+    # Add adaptation type legend
+    adaptations = set(TREATMENT_INFO.get(t, {}).get('adaptation', 'Unknown') for t in df.columns)
+    for adaptation in adaptations:
+        treatments_with_adaptation = [t for t in df.columns if TREATMENT_INFO.get(t, {}).get('adaptation') == adaptation]
+        if treatments_with_adaptation:
+            g.ax_col_dendrogram.bar(0, 0, color=ADAPTATION_COLORS.get(adaptation, '#333333'), label=adaptation)
     
+    g.ax_col_dendrogram.legend(title="Adaptation", loc='center')
+    
+    plt.suptitle('Mutation Types by Treatment (Clustered)', fontsize=16, y=0.95)
+    plt.savefig(os.path.join(output_dir, "mutation_type_by_treatment_clustermap.png"), dpi=300)
+    plt.close()
+    
+    # Analyze GC content by treatment
+    plt.figure(figsize=(10, 6))
+    
+    # Prepare data for boxplot
+    data = []
+    for treatment in treatments:
+        treatment_data = contexts_df[contexts_df['Treatment'] == treatment]
+        data.append(treatment_data['gc_content'].values)
+    
+    plt.boxplot(data, labels=treatments)
+    plt.xlabel('Treatment')
+    plt.ylabel('GC Content')
+    plt.title('GC Content Distribution by Treatment')
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "gc_content_boxplot_by_treatment.png"), dpi=300)
+    plt.close()
+    
+    # Analyze by adaptation type
+    plt.figure(figsize=(10, 6))
+    
+    # Group by adaptation
+    adaptation_groups = {}
+    for adaptation in contexts_df['Adaptation'].unique():
+        adaptation_data = contexts_df[contexts_df['Adaptation'] == adaptation]
+        adaptation_groups[adaptation] = adaptation_data['gc_content'].values
+    
+    plt.boxplot(list(adaptation_groups.values()), labels=list(adaptation_groups.keys()))
+    plt.xlabel('Adaptation Type')
+    plt.ylabel('GC Content')
+    plt.title('GC Content Distribution by Adaptation Type')
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "gc_content_boxplot_by_adaptation.png"), dpi=300)
+    plt.close()
+    
+    # Analyze by gene modification status
+    plt.figure(figsize=(10, 6))
+    
+    # Group by gene status
+    gene_groups = {}
+    for has_gene in contexts_df['Has_Gene'].unique():
+        gene_data = contexts_df[contexts_df['Has_Gene'] == has_gene]
+        gene_status = "Gene-Modified" if has_gene == "Yes" else "Non-Modified"
+        gene_groups[gene_status] = gene_data['gc_content'].values
+    
+    plt.boxplot(list(gene_groups.values()), labels=list(gene_groups.keys()))
     plt.xlabel('Gene Modification Status')
     plt.ylabel('GC Content')
     plt.title('GC Content Distribution by Gene Modification Status')
     
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "gc_content_boxplot_by_gene.png"), dpi=300)
+    plt.savefig(os.path.join(output_dir, "gc_content_boxplot_by_gene_status.png"), dpi=300)
     plt.close()
-
-# Function to analyze adaptation-specific context patterns
-def analyze_adaptation_specific_patterns(contexts_df, output_dir):
-    """Analyze context patterns specific to adaptation types."""
-    # Compare GC content between adaptation types
-    adaptation_groups = contexts_df.groupby('Adaptation')
-    
-    adaptation_gc = {}
-    for adaptation, group in adaptation_groups:
-        adaptation_gc[adaptation] = group['gc_content'].mean()
-    
-    # Calculate statistical significance using t-test
-    adaptations = list(adaptation_gc.keys())
-    if len(adaptations) >= 2:
-        from scipy.stats import ttest_ind
-        
-        # Compare first two adaptations
-        a1, a2 = adaptations[0], adaptations[1]
-        a1_data = contexts_df[contexts_df['Adaptation'] == a1]['gc_content']
-        a2_data = contexts_df[contexts_df['Adaptation'] == a2]['gc_content']
-        
-        t_stat, p_value = ttest_ind(a1_data, a2_data, equal_var=False)
-        
-        # Create a statistical summary
-        with open(os.path.join(output_dir, "adaptation_statistics.txt"), 'w') as f:
-            f.write("Adaptation-Specific Context Statistics\n")
-            f.write("====================================\n\n")
-            
-            f.write("GC Content by Adaptation Type:\n")
-            for adaptation, gc in adaptation_gc.items():
-                f.write(f"  {adaptation}: {gc:.4f}\n")
-            
-            f.write(f"\nComparison of {a1} vs {a2} GC Content:\n")
-            f.write(f"  t-statistic: {t_stat:.4f}\n")
-            f.write(f"  p-value: {p_value:.4e}\n")
-            f.write(f"  Significant difference: {'Yes' if p_value < 0.05 else 'No'}\n")
-            
-            # Homopolymer presence by adaptation
-            f.write("\nHomopolymer Presence by Adaptation:\n")
-            for adaptation, group in adaptation_groups:
-                homo_presence = group['nearby_homopolymer'].mean()
-                f.write(f"  {adaptation}: {homo_presence:.4f}\n")
-            
-            # Dinucleotide repeat presence by adaptation
-            f.write("\nDinucleotide Repeat Presence by Adaptation:\n")
-            for adaptation, group in adaptation_groups:
-                dinuc_presence = group['nearby_dinucleotide_repeat'].mean()
-                f.write(f"  {adaptation}: {dinuc_presence:.4f}\n")
-    
-    # Create adaptation-specific nucleotide distributions
-    for adaptation, group in adaptation_groups:
-        nucleotide_counts = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
-        
-        for _, row in group.iterrows():
-            context = row['context']
-            for base in context:
-                if base in nucleotide_counts:
-                    nucleotide_counts[base] += 1
-        
-        # Plot nucleotide distribution
-        plt.figure(figsize=(8, 6))
-        
-        bases = list(nucleotide_counts.keys())
-        counts = list(nucleotide_counts.values())
-        total = sum(counts)
-        
-        if total > 0:
-            proportions = [count / total for count in counts]
-            
-            colors = {'A': 'green', 'C': 'blue', 'G': 'orange', 'T': 'red'}
-            plt.bar(bases, proportions, color=[colors[base] for base in bases])
-            
-            # Add labels
-            for i, prop in enumerate(proportions):
-                plt.text(i, prop + 0.01, f'{prop:.3f}', ha='center')
-            
-            plt.xlabel('Nucleotide')
-            plt.ylabel('Proportion')
-            plt.title(f'Nucleotide Distribution for {adaptation} Adaptation')
-            
-            plt.tight_layout()
-            plt.savefig(os.path.join(output_dir, f"{adaptation}_nucleotide_distribution.png"), dpi=300)
-            plt.close()
-
-# Function to analyze gene-specific context patterns
-def analyze_gene_specific_patterns(contexts_df, output_dir):
-    """Analyze context patterns specific to gene modification status."""
-    # Compare GC content between gene statuses
-    gene_groups = contexts_df.groupby('Has_Gene')
-    
-    gene_gc = {}
-    for has_gene, group in gene_groups:
-        status = "Gene-modified" if has_gene == "Yes" else "Non-modified"
-        gene_gc[status] = group['gc_content'].mean()
-    
-    # Calculate statistical significance using t-test
-    gene_statuses = list(gene_gc.keys())
-    if len(gene_statuses) >= 2:
-        from scipy.stats import ttest_ind
-        
-        # Compare gene-modified vs non-modified
-        yes_data = contexts_df[contexts_df['Has_Gene'] == 'Yes']['gc_content']
-        no_data = contexts_df[contexts_df['Has_Gene'] == 'No']['gc_content']
-        
-        if len(yes_data) > 0 and len(no_data) > 0:
-            t_stat, p_value = ttest_ind(yes_data, no_data, equal_var=False)
-            
-            # Create a statistical summary
-            with open(os.path.join(output_dir, "gene_statistics.txt"), 'w') as f:
-                f.write("Gene Modification-Specific Context Statistics\n")
-                f.write("=========================================\n\n")
-                
-                f.write("GC Content by Gene Modification Status:\n")
-                for status, gc in gene_gc.items():
-                    f.write(f"  {status}: {gc:.4f}\n")
-                
-                f.write(f"\nComparison of Gene-modified vs Non-modified GC Content:\n")
-                f.write(f"  t-statistic: {t_stat:.4f}\n")
-                f.write(f"  p-value: {p_value:.4e}\n")
-                f.write(f"  Significant difference: {'Yes' if p_value < 0.05 else 'No'}\n")
-                
-                # Homopolymer presence by gene status
-                f.write("\nHomopolymer Presence by Gene Modification Status:\n")
-                for has_gene, group in gene_groups:
-                    status = "Gene-modified" if has_gene == "Yes" else "Non-modified"
-                    homo_presence = group['nearby_homopolymer'].mean()
-                    f.write(f"  {status}: {homo_presence:.4f}\n")
-                
-                # Dinucleotide repeat presence by gene status
-                f.write("\nDinucleotide Repeat Presence by Gene Modification Status:\n")
-                for has_gene, group in gene_groups:
-                    status = "Gene-modified" if has_gene == "Yes" else "Non-modified"
-                    dinuc_presence = group['nearby_dinucleotide_repeat'].mean()
-                    f.write(f"  {status}: {dinuc_presence:.4f}\n")
-
-# Function to analyze mutation context patterns
-def analyze_mutation_context_patterns(immediate_contexts_df, output_dir):
-    """Analyze and visualize immediate nucleotide context patterns around mutations."""
-    # Group by treatment
-    treatment_groups = immediate_contexts_df.groupby('Treatment')
-    
-    for treatment, group in treatment_groups:
-        # Skip if too few contexts
-        if len(group) < 10:
-            continue
-        
-        # Analyze context nucleotide distributions
-        contexts = group['immediate_context'].tolist()
-        
-        # Define positions relative to mutation
-        context_size = min(len(context) for context in contexts) // 2
-        positions = list(range(-context_size, context_size + 1))
-        
-        # Count nucleotides at each position
-        position_distributions = {}
-        for pos in positions:
-            position_distributions[pos] = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
-        
-        for context in contexts:
-            # Find the center position
-            center = len(context) // 2
-            
-            for pos in positions:
-                if 0 <= center + pos < len(context):
-                    nucleotide = context[center + pos]
-                    if nucleotide in 'ACGT':
-                        position_distributions[pos][nucleotide] += 1
-        
-        # Plot nucleotide distributions around mutation site
-        plt.figure(figsize=(12, 6))
-        
-        for i, pos in enumerate(positions):
-            # Calculate proportion of each nucleotide
-            total = sum(position_distributions[pos].values())
-            if total > 0:
-                proportions = {nt: count / total for nt, count in position_distributions[pos].items()}
-                
-                # Plot stacked bars
-                bottom = 0
-                for nt, color in zip(['A', 'C', 'G', 'T'], ['green', 'blue', 'orange', 'red']):
-                    plt.bar(i, proportions[nt], bottom=bottom, color=color, width=0.8, label=nt if i == 0 else "")
-                    bottom += proportions[nt]
-        
-        # Customize plot
-        plt.xlabel('Position Relative to Mutation')
-        plt.ylabel('Nucleotide Proportion')
-        
-        # Get treatment description
-        description = TREATMENT_INFO.get(treatment, {}).get('description', '')
-        adaptation = TREATMENT_INFO.get(treatment, {}).get('adaptation', '')
-        has_gene = TREATMENT_INFO.get(treatment, {}).get('gene')
-        
-        plt.title(f'Nucleotide Context for {treatment} Treatment\n{description} ({adaptation} adaptation{" with " + has_gene + " gene" if has_gene else ""})')
-        plt.xticks(range(len(positions)), positions)
-        
-        # Highlight mutation position
-        plt.axvline(x=positions.index(0), color='black', linestyle='--', alpha=0.5)
-        
-        # Add legend
-        plt.legend(title='Nucleotide')
-        
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, f"{treatment}_context_pattern.png"), dpi=300)
-        plt.close()
-    
-    # Also create adaptation-specific context patterns
-    adaptation_groups = immediate_contexts_df.groupby('Adaptation')
-    
-    for adaptation, group in adaptation_groups:
-        # Skip if too few contexts
-        if len(group) < 10:
-            continue
-        
-        # Analyze context nucleotide distributions
-        contexts = group['immediate_context'].tolist()
-        
-        # Define positions relative to mutation
-        context_size = min(len(context) for context in contexts) // 2
-        positions = list(range(-context_size, context_size + 1))
-        
-        # Count nucleotides at each position
-        position_distributions = {}
-        for pos in positions:
-            position_distributions[pos] = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
-        
-        for context in contexts:
-            # Find the center position
-            center = len(context) // 2
-            
-            for pos in positions:
-                if 0 <= center + pos < len(context):
-                    nucleotide = context[center + pos]
-                    if nucleotide in 'ACGT':
-                        position_distributions[pos][nucleotide] += 1
-        
-        # Plot nucleotide distributions around mutation site
-        plt.figure(figsize=(12, 6))
-        
-        for i, pos in enumerate(positions):
-            # Calculate proportion of each nucleotide
-            total = sum(position_distributions[pos].values())
-            if total > 0:
-                proportions = {nt: count / total for nt, count in position_distributions[pos].items()}
-                
-                # Plot stacked bars
-                bottom = 0
-                for nt, color in zip(['A', 'C', 'G', 'T'], ['green', 'blue', 'orange', 'red']):
-                    plt.bar(i, proportions[nt], bottom=bottom, color=color, width=0.8, label=nt if i == 0 else "")
-                    bottom += proportions[nt]
-        
-        # Customize plot
-        plt.xlabel('Position Relative to Mutation')
-        plt.ylabel('Nucleotide Proportion')
-        plt.title(f'Nucleotide Context for {adaptation} Adaptation')
-        plt.xticks(range(len(positions)), positions)
-        
-        # Highlight mutation position
-        plt.axvline(x=positions.index(0), color='black', linestyle='--', alpha=0.5)
-        
-        # Add legend
-        plt.legend(title='Nucleotide')
-        
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, f"{adaptation}_context_pattern.png"), dpi=300)
-        plt.close()
-    
-    # Create gene-specific context patterns
-    gene_groups = immediate_contexts_df.groupby('Has_Gene')
-    
-    for has_gene, group in gene_groups:
-        # Skip if too few contexts
-        if len(group) < 10:
-            continue
-        
-        # Analyze context nucleotide distributions
-        contexts = group['immediate_context'].tolist()
-        
-        # Define positions relative to mutation
-        context_size = min(len(context) for context in contexts) // 2
-        positions = list(range(-context_size, context_size + 1))
-        
-        # Count nucleotides at each position
-        position_distributions = {}
-        for pos in positions:
-            position_distributions[pos] = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
-        
-        for context in contexts:
-            # Find the center position
-            center = len(context) // 2
-            
-            for pos in positions:
-                if 0 <= center + pos < len(context):
-                    nucleotide = context[center + pos]
-                    if nucleotide in 'ACGT':
-                        position_distributions[pos][nucleotide] += 1
-        
-        # Plot nucleotide distributions around mutation site
-        plt.figure(figsize=(12, 6))
-        
-        for i, pos in enumerate(positions):
-            # Calculate proportion of each nucleotide
-            total = sum(position_distributions[pos].values())
-            if total > 0:
-                proportions = {nt: count / total for nt, count in position_distributions[pos].items()}
-                
-                # Plot stacked bars
-                bottom = 0
-                for nt, color in zip(['A', 'C', 'G', 'T'], ['green', 'blue', 'orange', 'red']):
-                    plt.bar(i, proportions[nt], bottom=bottom, color=color, width=0.8, label=nt if i == 0 else "")
-                    bottom += proportions[nt]
-        
-        # Customize plot
-        plt.xlabel('Position Relative to Mutation')
-        plt.ylabel('Nucleotide Proportion')
-        status = "Gene-Modified" if has_gene == "Yes" else "Non-Modified"
-        plt.title(f'Nucleotide Context for {status} Strains')
-        plt.xticks(range(len(positions)), positions)
-        
-        # Highlight mutation position
-        plt.axvline(x=positions.index(0), color='black', linestyle='--', alpha=0.5)
-        
-        # Add legend
-        plt.legend(title='Nucleotide')
-        
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, f"gene_{has_gene}_context_pattern.png"), dpi=300)
-        plt.close()
 
 # Function to create summary report
 def create_summary_report(contexts_df, control_df, output_dir):
@@ -1154,20 +1316,20 @@ def create_summary_report(contexts_df, control_df, output_dir):
         treatments = contexts_df['Treatment'].unique()
         f.write("Variants by treatment:\n")
         for treatment in treatments:
+            count = len(contexts_df[contexts_df['Treatment'] == treatment])
             description = TREATMENT_INFO.get(treatment, {}).get('description', 'Unknown')
             adaptation = TREATMENT_INFO.get(treatment, {}).get('adaptation', 'Unknown')
             has_gene = TREATMENT_INFO.get(treatment, {}).get('gene')
             
-            count = len(contexts_df[contexts_df['Treatment'] == treatment])
             f.write(f"  {treatment}: {count} variants - {description} ({adaptation} adaptation")
             if has_gene:
                 f.write(f" with {has_gene} gene")
             f.write(")\n")
         
         # Adaptation breakdown
-        adaptation_types = contexts_df['Adaptation'].unique()
+        adaptations = contexts_df['Adaptation'].unique()
         f.write("\nVariants by adaptation type:\n")
-        for adaptation in adaptation_types:
+        for adaptation in adaptations:
             count = len(contexts_df[contexts_df['Adaptation'] == adaptation])
             f.write(f"  {adaptation}: {count} variants\n")
         
@@ -1198,9 +1360,9 @@ def create_summary_report(contexts_df, control_df, output_dir):
             treatment_gc = contexts_df[contexts_df['Treatment'] == treatment]['gc_content'].mean()
             f.write(f"  {treatment}: {treatment_gc:.4f}\n")
         
-        # GC content by adaptation type
+        # GC content by adaptation
         f.write("\nGC content by adaptation type:\n")
-        for adaptation in adaptation_types:
+        for adaptation in adaptations:
             adaptation_gc = contexts_df[contexts_df['Adaptation'] == adaptation]['gc_content'].mean()
             f.write(f"  {adaptation}: {adaptation_gc:.4f}\n")
         
@@ -1232,7 +1394,7 @@ def create_summary_report(contexts_df, control_df, output_dir):
         
         # Homopolymer by adaptation
         f.write("\nHomopolymer presence by adaptation type:\n")
-        for adaptation in adaptation_types:
+        for adaptation in adaptations:
             adaptation_homopolymer = contexts_df[contexts_df['Adaptation'] == adaptation]['nearby_homopolymer'].mean()
             f.write(f"  {adaptation}: {adaptation_homopolymer:.4f}\n")
         
@@ -1260,7 +1422,7 @@ def create_summary_report(contexts_df, control_df, output_dir):
         
         # Dinucleotide by adaptation
         f.write("\nDinucleotide repeat presence by adaptation type:\n")
-        for adaptation in adaptation_types:
+        for adaptation in adaptations:
             adaptation_dinucleotide = contexts_df[contexts_df['Adaptation'] == adaptation]['nearby_dinucleotide_repeat'].mean()
             f.write(f"  {adaptation}: {adaptation_dinucleotide:.4f}\n")
         
@@ -1273,27 +1435,16 @@ def create_summary_report(contexts_df, control_df, output_dir):
         
         f.write("\n")
         
-        # Purine/Pyrimidine ratio
-        purine_ratio = contexts_df['purine_ratio'].mean()
-        control_purine = control_df['purine_ratio'].mean()
-        
-        f.write(f"Mean purine/pyrimidine ratio in variant regions: {purine_ratio:.4f}\n")
-        f.write(f"Mean purine/pyrimidine ratio in control regions: {control_purine:.4f}\n")
-        
-        f.write("\n")
-        
         # Main conclusions
         f.write("Main Conclusions:\n")
         f.write("---------------\n")
-        f.write("1. This analysis examines the local sequence context around mutation sites.\n")
-        f.write("2. We analyze GC content, homopolymer regions, and repetitive elements near variants.\n")
-        f.write("3. Adaptation types (Temperature vs Low Oxygen) show different patterns\n")
-        f.write("   in their local sequence contexts.\n")
-        f.write("4. Gene modifications (STC/CAS) influence the genomic context of mutations.\n")
-        f.write("5. Temperature adaptation shows distinct patterns in sequence composition\n")
-        f.write("   compared to low oxygen adaptation.\n")
-        f.write("6. Gene-modified strains exhibit different local sequence features compared\n")
-        f.write("   to non-modified strains, suggesting specific mutational mechanisms.\n")
+        f.write("1. This analysis examines the genomic context of mutations in different treatments.\n")
+        f.write("2. The GC content analysis reveals potential biases in mutation distribution.\n")
+        f.write("3. Homopolymer and repeat regions may influence mutation probability.\n")
+        f.write("4. Adaptation conditions (Temperature vs Low Oxygen) show distinct context preferences.\n")
+        f.write("5. Gene modifications (STC, CAS) appear to influence the genomic context of mutations.\n")
+        f.write("6. Sequence composition around mutation sites provides insights into damage mechanisms.\n")
+        f.write("7. Further analysis of specific motifs may reveal specific DNA damage signatures.\n")
 
 # Main function to run the analysis
 def main():
@@ -1304,67 +1455,79 @@ def main():
         return
     
     # Parse data for each treatment
-    all_data = []
-    
+    all_data = pd.DataFrame()
     for treatment in TREATMENTS:
         data = parse_mutation_data(treatment)
         if len(data) > 0:
-            all_data.append(data)
-            print(f"Loaded {len(data)} mutations for {treatment} treatment")
+            all_data = pd.concat([all_data, data])
+            print(f"Loaded {len(data)} variants for {treatment} treatment")
         else:
             print(f"Warning: No data available for {treatment} treatment")
     
-    if all_data:
-        combined_data = pd.concat(all_data, ignore_index=True)
-        print(f"Combined {len(combined_data)} mutations across {len(all_data)} treatments")
-    else:
-        print("No mutation data found.")
+    # Filter for SNVs
+    snv_data = filter_snvs(all_data)
+    print(f"Filtered to {len(snv_data)} single nucleotide variants")
+    
+    # Check if we have any SNVs before continuing
+    if len(snv_data) == 0:
+        print("Warning: No single nucleotide variants found after filtering.")
+        print("Creating empty results and skipping analysis.")
+        
+        # Create an empty summary report
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        with open(os.path.join(OUTPUT_DIR, "genomic_context_summary.txt"), 'w') as f:
+            f.write("Genomic Context Analysis Summary\n")
+            f.write("===============================\n\n")
+            f.write("No single nucleotide variants found after filtering.\n")
+            f.write("Please check your input data format.\n")
+        
+        print(f"Analysis complete! Empty summary saved to {OUTPUT_DIR}/")
         return
     
-    # IMPORTANT FIX: Extract context sequences BEFORE calculating metrics
-    contexts_df = extract_all_context_sequences(combined_data, reference_genome)
+    # Extract context sequences
+    contexts_df = extract_all_context_sequences(snv_data, reference_genome)
     print(f"Extracted context sequences for {len(contexts_df)} variants")
     
-    # Generate control contexts
-    control_df = generate_control_contexts(reference_genome, num_controls=1000)
+    # Generate control context sequences
+    control_df = generate_control_contexts(reference_genome)
     print(f"Generated {len(control_df)} control context sequences")
     
     # Calculate composition metrics
-    contexts_df = calculate_composition_metrics(contexts_df)  # Now using contexts_df, not combined_data
+    contexts_df = calculate_composition_metrics(contexts_df)
     control_df = calculate_composition_metrics(control_df)
     print("Calculated composition metrics for variant and control regions")
     
-    # Extract immediate contexts for context analysis
+    # Extract immediate contexts for mutation context analysis
     immediate_contexts_df = extract_immediate_contexts(contexts_df)
     print(f"Extracted immediate contexts for {len(immediate_contexts_df)} variants")
+    
+    # Create context matrices for sequence logos
+    treatment_matrices, adaptation_matrices, gene_matrices = create_context_matrix(immediate_contexts_df)
+    print(f"Created context matrices for {len(treatment_matrices)} treatment-mutation combinations")
+    print(f"Created context matrices for {len(adaptation_matrices)} adaptation-mutation combinations")
+    print(f"Created context matrices for {len(gene_matrices)} gene status-mutation combinations")
+    
+    # Plot sequence logos
+    plot_sequence_logos(treatment_matrices, OUTPUT_DIR)
+    plot_adaptation_logos(adaptation_matrices, OUTPUT_DIR)
+    plot_gene_logos(gene_matrices, OUTPUT_DIR)
+    print("Generated sequence logo plots")
     
     # Plot GC content distribution
     plot_gc_content(contexts_df, control_df, OUTPUT_DIR)
     print("Generated GC content distribution plots")
     
-    # Plot sequence features by treatment
+    # Plot sequence features
     plot_sequence_features(contexts_df, OUTPUT_DIR)
-    print("Generated sequence feature plots by treatment")
-    
-    # Plot sequence features by adaptation type
-    plot_sequence_features_by_adaptation(contexts_df, OUTPUT_DIR)
-    print("Generated sequence feature plots by adaptation type")
-    
-    # Plot sequence features by gene status
-    plot_sequence_features_by_gene(contexts_df, OUTPUT_DIR)
-    print("Generated sequence feature plots by gene status")
-    
-    # Analyze adaptation-specific patterns
-    analyze_adaptation_specific_patterns(contexts_df, OUTPUT_DIR)
-    print("Analyzed adaptation-specific patterns")
-    
-    # Analyze gene-specific patterns
-    analyze_gene_specific_patterns(contexts_df, OUTPUT_DIR)
-    print("Analyzed gene-specific patterns")
+    print("Generated sequence feature plots")
     
     # Analyze mutation context patterns
     analyze_mutation_context_patterns(immediate_contexts_df, OUTPUT_DIR)
     print("Analyzed immediate mutation context patterns")
+    
+    # Analyze context by treatment
+    analyze_context_by_treatment(contexts_df, OUTPUT_DIR)
+    print("Analyzed contexts by treatment")
     
     # Create summary report
     create_summary_report(contexts_df, control_df, OUTPUT_DIR)

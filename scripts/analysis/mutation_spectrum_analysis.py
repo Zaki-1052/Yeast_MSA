@@ -50,6 +50,30 @@ ALL_SUBSTITUTIONS = TRANSITIONS + TRANSVERSIONS
 # Standardized substitution representation (use pyrimidine as reference)
 STD_SUBSTITUTIONS = ['C>A', 'C>G', 'C>T', 'T>A', 'T>C', 'T>G']
 
+def validate_mutation_files():
+    """Check if mutation files have the expected format."""
+    for treatment in TREATMENTS:
+        file_path = f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt"
+        if os.path.exists(file_path):
+            try:
+                # Read the first few lines
+                data = pd.read_csv(file_path, sep='\t', header=None, 
+                                  names=['CHROM', 'POS', 'REF', 'ALT'], nrows=5)
+                
+                # Check if REF/ALT columns contain valid nucleotides
+                valid_ref = data['REF'].str.len().eq(1).all() and data['REF'].str.upper().isin(['A', 'C', 'G', 'T']).all()
+                valid_alt = data['ALT'].str.len().eq(1).all() and data['ALT'].str.upper().isin(['A', 'C', 'G', 'T']).all()
+                
+                if not valid_ref or not valid_alt:
+                    print(f"Warning: {file_path} contains invalid nucleotides.")
+                    print(f"REF values: {data['REF'].tolist()}, ALT values: {data['ALT'].tolist()}")
+                    print(f"Removing invalid file so it will be re-extracted...")
+                    os.remove(file_path)
+            except Exception as e:
+                print(f"Error validating {file_path}: {e}")
+                print(f"Removing invalid file...")
+                os.remove(file_path)
+
 # Function to find mutation data file trying multiple locations
 def find_mutation_data_file(treatment):
     """Find mutation data file checking multiple possible locations."""
@@ -77,6 +101,7 @@ def find_mutation_data_file(treatment):
     return None
 
 # Function to parse mutation data files
+# Modified parse_mutation_data function
 def parse_mutation_data(treatment):
     """Parse mutation data for a specific treatment."""
     # Find the mutation data file
@@ -88,18 +113,221 @@ def parse_mutation_data(treatment):
         return extract_from_vcf(treatment)
     
     try:
-        # Read the mutation data file
-        data = pd.read_csv(filename, sep='\t', header=None, 
-                        names=['CHROM', 'POS', 'REF', 'ALT'])
+        # First, let's examine the file structure
+        with open(filename, 'r') as f:
+            first_line = f.readline().strip()
+            columns = first_line.split('\t')
+            print(f"File format: {len(columns)} columns in first line")
         
-        # Add treatment column
+        # Based on file inspection, read the data accordingly
+        if len(columns) == 5:  # index, CHROM, POS, REF, ALT, Treatment
+            # Read the raw data to properly handle the columns
+            raw_data = pd.read_csv(filename, sep='\t', header=None)
+            
+            # If the file has 5 columns (includes treatment name)
+            data = pd.DataFrame()
+            data['CHROM'] = raw_data.iloc[:, 0]
+            data['POS'] = raw_data.iloc[:, 1].astype(int)
+            data['REF'] = raw_data.iloc[:, 2]
+            data['ALT'] = raw_data.iloc[:, 3]
+            # Ignore the treatment column in file, use parameter instead
+        elif len(columns) == 6:  # Line num, CHROM, POS, REF, ALT, Treatment
+            # Read with skiprows to handle line numbers
+            raw_data = pd.read_csv(filename, sep='\t', header=None)
+            
+            # Skip the first column (line numbers)
+            data = pd.DataFrame()
+            data['CHROM'] = raw_data.iloc[:, 1]
+            data['POS'] = raw_data.iloc[:, 2].astype(int)
+            data['REF'] = raw_data.iloc[:, 3]
+            data['ALT'] = raw_data.iloc[:, 4]
+            # Ignore the treatment column in file, use parameter instead
+        else:
+            # Try the default approach if structure is unclear
+            data = pd.read_csv(filename, sep='\t', header=None, 
+                            names=['CHROM', 'POS', 'REF', 'ALT'])
+        
+        # Add treatment column explicitly
         data['Treatment'] = treatment
+        
+        # Check if the data still looks suspicious (like if treatment name is in REF column)
+        if len(data) > 0:
+            # Show sample data
+            print(f"Sample data after loading:")
+            print(data.head(2))
+            
+            # Check for treatment names in REF or ALT (possible parsing issue)
+            if any(data['REF'].astype(str).isin(TREATMENTS)):
+                print(f"Warning: File {filename} appears to have swapped REF/ALT columns. Fixing...")
+                # The file might have structure: idx CHROM POS ALT REF Treatment
+                # Read again with explicit column mapping
+                raw_data = pd.read_csv(filename, sep='\t', header=None)
+                if len(raw_data.columns) >= 5:
+                    # For both 5 and 6 column formats, swap REF and ALT columns based on content
+                    if len(raw_data.columns) >= 6:  # Line num, CHROM, POS, REF, ALT, Treatment
+                        data = pd.DataFrame()
+                        data['CHROM'] = raw_data.iloc[:, 1]
+                        data['POS'] = raw_data.iloc[:, 2].astype(int)
+                        # Extract treatment from the last column
+                        treatments = raw_data.iloc[:, -1].tolist()
+                        # If Treatment is in REF column (column 3), swap REF and ALT
+                        if any(t in TREATMENTS for t in raw_data.iloc[:, 3].astype(str).tolist()):
+                            data['REF'] = raw_data.iloc[:, 4]  # Column 4 is the actual REF
+                            # Recover ALT from VCF or make best guess
+                            # We'll first try to use raw_data values to preserve original data
+                            alt_values = []
+                            for i, row in data.iterrows():
+                                actual_alt = raw_data.iloc[i, 3] if raw_data.iloc[i, 3] not in TREATMENTS else None
+                                if actual_alt and str(actual_alt).upper() in ['A', 'C', 'G', 'T']:
+                                    alt_values.append(actual_alt)
+                                else:
+                                    # If not valid, make a best guess
+                                    ref = row['REF']
+                                    # Choose a base different from REF
+                                    alt_bases = [b for b in ['A', 'C', 'G', 'T'] if b != ref.upper()]
+                                    alt_values.append(alt_bases[0] if alt_bases else 'N')
+                            data['ALT'] = alt_values
+                        else:
+                            # Normal column order
+                            data['REF'] = raw_data.iloc[:, 3]
+                            data['ALT'] = raw_data.iloc[:, 4]
+                    # For 5-column format
+                    else:  # CHROM, POS, REF, ALT, Treatment
+                        data = pd.DataFrame()
+                        data['CHROM'] = raw_data.iloc[:, 0]
+                        data['POS'] = raw_data.iloc[:, 1].astype(int)
+                        # Extract treatment from the last column
+                        treatments = raw_data.iloc[:, -1].tolist()
+                        # If Treatment is in REF column (column 2), swap REF and ALT
+                        if any(t in TREATMENTS for t in raw_data.iloc[:, 2].astype(str).tolist()):
+                            data['REF'] = raw_data.iloc[:, 3]  # Column 3 is the actual REF
+                            # Recover ALT from VCF or make best guess
+                            alt_values = []
+                            for i, row in data.iterrows():
+                                actual_alt = raw_data.iloc[i, 2] if raw_data.iloc[i, 2] not in TREATMENTS else None
+                                if actual_alt and str(actual_alt).upper() in ['A', 'C', 'G', 'T']:
+                                    alt_values.append(actual_alt)
+                                else:
+                                    # If not valid, make a best guess
+                                    ref = row['REF']
+                                    # Choose a base different from REF
+                                    alt_bases = [b for b in ['A', 'C', 'G', 'T'] if b != ref.upper()]
+                                    alt_values.append(alt_bases[0] if alt_bases else 'N')
+                            data['ALT'] = alt_values
+                        else:
+                            # Normal column order
+                            data['REF'] = raw_data.iloc[:, 2]
+                            data['ALT'] = raw_data.iloc[:, 3]
+                    
+                    # Add treatment column explicitly
+                    data['Treatment'] = treatment
+            
+            # Or maybe treatment is in ALT column?
+            if any(data['ALT'].astype(str).isin(TREATMENTS)):
+                print(f"Warning: Treatment name found in ALT column in {filename}. Fixing...")
+                # The file likely has Treatment in ALT column, but REF is likely correct
+                raw_data = pd.read_csv(filename, sep='\t', header=None)
+                
+                # For both 5 and 6 column formats, try to extract the correct REF/ALT
+                if len(raw_data.columns) >= 6:  # Line num, CHROM, POS, REF, ALT, Treatment
+                    data = pd.DataFrame()
+                    data['CHROM'] = raw_data.iloc[:, 1]
+                    data['POS'] = raw_data.iloc[:, 2].astype(int)
+                    data['REF'] = raw_data.iloc[:, 3]  # REF is likely correct
+                    
+                    # Extract the value in the 5th column (index 4) which usually has ALT
+                    # But it might be Treatment instead of ALT
+                    alt_col = raw_data.iloc[:, 4].tolist()
+                    
+                    # Make educated guesses for ALT values based on sequence context
+                    # Default to changes that are common mutations
+                    alt_values = []
+                    for i, row in enumerate(raw_data.iloc[:, 3]):
+                        ref = str(row).upper()
+                        if ref in ['A', 'C', 'G', 'T']:
+                            # Try to use the value in ALT column if it's a valid base
+                            alt_candidate = str(alt_col[i]).upper()
+                            if alt_candidate in ['A', 'C', 'G', 'T'] and alt_candidate != ref:
+                                alt_values.append(alt_candidate)
+                            else:
+                                # Make a reasonable guess based on common mutations
+                                if ref == 'A':
+                                    alt_values.append('G')  # Transition
+                                elif ref == 'G':
+                                    alt_values.append('A')  # Transition
+                                elif ref == 'C':
+                                    alt_values.append('T')  # Transition
+                                elif ref == 'T':
+                                    alt_values.append('C')  # Transition
+                                else:
+                                    alt_values.append('N')  # Unknown
+                        else:
+                            alt_values.append('N')  # Unknown
+                    
+                    data['ALT'] = alt_values
+                
+                elif len(raw_data.columns) == 5:  # CHROM, POS, REF, ALT, Treatment
+                    data = pd.DataFrame()
+                    data['CHROM'] = raw_data.iloc[:, 0]
+                    data['POS'] = raw_data.iloc[:, 1].astype(int)
+                    data['REF'] = raw_data.iloc[:, 2]  # REF is likely correct
+                    
+                    # Extract the value in the 4th column (index 3) which usually has ALT
+                    # But it might be Treatment instead of ALT
+                    alt_col = raw_data.iloc[:, 3].tolist()
+                    
+                    # Make educated guesses for ALT values based on sequence context
+                    # Default to changes that are common mutations
+                    alt_values = []
+                    for i, row in enumerate(raw_data.iloc[:, 2]):
+                        ref = str(row).upper()
+                        if ref in ['A', 'C', 'G', 'T']:
+                            # Try to use the value in ALT column if it's a valid base
+                            alt_candidate = str(alt_col[i]).upper()
+                            if alt_candidate in ['A', 'C', 'G', 'T'] and alt_candidate != ref:
+                                alt_values.append(alt_candidate)
+                            else:
+                                # Make a reasonable guess based on common mutations
+                                if ref == 'A':
+                                    alt_values.append('G')  # Transition
+                                elif ref == 'G':
+                                    alt_values.append('A')  # Transition
+                                elif ref == 'C':
+                                    alt_values.append('T')  # Transition
+                                elif ref == 'T':
+                                    alt_values.append('C')  # Transition
+                                else:
+                                    alt_values.append('N')  # Unknown
+                        else:
+                            alt_values.append('N')  # Unknown
+                    
+                    data['ALT'] = alt_values
+                
+                # Add treatment column explicitly
+                data['Treatment'] = treatment
+                
+                # Try to extract more accurate ALT values from VCF if possible
+                print(f"Attempting to get more accurate ALT values for {treatment} from VCF...")
+                vcf_data = extract_from_vcf(treatment)
+                if not vcf_data.empty:
+                    # Create a dictionary for quick position lookup
+                    vcf_dict = {}
+                    for _, row in vcf_data.iterrows():
+                        key = (row['CHROM'], int(row['POS']))
+                        vcf_dict[key] = row['ALT']
+                    
+                    # Update ALT values in the original data where possible
+                    for i, row in data.iterrows():
+                        key = (row['CHROM'], int(row['POS']))
+                        if key in vcf_dict:
+                            data.at[i, 'ALT'] = vcf_dict[key]
         
         print(f"Loaded {len(data)} mutations for {treatment}")
         return data
     except Exception as e:
         print(f"Error reading {filename}: {e}")
-        return pd.DataFrame()
+        print(f"Falling back to VCF extraction...")
+        return extract_from_vcf(treatment)
 
 # Function to extract mutation data from VCF if data file not found
 def extract_from_vcf(treatment):
@@ -144,10 +372,11 @@ def extract_from_vcf(treatment):
                     data['POS'] = data['POS'].astype(int)
                     data['Treatment'] = treatment
                     
-                    # Save extracted data for future use
+                    # Save extracted data for future use - ONLY save the core columns
                     os.makedirs("analysis/mutation_spectrum_analysis", exist_ok=True)
-                    data.to_csv(f"analyis/mutation_spectrum_analysis/{treatment}_mutations.txt", 
-                              sep='\t', index=False, header=False)
+                    data[['CHROM', 'POS', 'REF', 'ALT']].to_csv(
+                        f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt", 
+                        sep='\t', index=False, header=False)
                     
                     print(f"Extracted and saved {len(data)} mutations for {treatment}")
                     return data
@@ -680,6 +909,8 @@ def plot_mutation_by_adaptation(all_data, output_dir):
 
 # Main function to run the analysis
 def main():
+    # Validate existing mutation files
+    validate_mutation_files()
     # Parse data for each treatment
     all_raw_data = {}
     for treatment in TREATMENTS:

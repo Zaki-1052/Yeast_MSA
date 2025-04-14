@@ -3,28 +3,28 @@ Mutational Signatures Analysis Summary
 
 Overall Statistics:
 -----------------
-Total variants analyzed: 488
+Total variants analyzed: 516
 Variants by treatment:
   WT-37: 167 variants - Temperature-adapted wild type (Temperature adaptation)
   WTA: 134 variants - Low oxygen-adapted wild type (Low Oxygen adaptation)
-  STC: 59 variants - STC gene with low oxygen adaptation (Low Oxygen adaptation with STC gene)
-  CAS: 128 variants - CAS gene with temperature adaptation (Temperature adaptation with CAS gene)
+  STC: 104 variants - STC gene with low oxygen adaptation (Low Oxygen adaptation with STC gene)
+  CAS: 111 variants - CAS gene with temperature adaptation (Temperature adaptation with CAS gene)
 
 Variants by adaptation type:
-  Temperature: 295 variants
-  Low Oxygen: 193 variants
+  Temperature: 278 variants
+  Low Oxygen: 238 variants
 
 Variants by gene modification status:
   Non-modified: 301 variants
-  Gene-modified: 187 variants
+  Gene-modified: 215 variants
 
 Variants by mutation type:
-  C>A: 47 variants (9.63%)
-  C>G: 24 variants (4.92%)
-  C>T: 145 variants (29.71%)
-  T>A: 38 variants (7.79%)
-  T>C: 212 variants (43.44%)
-  T>G: 22 variants (4.51%)
+  C>A: 51 variants (9.88%)
+  C>G: 25 variants (4.84%)
+  C>T: 142 variants (27.52%)
+  T>A: 42 variants (8.14%)
+  T>C: 228 variants (44.19%)
+  T>G: 28 variants (5.43%)
 
 Signature Similarity Analysis:
 ----------------------------
@@ -33,32 +33,32 @@ Most similar treatment signatures: WT-37 and WTA (similarity: 0.8110)
   Same adaptation type: No
   Gene modification similarity: Neither has gene modifications
 
-Least similar treatment signatures: STC and CAS (similarity: 0.3198)
-  STC gene with low oxygen adaptation and CAS gene with temperature adaptation
-  Different adaptation types: Yes
-  Gene modification difference: No
+Least similar treatment signatures: WTA and STC (similarity: 0.6243)
+  Low oxygen-adapted wild type and STC gene with low oxygen adaptation
+  Different adaptation types: No
+  Gene modification difference: Yes
 
 Adaptation-Specific Signature Analysis:
 -----------------------------------
-Signature similarity between Temperature and Low Oxygen: 0.7968
+Signature similarity between Temperature and Low Oxygen: 0.8895
 
 Characteristic features of adaptation types:
 
 Temperature Adaptation:
   Top enriched trinucleotide contexts:
-    CTA (T>A): 15.36-fold enrichment
-    TTT (T>A): 15.36-fold enrichment
-    CCA (C>G): 14.77-fold enrichment
+    CCA (C>G): 17.45-fold enrichment
+    CTA (T>A): 13.33-fold enrichment
+    TTA (T>G): 12.80-fold enrichment
 
 Low Oxygen Adaptation:
   Top enriched trinucleotide contexts:
-    TCT (C>T): 12.57-fold enrichment
-    ACC (C>A): 10.67-fold enrichment
-    CTA (T>C): 8.73-fold enrichment
+    CTG (T>G): 14.77-fold enrichment
+    CCA (C>G): 13.71-fold enrichment
+    ACC (C>A): 12.19-fold enrichment
 
 Gene Modification Effects:
 -----------------------
-Signature similarity between gene-modified and non-modified strains: 0.8019
+Signature similarity between gene-modified and non-modified strains: 0.8479
 
 Characteristic features of gene status:
 
@@ -70,9 +70,9 @@ Non-modified strains:
 
 Gene-modified strains:
   Top enriched trinucleotide contexts:
-    ACT (C>G): 16.00-fold enrichment
-    CTA (T>A): 15.06-fold enrichment
-    TTT (T>A): 15.06-fold enrichment
+    TCC (C>G): 14.77-fold enrichment
+    CCA (C>G): 14.77-fold enrichment
+    ATT (T>G): 12.80-fold enrichment
 
 Enriched Trinucleotide Contexts by Treatment:
 ----------------------------------------
@@ -98,20 +98,20 @@ WTA Treatment (Low oxygen-adapted wild type):
 STC Treatment (STC gene with low oxygen adaptation):
   Adaptation: Low Oxygen with STC gene
   Top enriched trinucleotide contexts:
-    TCT (C>T): 14.22-fold enrichment (4 occurrences)
-    TCA (C>T): 10.67-fold enrichment (3 occurrences)
-    CTC (T>C): 7.38-fold enrichment (3 occurrences)
-    CTA (T>C): 7.38-fold enrichment (3 occurrences)
-    ATG (T>C): 7.38-fold enrichment (3 occurrences)
+    CTA (T>C): 12.00-fold enrichment (9 occurrences)
+    TCG (C>T): 8.00-fold enrichment (3 occurrences)
+    TCT (C>T): 8.00-fold enrichment (3 occurrences)
+    GCT (C>T): 8.00-fold enrichment (3 occurrences)
+    CTC (T>C): 6.67-fold enrichment (5 occurrences)
 
 CAS Treatment (CAS gene with temperature adaptation):
   Adaptation: Temperature with CAS gene
   Top enriched trinucleotide contexts:
-    TTT (T>A): 21.33-fold enrichment (4 occurrences)
-    CTA (T>A): 16.00-fold enrichment (3 occurrences)
-    ATG (T>C): 10.24-fold enrichment (8 occurrences)
-    CCT (C>T): 9.85-fold enrichment (6 occurrences)
-    GCT (C>T): 8.21-fold enrichment (5 occurrences)
+    CTA (T>C): 8.73-fold enrichment (6 occurrences)
+    TCT (C>T): 8.53-fold enrichment (4 occurrences)
+    GCT (C>T): 8.53-fold enrichment (4 occurrences)
+    ATG (T>C): 7.27-fold enrichment (5 occurrences)
+    TTG (T>C): 7.27-fold enrichment (5 occurrences)
 
 Main Conclusions:
 ---------------
