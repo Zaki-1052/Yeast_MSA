@@ -1,0 +1,10 @@
+##fileformat=VCFv4.2
+##contig=<ID=w303_scaffold_1>
+##reference=w303_scaffold_1
+##SnpEffVersion="5.2f (build 2025-02-07 08:36), by Pablo Cingolani"
+##SnpEffCmd="SnpEff  w303 annotation/diagnosis/tiny_test.vcf "
+##INFO=<ID=ANN,Number=.,Type=String,Description="Functional annotations: 'Allele | Annotation | Annotation_Impact | Gene_Name | Gene_ID | Feature_Type | Feature_ID | Transcript_BioType | Rank | HGVS.c | HGVS.p | cDNA.pos / cDNA.length | CDS.pos / CDS.length | AA.pos / AA.length | Distance | ERRORS / WARNINGS / INFO' ">
+##INFO=<ID=LOF,Number=.,Type=String,Description="Predicted loss of function effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+##INFO=<ID=NMD,Number=.,Type=String,Description="Predicted nonsense mediated decay effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+w303_scaffold_1	100	.	A	T	100.0	PASS	ANN=T|upstream_gene_variant|MODIFIER|W3030A00100|Gene_2096_4009|transcript|W303_0A00100|protein_coding||c.-1997A>T|||||1997|,T|downstream_gene_variant|MODIFIER|W3030A00110|Gene_4121_6148|transcript|W303_0A00110|protein_coding||c.*4022T>A|||||4022|,T|intergenic_region|MODIFIER|CHR_START-W3030A00100|CHR_START-Gene_2096_4009|intergenic_region|CHR_START-Gene_2096_4009|||n.100A>T||||||

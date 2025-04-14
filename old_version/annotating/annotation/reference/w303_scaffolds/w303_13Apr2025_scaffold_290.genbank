@@ -1,0 +1,41 @@
+LOCUS       w303_scaffold_290          639 bp    dna     linear   PLN 13-APR-2025
+DEFINITION  w303-annotated_by_ygap
+ACCESSION   unknown
+KEYWORDS    .
+COMMENT     Annotated using the "Yeast Genome Annotation Pipeline" (YGAP)
+            URL:http://wolfe.ucd.ie/annotation/
+            PMID:22984983
+FEATURES             Location/Qualifiers
+     source          1..639
+                     /mol_type="genomic DNA"
+                     /note="JRIU01000363.1"
+                     /note="scaffold 290"
+                     /organism="w303-annotated_by_ygap"
+     gene            complement(1..468)
+                     /gene="W3030KD00100"
+     CDS             complement(1..468)
+                     /gene="W3030KD00100"
+                     /inference="similar to DNA
+                     sequence:INSDC:YGL135W,YPL220W"
+                     /locus_tag="W303_0KD00100"
+                     /note="similar to Saccharomyces cerevisiae RPL1B
+                     (YGL135W) and RPL1A (YPL220W); ancestral locus Anc_6.237"
+                     /note="ancestral locus Anc_6.237"
+                     /product="hypothetical protein"
+                     /transl_table=1
+                     /translation="MSICIFGDAFDVDRAKSCGVDAMSVDDLKKLNKNKKLIKKLSKK
+                     YNAFIASEVLIKQVPRLLGPQLSKAGKFPTPVSHNDDLYGKVTDVRSTIKFQLKKVLC
+                     LAVAVGNVEMEEDVLVNQILMSVNFFVSLLKKNWQNVGSLVVKSSMGPAFRLY"
+ORIGIN      
+        1 ttagtacaat ctgaaagctg gacccatgga ggacttaaca accaaggaac caacattttg
+       61 ccagttcttc ttcaacaaag aaacaaagaa gttaacagac atcaagattt ggttaaccaa
+      121 aacgtcttct tccatttcaa cgttaccaac ggcaacagcc aaacacaaga ccttcttcaa
+      181 ttggaacttg atggtagatc tgacatcagt gaccttaccg tacaagtcat cgttgtgaga
+      241 aactggggtt gggaacttac cagccttgga caattgagga cccaatagtc ttggaacttg
+      301 cttgatcaaa acttcagaag caatgaaagc gttgtacttc ttagacaact tcttgattaa
+      361 cttcttgttc ttgttcaact tcttcaagtc atcgacggac atagcgtcaa caccgcaaga
+      421 cttagctctg tcaacatcga aagcatcacc gaagatacag atggacatgt ttggtcttgg
+      481 acaatttggc aacttcaaag aaccagagaa acgcttgtct ctttgagggt catagttctt
+      541 caaaccgact tgtagttcga cggtttccaa gaagtttctc ttcttggttt cgttggaata
+      601 cttcaacaat tccttgacgt gttctctgac ttgagaaga
+//

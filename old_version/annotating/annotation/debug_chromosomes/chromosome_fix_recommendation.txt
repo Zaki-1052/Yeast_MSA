@@ -1,0 +1,27 @@
+SnpEff Chromosome Naming Issue Recommendation
+Date: 2025-04-13 21:43:18
+==============================================
+
+ISSUE DIAGNOSIS:
+The chromosome names in your VCF files don't match the chromosome names in the SnpEff database.
+
+RECOMMENDED SOLUTION OPTIONS:
+
+OPTION 1: Modify the VCF files to use the chromosome names from the SnpEff database
+- Extract a complete list of chromosome names from the SnpEff database
+- Create a comprehensive mapping between your VCF chromosomes and SnpEff chromosomes
+- Use bcftools to reheader the VCF files with the correct chromosome names
+
+OPTION 2: Rebuild the SnpEff database using the GenBank files with JRIU identifiers
+- The genes.gbk file already contains JRIU identifiers, but the database might not be properly built
+- Delete the existing w303 database and rebuild it using the correct GenBank files
+
+OPTION 3: Use a different annotation tool that can handle the chromosome name mismatch
+- Tools like VEP or ANNOVAR might be more flexible with chromosome name mappings
+- You could also use a tool like vcfanno with a custom annotation file
+
+NEXT STEPS:
+1. Run a detailed comparison between the exact chromosome names in your VCF files and the SnpEff database
+2. If there's a consistent pattern, create a comprehensive mapping file
+3. Use bcftools reheader to rename chromosomes in your VCF files
+4. Try a test annotation on a single modified VCF to verify the fix

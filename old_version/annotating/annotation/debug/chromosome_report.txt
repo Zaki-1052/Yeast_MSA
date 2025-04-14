@@ -1,0 +1,51 @@
+Chromosome Mapping Analysis Report
+Date: 2025-04-13 21:28:29
+==============================================
+
+VCF Chromosomes:
+- JRIU01000001.1
+- JRIU01000002.1
+- JRIU01000003.1
+- JRIU01000004.1
+- JRIU01000005.1
+- JRIU01000006.1
+- JRIU01000007.1
+- JRIU01000008.1
+- JRIU01000009.1
+- JRIU01000010.1
+- JRIU01000011.1
+- JRIU01000012.1
+- JRIU01000013.1
+- JRIU01000014.1
+- JRIU01000015.1
+- JRIU01000016.1
+- JRIU01000017.1
+- JRIU01000018.1
+- JRIU01000019.1
+- JRIU01000020.1
+... and 395 more
+
+SnpEff Database Chromosomes:
+- w303_scaffold_1
+- w303_scaffold_10
+- w303_scaffold_100
+- w303_scaffold_101
+- w303_scaffold_102
+- w303_scaffold_103
+- w303_scaffold_104
+- w303_scaffold_105
+- w303_scaffold_106
+- w303_scaffold_107
+
+Observations:
+1. The chromosome names in VCF files don't match those in the SnpEff database
+2. This mismatch prevents SnpEff from properly annotating variants
+3. To fix this, we need to either:
+   a. Create a chromosome mapping file for SnpEff
+   b. Rename the chromosomes in the VCF files
+
+Recommended Actions:
+1. Examine the genes.gbk file to understand the exact chromosome naming convention
+2. Examine the GenBank files from Israel's annotation pipeline
+3. Create a complete and accurate chromosome mapping file
+4. Either configure SnpEff to use this mapping or modify the VCF files

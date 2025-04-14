@@ -1,0 +1,38 @@
+LOCUS       w303_scaffold_324          344 bp    dna     linear   PLN 13-APR-2025
+DEFINITION  w303-annotated_by_ygap
+ACCESSION   unknown
+KEYWORDS    .
+COMMENT     Annotated using the "Yeast Genome Annotation Pipeline" (YGAP)
+            URL:http://wolfe.ucd.ie/annotation/
+            PMID:22984983
+FEATURES             Location/Qualifiers
+     source          1..344
+                     /mol_type="genomic DNA"
+                     /note="JRIU01000345.1"
+                     /note="scaffold 324"
+                     /organism="w303-annotated_by_ygap"
+     gene            4..344
+                     /gene="W3030LL00100"
+     CDS             4..344
+                     /codon_start=1
+                     /gene="W3030LL00100"
+                     /inference="similar to DNA
+                     sequence:INSDC:YDL191W,YDL136W"
+                     /locus_tag="W303_0LL00100"
+                     /note="similar to Saccharomyces cerevisiae RPL35A
+                     (YDL191W) and RPL35B (YDL136W); ancestral locus
+                     Anc_7.306"
+                     /note="ancestral locus Anc_7.306"
+                     /product="hypothetical protein"
+                     /transl_table=1
+                     /translation="KAYELRTKSKEQLASQLVDLKKELAELKVQKLSRPSLPKIKTVR
+                     KSIACVLTVINEQQREAVRQLYKGKKYQPKDLRAKKTRALRRALTKFEASQVTEKQRK
+                     KQIAFPQRKYA"
+ORIGIN      
+        1 gttaaagctt acgaactaag aaccaaatcc aaggaacaat tggcttctca attggttgac
+       61 ttgaaaaagg agttggctga attgaaggtc caaaagttgt ccagaccatc tttgccaaag
+      121 atcaagaccg tcagaaagag tatcgcctgt gtcttgaccg tcatcaacga acaacaaaga
+      181 gaagctgtta gacaattata caagggtaag aagtaccaac caaaggactt gagagccaag
+      241 aagaccagag ctttgagaag agctttgacc aaattcgaag cttcccaagt taccgaaaag
+      301 caaagaaaga agcaaatcgc tttcccacaa agaaagtacg ctat
+//

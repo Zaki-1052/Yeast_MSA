@@ -1,0 +1,23 @@
+Gene Mapping Recommendations
+==============================================
+
+Based on the debug analysis, here are the key findings:
+
+1. VCF File Access:
+   - VCF files are accessible with zcat
+
+2. Current Gene Mappings:
+   - YHR072W → w303_scaffold_80 (Confidence: High)
+   - YHR007C → w303_scaffold_139 (Confidence: High)
+   - YNL280C → w303_scaffold_15 (Confidence: High)
+
+3. Observed Gene ID Patterns:
+   - No clear gene ID patterns observed
+
+4. Recommendations for next steps:
+   a. Manually check the GenBank files with grep for each target gene
+      Example: grep -A 10 -B 10 'YHR190W' /Users/zakiralibhai/snpEff/data/w303/genes.gbk
+   b. Try extracting the LOCUS line before each gene reference
+   c. Look for gene name patterns in the SnpEff database dump
+   d. Consider a more aggressive grep for partial matches
+   e. For unmapped genes, try using other genes on the same chromosome as guides

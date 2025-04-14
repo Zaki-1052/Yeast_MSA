@@ -1,0 +1,20 @@
+Gene Mapping Recommendations
+==============================================
+
+The SnpEff database uses different gene identifiers than the SGD-style YHR190W format.
+To find variants in your genes of interest, you'll need to:
+
+1. Identify the corresponding W303 identifiers for your target genes
+   - Look in the genes.gbk file for product or note fields containing your gene names
+   - Search for gene descriptions or aliases that match your genes
+   - Fill in the manual_mapping_template.tsv file with the correct mappings
+
+2. Update your gene extraction script to:
+   - Use the W303 gene identifiers instead of SGD names
+   - Extract the correct field from the ANN string (appears to be field 4)
+   - Map back to the SGD names in your final output
+
+3. Alternative approaches:
+   - Run SnpEff on the VCF files with the -canon option to get canonical gene names
+   - Use an external database to map between identifier systems
+   - Create a custom annotation using BED files with your genes of interest

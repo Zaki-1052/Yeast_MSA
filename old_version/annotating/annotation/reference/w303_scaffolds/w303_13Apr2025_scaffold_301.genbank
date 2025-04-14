@@ -1,0 +1,39 @@
+LOCUS       w303_scaffold_301          466 bp    dna     linear   PLN 13-APR-2025
+DEFINITION  w303-annotated_by_ygap
+ACCESSION   unknown
+KEYWORDS    .
+COMMENT     Annotated using the "Yeast Genome Annotation Pipeline" (YGAP)
+            URL:http://wolfe.ucd.ie/annotation/
+            PMID:22984983
+FEATURES             Location/Qualifiers
+     source          1..466
+                     /mol_type="genomic DNA"
+                     /note="JRIU01000360.1"
+                     /note="scaffold 301"
+                     /organism="w303-annotated_by_ygap"
+     gene            4..465
+                     /gene="W3030KO00100"
+     CDS             4..465
+                     /codon_start=1
+                     /gene="W3030KO00100"
+                     /inference="similar to DNA
+                     sequence:INSDC:YBL072C,YER102W"
+                     /locus_tag="W303_0KO00100"
+                     /note="similar to Saccharomyces cerevisiae RPS8A
+                     (YBL072C) and RPS8B (YER102W); ancestral locus Anc_7.395"
+                     /note="ancestral locus Anc_7.395"
+                     /product="hypothetical protein"
+                     /transl_table=1
+                     /translation="TRGGNKKYRALRIETGNFSWASEGISKKTRIAGVVYHPSNNELV
+                     RTNTLTKAAIVQIDATPFRQWFEAHYGQTLGKKKNVKEEETVAKSKNAERKWAARAAS
+                     AKIESSVESQFSAGRLYACISSRPGQSGRCDGYILEGEELAFYLRRLTAKK"
+ORIGIN      
+        1 agaactagag gtggtaacaa gaaatacaga gctctaagaa ttgaaaccgg taacttttct
+       61 tgggcttctg aaggtatctc caagaagacc agaattgctg gtgttgttta ccatccatcc
+      121 aacaatgaat tggttagaac taacactttg accaaggctg ccattgtcca aattgatgct
+      181 actccattca gacaatggtt cgaagctcac tacggtcaaa ccttgggtaa gaagaagaac
+      241 gtcaaggaag aagaaactgt tgccaagagc aagaacgctg aaagaaagtg ggctgctaga
+      301 gctgcttctg ccaagatcga atcttccgtt gaatctcaat tcagcgccgg tagattatac
+      361 gcttgtatct cttccagacc aggtcaatcc ggtagatgtg atggttacat cttggaaggt
+      421 gaagaattag ctttctacct aagaagattg actgctaaga aataga
+//
