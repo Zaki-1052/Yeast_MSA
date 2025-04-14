@@ -3,24 +3,125 @@ Regional Enrichment Analysis Summary
 
 Overall Statistics:
 -----------------
-Total enriched regions identified: 0
+Total enriched regions identified: 822
 
 Treatment-Specific Statistics:
 --------------------------
 
+WT-37 Treatment (Temperature adaptation):
+  Enriched regions: 221
+  Average fold enrichment: 115.70
+  Maximum fold enrichment: 559.90
+
+  Top 5 most enriched regions:
+    JRIU01000031.1:4800-5800, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000031.1:5000-6000, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000031.1:5200-6200, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000031.1:5400-6400, Fold enrichment: 559.90, Q-value: 0.00e+00
+    JRIU01000195.1:16000-17000, Fold enrichment: 559.90, Q-value: 0.00e+00
+
+WTA Treatment (Low Oxygen adaptation):
+  Enriched regions: 195
+  Average fold enrichment: 126.20
+  Maximum fold enrichment: 671.17
+
+  Top 5 most enriched regions:
+    JRIU01000195.1:16200-17200, Fold enrichment: 671.17, Q-value: 0.00e+00
+    JRIU01000195.1:16000-17000, Fold enrichment: 671.17, Q-value: 0.00e+00
+    JRIU01000031.1:126200-127200, Fold enrichment: 596.59, Q-value: 0.00e+00
+    JRIU01000031.1:126400-127400, Fold enrichment: 596.59, Q-value: 0.00e+00
+    JRIU01000031.1:126600-127600, Fold enrichment: 596.59, Q-value: 0.00e+00
+
+STC Treatment (Low Oxygen adaptation with STC gene):
+  Enriched regions: 203
+  Average fold enrichment: 147.82
+  Maximum fold enrichment: 830.97
+
+  Top 5 most enriched regions:
+    JRIU01000195.1:16000-17000, Fold enrichment: 830.97, Q-value: 0.00e+00
+    JRIU01000195.1:16200-17200, Fold enrichment: 830.97, Q-value: 0.00e+00
+    JRIU01000031.1:5200-6200, Fold enrichment: 646.31, Q-value: 0.00e+00
+    JRIU01000031.1:5400-6400, Fold enrichment: 646.31, Q-value: 0.00e+00
+    JRIU01000031.1:5000-6000, Fold enrichment: 646.31, Q-value: 0.00e+00
+
+CAS Treatment (Temperature adaptation with CAS gene):
+  Enriched regions: 203
+  Average fold enrichment: 145.88
+  Maximum fold enrichment: 793.20
+
+  Top 5 most enriched regions:
+    JRIU01000243.1:0-1000, Fold enrichment: 793.20, Q-value: 0.00e+00
+    JRIU01000031.1:126800-127800, Fold enrichment: 705.06, Q-value: 0.00e+00
+    JRIU01000031.1:126600-127600, Fold enrichment: 705.06, Q-value: 0.00e+00
+    JRIU01000031.1:126400-127400, Fold enrichment: 705.06, Q-value: 0.00e+00
+    JRIU01000031.1:126200-127200, Fold enrichment: 705.06, Q-value: 0.00e+00
+
 Adaptation-Specific Statistics:
 ----------------------------
+
+Temperature Adaptation:
+  Enriched regions: 320
+  Average fold enrichment: 85.13
+  Maximum fold enrichment: 619.97
+
+  Top 3 most enriched regions:
+    JRIU01000195.1:16200-17200, Fold enrichment: 619.97
+    JRIU01000195.1:16000-17000, Fold enrichment: 619.97
+    JRIU01000031.1:126200-127200, Fold enrichment: 583.50
+
+Low Oxygen Adaptation:
+  Enriched regions: 282
+  Average fold enrichment: 95.82
+  Maximum fold enrichment: 742.57
+
+  Top 3 most enriched regions:
+    JRIU01000195.1:16000-17000, Fold enrichment: 742.57
+    JRIU01000195.1:16200-17200, Fold enrichment: 742.57
+    JRIU01000031.1:126200-127200, Fold enrichment: 495.05
 
 Gene Modification Statistics:
 --------------------------
 
+Non-Modified Strains:
+  Enriched regions: 296
+  Average fold enrichment: 84.91
+  Maximum fold enrichment: 610.51
+
+Gene-Modified Strains:
+  Enriched regions: 308
+  Average fold enrichment: 96.77
+  Maximum fold enrichment: 766.55
+
 Shared Regions Statistics:
 ------------------------
-  No regions shared across multiple treatments
+  Total shared regions (in multiple treatments): 177
+  Regions in exactly 2 treatments: 41
+  Regions in exactly 3 treatments: 65
+  Regions in exactly 4 treatments: 71
+
+  Top 3 most consistently enriched regions:
+    JRIU01000195.1:16000-17000, Treatments: 4, Avg enrichment: 691.78
+    JRIU01000195.1:16200-17200, Treatments: 4, Avg enrichment: 691.78
+    JRIU01000031.1:126200-127200, Treatments: 4, Avg enrichment: 542.17
 
 Adaptation-Specific Region Statistics:
 ----------------------------------
-  No adaptation-specific regions identified
+
+Temperature Adaptation-Specific Regions:
+  Total specific regions: 104
+  Average enrichment: 178.73
+  Top 3 most enriched regions:
+    JRIU01000195.1:16200-17200, Avg enrichment: 632.48
+    JRIU01000195.1:16000-17000, Avg enrichment: 632.48
+    JRIU01000031.1:126600-127600, Avg enrichment: 601.38
+
+Low Oxygen Adaptation-Specific Regions:
+  Total specific regions: 116
+  Average enrichment: 165.97
+  Top 3 most enriched regions:
+    JRIU01000195.1:16000-17000, Avg enrichment: 751.07
+    JRIU01000195.1:16200-17200, Avg enrichment: 751.07
+    JRIU01000031.1:126400-127400, Avg enrichment: 482.96
 
 Main Conclusions:
 ---------------
