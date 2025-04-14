@@ -1029,9 +1029,30 @@ def main():
     # Create summary table
     summary_table = create_summary_table(all_data, all_counts, ti_tv_ratios)
     
+    # Calculate and add filtering stats
+    original_counts = {t: len(all_raw_data.get(t, pd.DataFrame())) for t in TREATMENTS if t in all_raw_data}
+    final_counts = {t: len(all_data.get(t, pd.DataFrame())) for t in TREATMENTS if t in all_data}
+    
+    # Add this info to the summary table
+    filtered_info = []
+    for treatment in TREATMENTS:
+        if treatment in original_counts and treatment in final_counts:
+            filtered_info.append({
+                'Treatment': treatment,
+                'Total_Variants': original_counts[treatment],
+                'SNVs_After_Filtering': final_counts[treatment],
+                'MNVs_and_Other_Filtered': original_counts[treatment] - final_counts[treatment],
+                'Percent_Kept': round(final_counts[treatment] / original_counts[treatment] * 100, 1)
+            })
+    
+    # Save filtering stats to a separate file
+    filtering_df = pd.DataFrame(filtered_info)
+    filtering_df.to_csv(os.path.join(OUTPUT_DIR, "variant_filtering_stats.csv"), index=False)
+    
     # Save summary table
     summary_table.to_csv(os.path.join(OUTPUT_DIR, "mutation_spectrum_summary.csv"), index=False)
     print(f"Saved summary table to {OUTPUT_DIR}/mutation_spectrum_summary.csv")
+    print(f"Saved filtering statistics to {OUTPUT_DIR}/variant_filtering_stats.csv")
     
     # Save test results
     with open(os.path.join(OUTPUT_DIR, "statistical_test_results.txt"), 'w') as f:

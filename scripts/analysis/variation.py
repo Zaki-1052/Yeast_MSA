@@ -48,10 +48,10 @@ def analyze_treatment_control_differences():
     
     # Define possible treatment VCF locations to check
     treatment_locations = [
-        "results/merged/analysis/{}/specific.vcf.gz",
-        "results/merged/analysis/{}_specific.vcf.gz",
         "results/merged/analysis/{}/highconf.vcf.gz",
-        "results/merged/analysis/{}_highconf.vcf.gz"
+        "results/merged/analysis/{}_highconf.vcf.gz",
+        "results/merged/analysis/{}/specific.vcf.gz",
+        "results/merged/analysis/{}_specific.vcf.gz"
     ]
     
     # Define possible control VCF locations to check
@@ -103,8 +103,11 @@ def analyze_treatment_control_differences():
             [control_count, genome_size - control_count]
         ])
         
-        # Perform Fisher's exact test
+        # Perform Fisher's exact test (stable and doesn't require chi-square assumptions)
         odds_ratio, p_value = fisher_exact(contingency_table)
+        
+        # Make sure the p-value is not too extreme
+        #p_value = max(p_value, 1e-10)  # Limit extremely small p-values
         
         # Store results
         results.append({

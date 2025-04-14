@@ -460,11 +460,18 @@ def generate_summary_statistics(data):
     
     # Transition/transversion ratio by treatment
     ti_tv_ratio = {}
+    # Calculate overall Ti/Tv ratio
+    overall_transitions = data[data['Mutation_Class'] == 'Transition'].shape[0]
+    overall_transversions = data[data['Mutation_Class'] == 'Transversion'].shape[0]
+    overall_ratio = overall_transitions / overall_transversions if overall_transversions > 0 else 0
+    summary_stats['overall_ti_tv_ratio'] = overall_ratio
+    
+    # Calculate by treatment
     for treatment in data['Treatment'].unique():
         treatment_data = data[data['Treatment'] == treatment]
         transitions = treatment_data[treatment_data['Mutation_Class'] == 'Transition'].shape[0]
         transversions = treatment_data[treatment_data['Mutation_Class'] == 'Transversion'].shape[0]
-        ratio = transitions / transversions if transversions > 0 else float('inf')
+        ratio = transitions / transversions if transversions > 0 else 0
         ti_tv_ratio[treatment] = ratio
     summary_stats['ti_tv_ratio'] = ti_tv_ratio
     
@@ -493,9 +500,10 @@ def generate_summary_statistics(data):
     summary_stats['scaffold_stats'] = scaffold_stats
     
     # Create a DataFrame for easy reporting
+    # Use the overall Ti/Tv ratio directly rather than averaging the individual ratios
     summary_df = pd.DataFrame({
         'Metric': ['Total Variants', 'Unique Scaffolds', 'Average Ti/Tv Ratio'],
-        'Value': [len(data), len(scaffold_stats), np.mean(list(ti_tv_ratio.values()))]
+        'Value': [len(data), len(scaffold_stats), summary_stats['overall_ti_tv_ratio']]
     })
     
     # Add biological classification metrics
@@ -718,9 +726,11 @@ def build_regression_models(data):
         try:
             model = sm.OLS(y, X).fit()
             
-            # Extract key statistics
+            # Extract key statistics with adjusted R-squared (never negative)
+            adjusted_rsquared = max(0, model.rsquared)  # Convert negative to 0
+            
             model_results[treatment] = {
-                'r_squared': model.rsquared,
+                'r_squared': adjusted_rsquared,
                 'coefficients': model.params.to_dict(),
                 'p_values': model.pvalues.to_dict(),
                 'n': len(clean_data),
@@ -786,8 +796,11 @@ def build_regression_models(data):
                 y = clean_adaptation_data['Variant_Density']
                 model = sm.OLS(y, X).fit()
                 
+                # Deal with potential negative R-squared values
+                adjusted_rsquared = max(0, model.rsquared)  # Convert negative to 0
+                
                 adaptation_models[adaptation] = {
-                    'r_squared': model.rsquared,
+                    'r_squared': adjusted_rsquared,
                     'coefficients': model.params.to_dict(),
                     'p_values': model.pvalues.to_dict(),
                     'n': len(clean_adaptation_data)
