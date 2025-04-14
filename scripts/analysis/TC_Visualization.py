@@ -97,7 +97,7 @@ def create_treatment_control_visualizations(results_df):
                     ha='center', va='bottom', fontsize=9)
     
     plt.tight_layout()
-    plt.savefig('treatment_control_analysis/variant_comparison_barplot.png', dpi=300, bbox_inches='tight')
+    plt.savefig('analysis/treatment_control_analysis/variant_comparison_barplot.png', dpi=300, bbox_inches='tight')
     plt.close()
     
     # 2. Grouped Bar Plot with Primary vs Secondary Comparisons
@@ -147,7 +147,7 @@ def create_treatment_control_visualizations(results_df):
             plt.legend()
         
         plt.tight_layout()
-        plt.savefig('treatment_control_analysis/primary_vs_secondary_comparisons.png', dpi=300, bbox_inches='tight')
+        plt.savefig('analysis/treatment_control_analysis/primary_vs_secondary_comparisons.png', dpi=300, bbox_inches='tight')
         plt.close()
     
     # 3. Fold Change Visualization
@@ -206,7 +206,7 @@ def create_treatment_control_visualizations(results_df):
     
     plt.ylim(0, max(results_df['Fold_Change']) * 1.2)  # Add some space at the top
     plt.tight_layout()
-    plt.savefig('treatment_control_analysis/fold_change_plot.png', dpi=300, bbox_inches='tight')
+    plt.savefig('analysis/treatment_control_analysis/fold_change_plot.png', dpi=300, bbox_inches='tight')
     plt.close()
     
     # 4. Treatment Types - Biological Classification Visual
@@ -254,7 +254,7 @@ def create_treatment_control_visualizations(results_df):
         plt.legend(handles, legend_labels, title="Treatment", loc='best')
         
         plt.tight_layout()
-        plt.savefig('treatment_control_analysis/biological_classification.png', dpi=300, bbox_inches='tight')
+        plt.savefig('analysis/treatment_control_analysis/biological_classification.png', dpi=300, bbox_inches='tight')
         plt.close()
     
     # 5. Impact Visualization - Horizontal Bar Chart
@@ -287,7 +287,7 @@ def create_treatment_control_visualizations(results_df):
                     f'{width:.1f}×', ha='left', va='center')
     
     plt.tight_layout()
-    plt.savefig('treatment_control_analysis/impact_ranked_plot.png', dpi=300, bbox_inches='tight')
+    plt.savefig('analysis/treatment_control_analysis/impact_ranked_plot.png', dpi=300, bbox_inches='tight')
     plt.close()
     
     # 6. Description Table Plot (visualize treatment descriptions)
@@ -322,7 +322,7 @@ def create_treatment_control_visualizations(results_df):
     plt.title('Treatment Descriptions and Key Metrics', pad=20)
     
     plt.tight_layout()
-    plt.savefig('treatment_control_analysis/treatment_descriptions.png', dpi=300, bbox_inches='tight')
+    plt.savefig('analysis/treatment_control_analysis/treatment_descriptions.png', dpi=300, bbox_inches='tight')
     plt.close()
 
 if __name__ == "__main__":

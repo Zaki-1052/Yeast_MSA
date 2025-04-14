@@ -16,7 +16,7 @@ sns.set(font_scale=1.2)
 sns.set_style("whitegrid")
 
 # Define output directory
-OUTPUT_DIR = "mutation_spectrum_results"
+OUTPUT_DIR = "analysis/mutation_spectrum_results"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Updated biologically correct treatment groups

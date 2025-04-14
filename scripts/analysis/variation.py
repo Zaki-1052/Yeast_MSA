@@ -130,10 +130,10 @@ def analyze_treatment_control_differences():
     results_df = results_df.sort_values('P_Value')
     
     # Create output directory if it doesn't exist
-    os.makedirs('treatment_control_analysis', exist_ok=True)
+    os.makedirs('analysis/treatment_control_analysis', exist_ok=True)
     
     # Save results
-    results_df.to_csv('treatment_control_analysis/treatment_vs_control_statistics.csv', index=False)
+    results_df.to_csv('analysis/treatment_control_analysis/treatment_vs_control_statistics.csv', index=False)
     
     # Create a detailed report
     with open('treatment_control_analysis/statistical_analysis_report.txt', 'w') as f:

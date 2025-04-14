@@ -19,7 +19,7 @@ sns.set(font_scale=1.2)
 sns.set_style("whitegrid")
 
 # Define output directory
-OUTPUT_DIR = "regional_enrichment_results"
+OUTPUT_DIR = "analysis/regional_enrichment_results"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Updated biologically correct treatment groups

@@ -25,7 +25,7 @@ sns.set(font_scale=1.2)
 sns.set_style("whitegrid")
 
 # Define output directory
-OUTPUT_DIR = "statistical_pattern_results"
+OUTPUT_DIR = "analysis/statistical_pattern_results"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Define biologically correct treatment groups
