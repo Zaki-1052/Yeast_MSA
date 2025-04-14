@@ -446,9 +446,9 @@
 ##bcftools_filterVersion=1.21+htslib-1.21
 ##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/WTA-55-2.filtered.vcf results/vcf/individual/WTA-55-2.norm.vcf; Date=Sun Apr 13 01:54:48 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/WTA-55-2.filtered.vcf.gz; Date=Sun Apr 13 13:50:00 2025
+##bcftools_viewCommand=view -h results/merged/filtered/WTA-55-2.filtered.vcf.gz; Date=Sun Apr 13 16:49:15 2025
 ##bcftools_isecVersion=1.21+htslib-1.21
-##bcftools_isecCommand=isec -p results/merged/direct_comparison/WTA/WTA-55-2_vs_control -n =1 -c none results/merged/fixed/WTA-55-2.fixed.vcf.gz results/merged/fixed/WT-CTRL.fixed.vcf.gz; Date=Sun Apr 13 13:50:04 2025
+##bcftools_isecCommand=isec -p results/merged/direct_comparison/WTA/WTA-55-2_vs_control -n =1 -c none results/merged/fixed/WTA-55-2.fixed.vcf.gz results/merged/fixed/WT-CTRL.fixed.vcf.gz; Date=Sun Apr 13 16:49:19 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	WTA-55-2
 JRIU01000371.1	39	.	A	G	108.849	PASS	DP=60;VDB=0.000177993;SGB=-0.688148;RPBZ=0.349939;MQBZ=-0.837708;MQSBZ=0.949871;BQBZ=0;SCBZ=1.43771;MQ0F=0;AC=1;AN=1;DP4=3,2,11,4;MQ=58	GT:PL:DP:AD	1:255,119:20:5,15
 JRIU01000371.1	135	.	T	G	25.9512	PASS	DP=66;VDB=0.00266169;SGB=-0.693145;RPBZ=-0.52094;MQBZ=-1.86835;MQSBZ=1.28274;BQBZ=1.2839;SCBZ=3.55997;MQ0F=0;AC=1;AN=1;DP4=6,6,16,25;MQ=56	GT:PL:DP:AD	1:255,202:53:12,41

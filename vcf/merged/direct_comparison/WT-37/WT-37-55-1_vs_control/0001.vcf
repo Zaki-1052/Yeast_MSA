@@ -446,9 +446,9 @@
 ##bcftools_filterVersion=1.21+htslib-1.21
 ##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/WT-CTRL.filtered.vcf results/vcf/individual/WT-CTRL.norm.vcf; Date=Sun Apr 13 01:54:48 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/WT-CTRL.filtered.vcf.gz; Date=Sun Apr 13 13:50:00 2025
+##bcftools_viewCommand=view -h results/merged/filtered/WT-CTRL.filtered.vcf.gz; Date=Sun Apr 13 16:49:15 2025
 ##bcftools_isecVersion=1.21+htslib-1.21
-##bcftools_isecCommand=isec -p results/merged/direct_comparison/WT-37/WT-37-55-1_vs_control -n =1 -c none results/merged/fixed/WT-37-55-1.fixed.vcf.gz results/merged/fixed/WT-CTRL.fixed.vcf.gz; Date=Sun Apr 13 13:50:04 2025
+##bcftools_isecCommand=isec -p results/merged/direct_comparison/WT-37/WT-37-55-1_vs_control -n =1 -c none results/merged/fixed/WT-37-55-1.fixed.vcf.gz results/merged/fixed/WT-CTRL.fixed.vcf.gz; Date=Sun Apr 13 16:49:19 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	WT-CTRL
 JRIU01000324.1	442	.	C	CT	77.3406	PASS	INDEL;IDV=25;IMF=0.416667;DP=60;VDB=0.0748685;SGB=-0.692914;RPBZ=-2.26484;MQBZ=0;MQSBZ=0;BQBZ=-2.43687;SCBZ=0;MQ0F=0;AC=1;AN=1;DP4=18,15,8,17;MQ=60	GT:PL:DP:AD	1:233,128:58:33,25
 JRIU01000324.1	3744	.	C	CT	51.3602	PASS	INDEL;IDV=20;IMF=0.416667;DP=48;VDB=0.210173;SGB=-0.692067;RPBZ=-2.45771;MQBZ=-0.847356;MQSBZ=-0.159942;BQBZ=-3.28788;SCBZ=-2.13695;MQ0F=0;AC=1;AN=1;DP4=15,10,10,10;MQ=59	GT:PL:DP:AD	1:123,44:45:25,16

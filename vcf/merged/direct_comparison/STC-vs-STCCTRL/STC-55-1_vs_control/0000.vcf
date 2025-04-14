@@ -446,9 +446,9 @@
 ##bcftools_filterVersion=1.21+htslib-1.21
 ##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/STC-55-1.filtered.vcf results/vcf/individual/STC-55-1.norm.vcf; Date=Sun Apr 13 01:54:48 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/STC-55-1.filtered.vcf.gz; Date=Sun Apr 13 13:50:00 2025
+##bcftools_viewCommand=view -h results/merged/filtered/STC-55-1.filtered.vcf.gz; Date=Sun Apr 13 16:49:15 2025
 ##bcftools_isecVersion=1.21+htslib-1.21
-##bcftools_isecCommand=isec -p results/merged/direct_comparison/STC-vs-STCCTRL/STC-55-1_vs_control -n =1 -c none results/merged/fixed/STC-55-1.fixed.vcf.gz results/merged/fixed/STC-CTRL.fixed.vcf.gz; Date=Sun Apr 13 13:50:04 2025
+##bcftools_isecCommand=isec -p results/merged/direct_comparison/STC-vs-STCCTRL/STC-55-1_vs_control -n =1 -c none results/merged/fixed/STC-55-1.fixed.vcf.gz results/merged/fixed/STC-CTRL.fixed.vcf.gz; Date=Sun Apr 13 16:49:19 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	STC-55-1
 JRIU01000367.1	140	.	T	C	31.4524	PASS	DP=21;VDB=0.0319263;SGB=-0.676189;RPBZ=-2.424;MQBZ=-2.6193;MQSBZ=0.370907;BQBZ=-1.25127;SCBZ=-0.35887;MQ0F=0;AC=1;AN=1;DP4=3,3,7,4;MQ=51	GT:PL:DP:AD	1:255,196:17:6,11
 JRIU01000361.1	93	.	A	G	56.2754	PASS	DP=23;VDB=0.563605;SGB=-0.670168;RPBZ=0.113475;MQBZ=0;MQSBZ=0;BQBZ=1.8311;SCBZ=-0.355348;MQ0F=0;AC=1;AN=1;DP4=10,0,9,1;MQ=60	GT:PL:DP:AD	1:245,161:20:10,10

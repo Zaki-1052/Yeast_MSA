@@ -446,9 +446,9 @@
 ##bcftools_filterVersion=1.21+htslib-1.21
 ##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/CAS-55-2.filtered.vcf results/vcf/individual/CAS-55-2.norm.vcf; Date=Sun Apr 13 01:54:48 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-2.filtered.vcf.gz; Date=Sun Apr 13 13:50:00 2025
+##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-2.filtered.vcf.gz; Date=Sun Apr 13 16:49:15 2025
 ##bcftools_isecVersion=1.21+htslib-1.21
-##bcftools_isecCommand=isec -p results/merged/direct_comparison/CAS/CAS-55-2_vs_control -n =1 -c none results/merged/fixed/CAS-55-2.fixed.vcf.gz results/merged/fixed/WT-CTRL.fixed.vcf.gz; Date=Sun Apr 13 13:50:04 2025
+##bcftools_isecCommand=isec -p results/merged/direct_comparison/CAS/CAS-55-2_vs_control -n =1 -c none results/merged/fixed/CAS-55-2.fixed.vcf.gz results/merged/fixed/WT-CTRL.fixed.vcf.gz; Date=Sun Apr 13 16:49:19 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	CAS-55-2
 JRIU01000361.1	45	.	C	T	99.6124	PASS	DP=21;VDB=0.000125639;SGB=-0.683931;RPBZ=1.86431;MQBZ=0;MQSBZ=0;BQBZ=0.733799;SCBZ=-1.1225;MQ0F=0;AC=1;AN=1;DP4=7,0,7,6;MQ=60	GT:PL:DP:AD	1:255,128:20:7,13
 JRIU01000361.1	48	.	C	T	99.6124	PASS	DP=21;VDB=0.000220233;SGB=-0.683931;RPBZ=1.86642;MQBZ=0;MQSBZ=0;BQBZ=0.733799;SCBZ=-1.1239;MQ0F=0;AC=1;AN=1;DP4=7,0,7,6;MQ=60	GT:PL:DP:AD	1:255,128:20:7,13

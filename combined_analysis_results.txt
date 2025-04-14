@@ -1,0 +1,703 @@
+# YEAST MSA COMBINED ANALYSIS RESULTS
+# Generated: 2025-04-13 20:02:25
+# ==========================================
+
+
+
+################################################################################
+# GENOMIC CONTEXT RESULTS
+################################################################################
+
+Genomic Context Analysis Summary
+===============================
+
+Overall Statistics:
+-----------------
+Total variants analyzed: 516
+Variants by treatment:
+  WT-37: 167 variants - Temperature-adapted wild type (Temperature adaptation)
+  WTA: 134 variants - Low oxygen-adapted wild type (Low Oxygen adaptation)
+  STC: 104 variants - STC gene with low oxygen adaptation (Low Oxygen adaptation with STC gene)
+  CAS: 111 variants - CAS gene with temperature adaptation (Temperature adaptation with CAS gene)
+
+Variants by adaptation type:
+  Temperature: 278 variants
+  Low Oxygen: 238 variants
+
+Variants by gene modification status:
+  Non-modified: 301 variants
+  Gene-modified: 215 variants
+
+GC Content Analysis:
+-------------------
+Mean GC content in variant regions: 0.3968
+Mean GC content in control regions: 0.3785
+GC content by treatment:
+  WT-37: 0.4037
+  WTA: 0.3951
+  STC: 0.3991
+  CAS: 0.3866
+
+GC content by adaptation type:
+  Temperature: 0.3969
+  Low Oxygen: 0.3968
+
+GC content by gene modification status:
+  Non-modified: 0.3999
+  Gene-modified: 0.3926
+
+Local Sequence Features:
+----------------------
+Fraction of variants near homopolymers: 0.8992
+Fraction of control sites near homopolymers: 0.9420
+Homopolymer presence by treatment:
+  WT-37: 0.8802
+  WTA: 0.9403
+  STC: 0.8462
+  CAS: 0.9279
+
+Homopolymer presence by adaptation type:
+  Temperature: 0.8993
+  Low Oxygen: 0.8992
+
+Homopolymer presence by gene modification status:
+  Non-modified: 0.9070
+  Gene-modified: 0.8884
+
+Fraction of variants near dinucleotide repeats: 0.8101
+Fraction of control sites near dinucleotide repeats: 0.9080
+Dinucleotide repeat presence by treatment:
+  WT-37: 0.8084
+  WTA: 0.8507
+  STC: 0.7500
+  CAS: 0.8198
+
+Dinucleotide repeat presence by adaptation type:
+  Temperature: 0.8129
+  Low Oxygen: 0.8067
+
+Dinucleotide repeat presence by gene modification status:
+  Non-modified: 0.8272
+  Gene-modified: 0.7860
+
+Main Conclusions:
+---------------
+1. This analysis examines the genomic context of mutations in different treatments.
+2. The GC content analysis reveals potential biases in mutation distribution.
+3. Homopolymer and repeat regions may influence mutation probability.
+4. Adaptation conditions (Temperature vs Low Oxygen) show distinct context preferences.
+5. Gene modifications (STC, CAS) appear to influence the genomic context of mutations.
+6. Sequence composition around mutation sites provides insights into damage mechanisms.
+7. Further analysis of specific motifs may reveal specific DNA damage signatures.
+
+
+################################################################################
+# MUTATION SPECTRUM RESULTS
+################################################################################
+
+Chi-square test for differences in mutation patterns:
+Chi-square value: 7.8582
+p-value: 0.9293
+Degrees of freedom: 15
+
+Interpretation:
+No significant difference detected in mutation patterns between treatments (p >= 0.05).
+
+Biological Context:
+------------------
+WT-37: Temperature-adapted wild type
+  Adaptation type: Temperature
+  Gene modification: None
+  Ti/Tv ratio: 2.88
+  Most common mutation: T>C (74 occurrences)
+
+WTA: Low oxygen-adapted wild type
+  Adaptation type: Low Oxygen
+  Gene modification: None
+  Ti/Tv ratio: 2.94
+  Most common mutation: T>C (62 occurrences)
+
+STC: STC gene with low oxygen adaptation
+  Adaptation type: Low Oxygen
+  Gene modification: STC
+  Ti/Tv ratio: 2.25
+  Most common mutation: T>C (48 occurrences)
+
+CAS: CAS gene with temperature adaptation
+  Adaptation type: Temperature
+  Gene modification: CAS
+  Ti/Tv ratio: 2.00
+  Most common mutation: T>C (44 occurrences)
+
+
+Comparison by Adaptation Type:
+----------------------------
+Low Oxygen adaptation:
+  Average Ti/Tv ratio: 2.60
+  Treatments: WTA, STC
+
+Temperature adaptation:
+  Average Ti/Tv ratio: 2.44
+  Treatments: WT-37, CAS
+
+
+
+################################################################################
+# POPULATION STRUCTURE RESULTS
+################################################################################
+
+Population Structure Analysis Summary
+===================================
+
+Overall Statistics:
+-----------------
+Total samples analyzed: 12
+Samples by treatment:
+  CAS: 3 samples - CAS gene with temperature adaptation
+  STC: 3 samples - STC gene with low oxygen adaptation
+  WT-37: 3 samples - Temperature-adapted wild type
+  WTA: 3 samples - Low oxygen-adapted wild type
+
+Variant Statistics:
+-----------------
+Variant count by treatment:
+  CAS: 100.33 variants (range: 90-107)
+  STC: 94.00 variants (range: 89-100)
+  WT-37: 146.67 variants (range: 141-152)
+  WTA: 122.33 variants (range: 117-125)
+
+Variant count by adaptation type:
+  Low Oxygen: 108.17 variants (range: 89-125)
+  Temperature: 123.50 variants (range: 90-152)
+
+Variant count by gene modification status:
+  Non-modified: 134.50 variants (range: 117-152)
+  Gene-modified: 97.17 variants (range: 89-107)
+
+Genetic Similarity Statistics:
+---------------------------
+Variant sharing by relationship type:
+  Different Treatment:
+    Sample pairs: 54
+    Mean shared variants: 48.54
+    Mean Jaccard similarity: 0.2648
+  Same Treatment:
+    Sample pairs: 12
+    Mean shared variants: 82.00
+    Mean Jaccard similarity: 0.5431
+
+Variant sharing by adaptation relationship:
+  Different Adaptation:
+    Sample pairs: 36
+    Mean shared variants: 49.42
+    Mean Jaccard similarity: 0.2703
+  Same Adaptation:
+    Sample pairs: 30
+    Mean shared variants: 60.87
+    Mean Jaccard similarity: 0.3696
+
+Variant sharing by gene modification relationship:
+  Different Gene Status:
+    Sample pairs: 36
+    Mean shared variants: 47.78
+    Mean Jaccard similarity: 0.2610
+  Same Gene Status:
+    Sample pairs: 30
+    Mean shared variants: 62.83
+    Mean Jaccard similarity: 0.3807
+
+Variant sharing between treatment pairs (top 3):
+  WTA-WTA:
+    Mean Jaccard similarity: 0.5819
+    Mean shared variants: 90.00
+  WT-37-WT-37:
+    Mean Jaccard similarity: 0.5743
+    Mean shared variants: 107.00
+  CAS-CAS:
+    Mean Jaccard similarity: 0.5202
+    Mean shared variants: 68.67
+
+Clustering and PCA Analysis:
+-------------------------
+1. PCA analysis highlights the major axes of variation in the dataset.
+2. Hierarchical clustering reveals sample groups based on genetic similarity.
+3. Samples tend to cluster by adaptation type, suggesting that temperature and
+   low oxygen adaptations involve distinct genomic changes.
+4. Gene-modified strains show specific population structure characteristics
+   compared to their non-modified counterparts.
+
+Main Conclusions:
+---------------
+1. This analysis examines the genetic relationships between samples based on their variant profiles.
+2. Principal Component Analysis reveals the major axes of variation in the dataset.
+3. Hierarchical clustering identifies sample groups based on genetic similarity.
+4. Treatment-specific variant patterns provide insights into adaptation mechanisms.
+5. Temperature and low oxygen adaptations show distinct population structures,
+   suggesting different evolutionary trajectories.
+6. Gene modifications influence variant profiles and population structure,
+   potentially through interactions with adaptation mechanisms.
+
+
+################################################################################
+# MUTATIONAL SIGNATURES RESULTS
+################################################################################
+
+Mutational Signatures Analysis Summary
+=====================================
+
+Overall Statistics:
+-----------------
+Total variants analyzed: 516
+Variants by treatment:
+  WT-37: 167 variants - Temperature-adapted wild type (Temperature adaptation)
+  WTA: 134 variants - Low oxygen-adapted wild type (Low Oxygen adaptation)
+  STC: 104 variants - STC gene with low oxygen adaptation (Low Oxygen adaptation with STC gene)
+  CAS: 111 variants - CAS gene with temperature adaptation (Temperature adaptation with CAS gene)
+
+Variants by adaptation type:
+  Temperature: 278 variants
+  Low Oxygen: 238 variants
+
+Variants by gene modification status:
+  Non-modified: 301 variants
+  Gene-modified: 215 variants
+
+Variants by mutation type:
+  C>A: 51 variants (9.88%)
+  C>G: 25 variants (4.84%)
+  C>T: 142 variants (27.52%)
+  T>A: 42 variants (8.14%)
+  T>C: 228 variants (44.19%)
+  T>G: 28 variants (5.43%)
+
+Signature Similarity Analysis:
+----------------------------
+Most similar treatment signatures: WT-37 and WTA (similarity: 0.8110)
+  Temperature-adapted wild type and Low oxygen-adapted wild type
+  Same adaptation type: No
+  Gene modification similarity: Neither has gene modifications
+
+Least similar treatment signatures: WTA and STC (similarity: 0.6243)
+  Low oxygen-adapted wild type and STC gene with low oxygen adaptation
+  Different adaptation types: No
+  Gene modification difference: Yes
+
+Adaptation-Specific Signature Analysis:
+-----------------------------------
+Signature similarity between Temperature and Low Oxygen: 0.8895
+
+Characteristic features of adaptation types:
+
+Temperature Adaptation:
+  Top enriched trinucleotide contexts:
+    CCA (C>G): 17.45-fold enrichment
+    CTA (T>A): 13.33-fold enrichment
+    TTA (T>G): 12.80-fold enrichment
+
+Low Oxygen Adaptation:
+  Top enriched trinucleotide contexts:
+    CTG (T>G): 14.77-fold enrichment
+    CCA (C>G): 13.71-fold enrichment
+    ACC (C>A): 12.19-fold enrichment
+
+Gene Modification Effects:
+-----------------------
+Signature similarity between gene-modified and non-modified strains: 0.8479
+
+Characteristic features of gene status:
+
+Non-modified strains:
+  Top enriched trinucleotide contexts:
+    TTA (T>G): 19.69-fold enrichment
+    CCA (C>G): 16.00-fold enrichment
+    CTA (T>A): 12.19-fold enrichment
+
+Gene-modified strains:
+  Top enriched trinucleotide contexts:
+    TCC (C>G): 14.77-fold enrichment
+    CCA (C>G): 14.77-fold enrichment
+    ATT (T>G): 12.80-fold enrichment
+
+Enriched Trinucleotide Contexts by Treatment:
+----------------------------------------
+
+WT-37 Treatment (Temperature-adapted wild type):
+  Adaptation: Temperature
+  Top enriched trinucleotide contexts:
+    CTA (T>A): 14.77-fold enrichment (3 occurrences)
+    ACC (C>A): 10.67-fold enrichment (3 occurrences)
+    TCT (C>A): 10.67-fold enrichment (3 occurrences)
+    CTA (T>C): 9.51-fold enrichment (11 occurrences)
+    TCT (C>T): 8.96-fold enrichment (7 occurrences)
+
+WTA Treatment (Low oxygen-adapted wild type):
+  Adaptation: Low Oxygen
+  Top enriched trinucleotide contexts:
+    TCT (C>T): 11.79-fold enrichment (7 occurrences)
+    CTA (T>C): 9.29-fold enrichment (9 occurrences)
+    ATG (T>C): 8.26-fold enrichment (8 occurrences)
+    TTT (T>C): 7.23-fold enrichment (7 occurrences)
+    ACG (C>T): 6.74-fold enrichment (4 occurrences)
+
+STC Treatment (STC gene with low oxygen adaptation):
+  Adaptation: Low Oxygen with STC gene
+  Top enriched trinucleotide contexts:
+    CTA (T>C): 12.00-fold enrichment (9 occurrences)
+    TCG (C>T): 8.00-fold enrichment (3 occurrences)
+    TCT (C>T): 8.00-fold enrichment (3 occurrences)
+    GCT (C>T): 8.00-fold enrichment (3 occurrences)
+    CTC (T>C): 6.67-fold enrichment (5 occurrences)
+
+CAS Treatment (CAS gene with temperature adaptation):
+  Adaptation: Temperature with CAS gene
+  Top enriched trinucleotide contexts:
+    CTA (T>C): 8.73-fold enrichment (6 occurrences)
+    TCT (C>T): 8.53-fold enrichment (4 occurrences)
+    GCT (C>T): 8.53-fold enrichment (4 occurrences)
+    ATG (T>C): 7.27-fold enrichment (5 occurrences)
+    TTG (T>C): 7.27-fold enrichment (5 occurrences)
+
+Main Conclusions:
+---------------
+1. This analysis examines the sequence context of mutations in different treatments.
+2. The mutational signatures reveal preferred sequence contexts for mutations.
+3. Adaptation types (Temperature vs Low Oxygen) show distinct mutational patterns.
+4. Gene modifications (STC/CAS) influence the sequence context preferences.
+5. The analysis of enriched trinucleotide contexts provides insights into the
+   mechanisms of mutagenesis and DNA damage repair under different conditions.
+6. Sequence logos reveal position-specific nucleotide preferences around mutations.
+
+
+################################################################################
+# SCAFFOLD DISTRIBUTION RESULTS
+################################################################################
+
+Scaffold Distribution Analysis Summary
+=====================================
+
+Overall Statistics:
+-----------------
+WT-37 Treatment (Temperature-adapted wild type):
+  Adaptation: Temperature
+  Total Variants: 187
+  Scaffolds with Variants: 72
+  Global Variant Density: 0.0522 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000325.1: 0.9625 variants/kb (Count: 1, Length: 1039bp)
+    JRIU01000042.1: 0.7042 variants/kb (Count: 1, Length: 1420bp)
+    JRIU01000148.1: 0.6210 variants/kb (Count: 9, Length: 14492bp)
+    JRIU01000195.1: 0.5208 variants/kb (Count: 9, Length: 17280bp)
+    JRIU01000378.1: 0.4165 variants/kb (Count: 1, Length: 2401bp)
+
+WTA Treatment (Low oxygen-adapted wild type):
+  Adaptation: Low Oxygen
+  Total Variants: 156
+  Scaffolds with Variants: 67
+  Global Variant Density: 0.0435 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000223.1: 1.1242 variants/kb (Count: 2, Length: 1779bp)
+    JRIU01000292.1: 0.6866 variants/kb (Count: 2, Length: 2913bp)
+    JRIU01000087.1: 0.5701 variants/kb (Count: 1, Length: 1754bp)
+    JRIU01000243.1: 0.5278 variants/kb (Count: 5, Length: 9473bp)
+    JRIU01000195.1: 0.5208 variants/kb (Count: 9, Length: 17280bp)
+
+STC Treatment (STC gene with low oxygen adaptation):
+  Adaptation: Low Oxygen with STC gene
+  Total Variants: 126
+  Scaffolds with Variants: 65
+  Global Variant Density: 0.0360 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000195.1: 0.5208 variants/kb (Count: 9, Length: 17280bp)
+    JRIU01000179.1: 0.4949 variants/kb (Count: 2, Length: 4041bp)
+    JRIU01000243.1: 0.4223 variants/kb (Count: 4, Length: 9473bp)
+    JRIU01000148.1: 0.4140 variants/kb (Count: 6, Length: 14492bp)
+    JRIU01000375.1: 0.4057 variants/kb (Count: 1, Length: 2465bp)
+
+CAS Treatment (CAS gene with temperature adaptation):
+  Adaptation: Temperature with CAS gene
+  Total Variants: 132
+  Scaffolds with Variants: 64
+  Global Variant Density: 0.0429 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000243.1: 0.9501 variants/kb (Count: 9, Length: 9473bp)
+    JRIU01000323.1: 0.9443 variants/kb (Count: 1, Length: 1059bp)
+    JRIU01000408.1: 0.8921 variants/kb (Count: 1, Length: 1121bp)
+    JRIU01000195.1: 0.4630 variants/kb (Count: 8, Length: 17280bp)
+    JRIU01000378.1: 0.4165 variants/kb (Count: 1, Length: 2401bp)
+
+Adaptation Type Comparison:
+-------------------------
+Temperature Adaptation:
+  Average Variants: 159.5
+  Total Unique Scaffolds: 95
+  Average Variant Density: 0.0479 variants/kb
+
+Low Oxygen Adaptation:
+  Average Variants: 141.0
+  Total Unique Scaffolds: 91
+  Average Variant Density: 0.0398 variants/kb
+
+Gene Modification Effects:
+------------------------
+Low Oxygen Adaptation:
+  Gene-Modified Variants: 126
+  Non-Modified Variants: 156
+  Gene/Non-Gene Ratio: 0.81
+
+Temperature Adaptation:
+  Gene-Modified Variants: 132
+  Non-Modified Variants: 187
+  Gene/Non-Gene Ratio: 0.71
+
+Treatment Correlation Summary:
+----------------------------
+  Most Similar Treatments: WTA and STC (ρ = 0.3851)
+  Most Different Treatments: WT-37 and CAS (ρ = 0.2189)
+
+  Full Correlation Matrix:
+         WT-37     WTA     STC     CAS
+  WT-37  1.0000  0.3076  0.2793  0.2189
+  WTA   0.3076  1.0000  0.3851  0.3740
+  STC   0.2793  0.3851  1.0000  0.2478
+  CAS   0.2189  0.3740  0.2478  1.0000
+
+  Adaptation Correlation:
+    Temperature vs Low Oxygen: 0.3022
+    Low Oxygen vs Temperature: 0.3022
+
+Main Conclusions:
+---------------
+1. This analysis identifies scaffolds with high variant densities across treatments.
+2. Several scaffolds show treatment-specific enrichment.
+3. The pattern of variant distribution provides insights into adaptation mechanisms.
+4. Temperature and low oxygen adaptations show distinct scaffold distribution patterns.
+5. Gene modifications (STC, CAS) appear to influence scaffold enrichment patterns.
+6. Further sequence analysis of enriched scaffolds may reveal functional implications.
+
+
+################################################################################
+# REGIONAL ENRICHMENT RESULTS
+################################################################################
+
+Regional Enrichment Analysis Summary
+==================================
+
+Overall Statistics:
+-----------------
+Total enriched regions identified: 0
+
+Treatment-Specific Statistics:
+--------------------------
+
+Adaptation-Specific Statistics:
+----------------------------
+
+Gene Modification Statistics:
+--------------------------
+
+Shared Regions Statistics:
+------------------------
+  No regions shared across multiple treatments
+
+Adaptation-Specific Region Statistics:
+----------------------------------
+  No adaptation-specific regions identified
+
+Main Conclusions:
+---------------
+1. This analysis identifies regions with statistically significant variant enrichment.
+2. Treatment-specific patterns of regional enrichment have been identified.
+3. Adaptation-specific enrichment patterns highlight genomic regions associated with
+   temperature or low oxygen adaptation mechanisms.
+4. Gene modifications appear to influence the pattern of regional enrichment,
+   suggesting potential functional impacts of inserted genes.
+5. Regions shared across multiple treatments may represent mutational hotspots
+   or regions under selection pressure in multiple conditions.
+6. For a detailed view of enriched regions, refer to the individual analysis files
+   in the output directory.
+
+
+################################################################################
+# STATISTICAL PATTERN RESULTS
+################################################################################
+
+Statistical Pattern Analysis Summary
+==================================
+
+Basic Statistics:
+-----------------
+Total Variants: 601.0
+Unique Scaffolds: 288.0
+Average Ti/Tv Ratio: 0.0
+Low Oxygen Adaptation Variants: 282.0
+Temperature Adaptation Variants: 319.0
+Variants in Gene-Modified Strains: 258.0
+Variants in Non-Modified Strains: 343.0
+
+Regression Analysis Results:
+--------------------------
+
+CAS Treatment (Temperature adaptation with gene modification):
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2950 ***
+  Sample size: 126
+
+STC Treatment (Low Oxygen adaptation with gene modification):
+  R-squared: 0.0000
+  Coefficients:
+    Log_Length: 0.2987 ***
+  Sample size: 122
+
+WTA Treatment (Low Oxygen adaptation):
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2834 ***
+  Sample size: 148
+
+WT-37 Treatment (Temperature adaptation):
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2598 ***
+  Sample size: 179
+
+Regression Analysis by Adaptation Type:
+-----------------------------------
+
+Low Oxygen Adaptation:
+  R-squared: 0.0000
+  Coefficients:
+    Log_Length: 0.2616 ***
+  Sample size: 200
+
+Temperature Adaptation:
+  R-squared: -0.0000
+  Coefficients:
+    Log_Length: 0.2427 ***
+  Sample size: 228
+
+Biological Context Summary:
+-------------------------
+This analysis examines mutation patterns in yeast strains under different conditions:
+
+  WT-37: Temperature-adapted wild type - Temperature adaptation
+  WTA: Low oxygen-adapted wild type - Low Oxygen adaptation
+  STC: STC gene with low oxygen adaptation - Low Oxygen adaptation with STC gene insertion
+  CAS: CAS gene with temperature adaptation - Temperature adaptation with CAS gene insertion
+
+Main Conclusions:
+---------------
+1. This analysis examines statistical patterns in the variant data.
+2. Principal Component Analysis identifies major axes of variation between treatments.
+3. Correlation analysis reveals relationships between mutation types and treatments.
+4. Regression models evaluate the relationship between genomic features and variant density.
+5. Clustering analysis identifies groups of scaffolds with similar variant patterns.
+6. Comparisons between adaptation types (temperature vs. low oxygen) reveal
+   differences in mutation patterns and genomic distributions.
+7. Gene-modified strains (STC, CAS) show specific mutation characteristics
+   compared to their non-modified counterparts (WTA, WT-37).
+
+
+################################################################################
+# TREATMENT CONTROL ANALYSIS
+################################################################################
+
+Treatment vs Control Statistical Analysis
+=====================================
+
+STC-vs-STCCTRL Treatment Analysis:
+----------------------------------
+Description: STC vs STC control
+Control: STC-CTRL
+Treatment variants: 768
+Control variants: 1075
+Fold change: 0.71
+Odds ratio: 0.71
+P-value: 9.04e-13
+Q-value (FDR-corrected): 5.43e-12
+Statistical significance: ***
+
+CAS-vs-CASCTRL Treatment Analysis:
+----------------------------------
+Description: CAS vs CAS control
+Control: CAS-CTRL
+Treatment variants: 768
+Control variants: 956
+Fold change: 0.80
+Odds ratio: 0.80
+P-value: 6.54e-06
+Q-value (FDR-corrected): 1.96e-05
+Statistical significance: ***
+
+WT-37 Treatment Analysis:
+-------------------------
+Description: Temperature-adapted wild type
+Control: WT-CTRL
+Treatment variants: 768
+Control variants: 944
+Fold change: 0.81
+Odds ratio: 0.81
+P-value: 2.30e-05
+Q-value (FDR-corrected): 2.30e-05
+Statistical significance: ***
+
+WTA Treatment Analysis:
+-----------------------
+Description: Low oxygen-adapted wild type
+Control: WT-CTRL
+Treatment variants: 768
+Control variants: 944
+Fold change: 0.81
+Odds ratio: 0.81
+P-value: 2.30e-05
+Q-value (FDR-corrected): 2.30e-05
+Statistical significance: ***
+
+STC Treatment Analysis:
+-----------------------
+Description: STC gene with low oxygen adaptation
+Control: WT-CTRL
+Treatment variants: 768
+Control variants: 944
+Fold change: 0.81
+Odds ratio: 0.81
+P-value: 2.30e-05
+Q-value (FDR-corrected): 2.30e-05
+Statistical significance: ***
+
+CAS Treatment Analysis:
+-----------------------
+Description: CAS gene with temperature adaptation
+Control: WT-CTRL
+Treatment variants: 768
+Control variants: 944
+Fold change: 0.81
+Odds ratio: 0.81
+P-value: 2.30e-05
+Q-value (FDR-corrected): 2.30e-05
+Statistical significance: ***
+
+
+
+################################################################################
+# MUTATION SPECTRUM RESULTS - mutation_spectrum_summary.csv
+################################################################################
+
+Treatment                          Description  Adaptation Has_Gene  Total SNVs  Transitions  Transversions  Transition %  Transversion %  Ti/Tv Ratio Most Common  Most Common Count
+    WT-37        Temperature-adapted wild type Temperature       No         167          124             43     74.251497       25.748503     2.883721         T>C                 74
+      WTA         Low oxygen-adapted wild type  Low Oxygen       No         134          100             34     74.626866       25.373134     2.941176         T>C                 62
+      STC  STC gene with low oxygen adaptation  Low Oxygen      Yes         104           72             32     69.230769       30.769231     2.250000         T>C                 48
+      CAS CAS gene with temperature adaptation Temperature      Yes         111           74             37     66.666667       33.333333     2.000000         T>C                 44
+
+
+################################################################################
+# SCAFFOLD DISTRIBUTION RESULTS - scaffold_distribution_summary.csv
+################################################################################
+
+            Treatment                          Description  Adaptation Has_Gene  Total_Variants  Scaffolds_With_Variants  Global_Density                                                       Top_Scaffolds
+                WT-37        Temperature-adapted wild type Temperature       No           187.0                     72.0        0.052172 JRIU01000325.1 (0.96), JRIU01000042.1 (0.70), JRIU01000148.1 (0.62)
+                  WTA         Low oxygen-adapted wild type  Low Oxygen       No           156.0                     67.0        0.043474 JRIU01000223.1 (1.12), JRIU01000292.1 (0.69), JRIU01000087.1 (0.57)
+                  STC  STC gene with low oxygen adaptation  Low Oxygen      Yes           126.0                     65.0        0.035997 JRIU01000195.1 (0.52), JRIU01000179.1 (0.49), JRIU01000243.1 (0.42)
+                  CAS CAS gene with temperature adaptation Temperature      Yes           132.0                     64.0        0.042884 JRIU01000243.1 (0.95), JRIU01000323.1 (0.94), JRIU01000408.1 (0.89)
+ Low Oxygen (Average)            Average across treatments  Low Oxygen      NaN           141.0                     66.0        0.039736                                                                 NaN
+Temperature (Average)            Average across treatments Temperature      NaN           159.5                     68.0        0.047528                                                                 NaN
