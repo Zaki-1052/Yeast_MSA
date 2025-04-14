@@ -55,17 +55,17 @@ def find_mutation_data_file(treatment):
     """Find mutation data file checking multiple possible locations."""
     # Define possible file patterns
     file_patterns = [
-        f"mutation_spectrum_analysis/{treatment}_mutations.txt",
+        f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt",
         f"analysis/MSA/mutation_spectrum_analysis/{treatment}_mutations.txt",
-        f"results/mutation_spectrum_analysis/{treatment}_mutations.txt"
+        f"mutation_spectrum_analysis/{treatment}_mutations.txt"
     ]
     
     # Also check for old 'WT' naming if we're looking for WT-37
     if treatment == 'WT-37':
         file_patterns.extend([
-            "mutation_spectrum_analysis/WT_mutations.txt",
+            "analysis/mutation_spectrum_analysis/WT_mutations.txt",
             "analysis/MSA/mutation_spectrum_analysis/WT_mutations.txt",
-            "results/mutation_spectrum_analysis/WT_mutations.txt"
+            "mutation_spectrum_analysis/WT_mutations.txt"
         ])
     
     # Try each pattern
@@ -145,8 +145,8 @@ def extract_from_vcf(treatment):
                     data['Treatment'] = treatment
                     
                     # Save extracted data for future use
-                    os.makedirs("mutation_spectrum_analysis", exist_ok=True)
-                    data.to_csv(f"mutation_spectrum_analysis/{treatment}_mutations.txt", 
+                    os.makedirs("analysis/mutation_spectrum_analysis", exist_ok=True)
+                    data.to_csv(f"analyis/mutation_spectrum_analysis/{treatment}_mutations.txt", 
                               sep='\t', index=False, header=False)
                     
                     print(f"Extracted and saved {len(data)} mutations for {treatment}")
@@ -158,16 +158,59 @@ def extract_from_vcf(treatment):
     return pd.DataFrame()
 
 # Function to filter data for single nucleotide variants
-def filter_snvs(data):
+def filter_snvs(data, debug=True):
     """Filter data to include only single nucleotide variants."""
-    # Keep only rows where REF and ALT are single nucleotides
-    snv_data = data[(data['REF'].str.len() == 1) & (data['ALT'].str.len() == 1)]
+    if debug:
+        print(f"Initial variant count: {len(data)}")
+        if len(data) > 0:
+            print(f"REF column type: {type(data['REF'].iloc[0])}")
+            print(f"Sample REF values: {data['REF'].head().tolist()}")
+            print(f"Sample ALT values: {data['ALT'].head().tolist()}")
     
-    # Keep only ACGT bases (filter out N or other ambiguous bases)
-    valid_bases = snv_data['REF'].isin(['A', 'C', 'G', 'T']) & snv_data['ALT'].isin(['A', 'C', 'G', 'T'])
-    snv_data = snv_data[valid_bases]
+    # Check for non-string data types
+    if not pd.api.types.is_string_dtype(data['REF']) or not pd.api.types.is_string_dtype(data['ALT']):
+        if debug:
+            print("Converting REF/ALT to string types")
+        data = data.copy()
+        data['REF'] = data['REF'].astype(str)
+        data['ALT'] = data['ALT'].astype(str)
     
-    return snv_data
+    # First filtering step: length check
+    length_filter = (data['REF'].str.len() == 1) & (data['ALT'].str.len() == 1)
+    snv_data = data[length_filter]
+    
+    if debug:
+        print(f"After length filter: {len(snv_data)} variants remain")
+        print(f"Removed {len(data) - len(snv_data)} multi-nucleotide variants")
+        if len(data) > 0 and len(snv_data) == 0:
+            # Show some examples of what's being filtered out
+            print("Examples of filtered variants:")
+            multi_nt = data[~length_filter].head(5)
+            for _, row in multi_nt.iterrows():
+                print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
+    
+    # Second filtering step: valid bases
+    # Make case-insensitive by converting to uppercase
+    if len(snv_data) > 0:
+        snv_data = snv_data.copy()
+        snv_data['REF'] = snv_data['REF'].str.upper()
+        snv_data['ALT'] = snv_data['ALT'].str.upper()
+        
+        valid_bases = snv_data['REF'].isin(['A', 'C', 'G', 'T']) & snv_data['ALT'].isin(['A', 'C', 'G', 'T'])
+        final_data = snv_data[valid_bases]
+        
+        if debug:
+            print(f"After ACGT filter: {len(final_data)} variants remain")
+            print(f"Removed {len(snv_data) - len(final_data)} variants with non-ACGT bases")
+            if len(snv_data) > 0 and len(final_data) == 0:
+                print("Examples of non-ACGT bases:")
+                non_acgt = snv_data[~valid_bases].head(5)
+                for _, row in non_acgt.iterrows():
+                    print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
+    else:
+        final_data = snv_data
+    
+    return final_data
 
 # Function to classify mutations
 def classify_mutations(data):

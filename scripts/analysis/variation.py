@@ -136,7 +136,7 @@ def analyze_treatment_control_differences():
     results_df.to_csv('analysis/treatment_control_analysis/treatment_vs_control_statistics.csv', index=False)
     
     # Create a detailed report
-    with open('treatment_control_analysis/statistical_analysis_report.txt', 'w') as f:
+    with open('analysis/treatment_control_analysis/statistical_analysis_report.txt', 'w') as f:
         f.write("Treatment vs Control Statistical Analysis\n")
         f.write("=====================================\n\n")
         
