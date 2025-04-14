@@ -14,13 +14,12 @@ import warnings
 import logging
 warnings.filterwarnings('ignore')
 
-# Set up logging
+# Set up logging for file only, not console
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("regional_enrichment_debug.log"),
-        logging.StreamHandler()
+        logging.FileHandler("regional_enrichment_debug.log")
     ]
 )
 
@@ -371,6 +370,8 @@ def analyze_regional_enrichment(data, scaffold_info, window_size=1000, step_size
     total_length = sum(scaffold_info.values())
     genome_wide_rate = total_mutations / total_length
     
+    print(f"Genome-wide mutation rate: {genome_wide_rate:.8f} mutations per base")
+    print(f"Window size: {window_size}, Step size: {step_size}, P-value threshold: {p_value_threshold}")
     logging.info(f"Genome-wide mutation rate: {genome_wide_rate:.8f} mutations per base")
     logging.info(f"Window size: {window_size}, Step size: {step_size}, P-value threshold: {p_value_threshold}")
     
@@ -556,6 +557,7 @@ def analyze_regional_enrichment(data, scaffold_info, window_size=1000, step_size
             # Always take at least some regions to report, even if nothing passes our threshold
             if len(significant_regions) == 0 or len(significant_regions) < 5:
                 logging.info("Using top regions by p-value to ensure results")
+                print("No regions significant after FDR correction, using uncorrected p-values")
                 # Take top 20 regions by p-value regardless
                 top_regions = results_df.nsmallest(20, 'P_Value').copy()
                 top_regions['Q_Value'] = top_regions['P_Value']  # Use p-value as q-value
@@ -568,18 +570,22 @@ def analyze_regional_enrichment(data, scaffold_info, window_size=1000, step_size
             significant_regions = significant_regions.sort_values('Q_Value')
             
             logging.info(f"Found {len(significant_regions)} significantly enriched regions")
+            print(f"Found {len(significant_regions)} significantly enriched regions")
             return significant_regions
             
         except Exception as e:
             # If multiple testing correction fails, use p-values directly
             logging.warning(f"Error in multiple testing correction: {e}. Using uncorrected p-values.")
+            print(f"Error in multiple testing correction: {e}. Using uncorrected p-values.")
             results_df['Q_Value'] = results_df['P_Value']
             significant_regions = results_df[results_df['P_Value'] < p_value_threshold].copy()
             significant_regions = significant_regions.sort_values('P_Value')
             logging.info(f"Found {len(significant_regions)} enriched regions using uncorrected p-values")
+            print(f"Found {len(significant_regions)} enriched regions using uncorrected p-values")
             return significant_regions
     else:
         logging.warning("No enriched regions found")
+        print("No enriched regions found")
         logging.info("This is caused by either:")
         logging.info("1. No overlapping chromosomes/scaffolds between mutation data and reference")
         logging.info("2. No windows with enough mutations to be statistically significant")
@@ -1270,6 +1276,8 @@ def adaptive_enrichment_analysis(data, scaffold_info):
         step_size = step_sizes[i]
         p_threshold = p_thresholds[i]
         
+        print(f"Attempting enrichment analysis with: window_size={window_size}, " 
+              f"step_size={step_size}, p_threshold={p_threshold}")
         logging.info(f"Attempting enrichment analysis with: window_size={window_size}, " 
                    f"step_size={step_size}, p_threshold={p_threshold}")
         
@@ -1282,11 +1290,14 @@ def adaptive_enrichment_analysis(data, scaffold_info):
         )
         
         if results is not None and len(results) > 0:
+            print(f"Found {len(results)} enriched regions with window_size={window_size}, "
+                  f"step_size={step_size}, p_threshold={p_threshold}")
             logging.info(f"Found {len(results)} enriched regions with window_size={window_size}, "
                        f"step_size={step_size}, p_threshold={p_threshold}")
             return results
     
     # If we still didn't find anything, try one last attempt with very lenient parameters
+    print("No enriched regions found with standard parameters, trying very lenient parameters")
     logging.warning("No enriched regions found with standard parameters, trying very lenient parameters")
     
     # Very lenient parameters
@@ -1302,13 +1313,16 @@ def adaptive_enrichment_analysis(data, scaffold_info):
 
 def main():
     # Load data
+    print("Loading mutation data...")
     logging.info("Loading mutation data...")
     mutation_data = load_data()
     
+    print("Loading scaffold information...")
     logging.info("Loading scaffold information...")
     scaffold_info = load_scaffold_info()
     
     if mutation_data is None or not scaffold_info:
+        print("Cannot proceed with analysis due to missing data")
         logging.error("Cannot proceed with analysis due to missing data")
         return
     
@@ -1317,14 +1331,17 @@ def main():
     logging.info(f"Loaded {len(scaffold_info)} scaffolds from reference")
     
     # Perform treatment-specific enrichment analysis with adaptive parameters
+    print("\nAnalyzing regional enrichment by treatment...")
     logging.info("\nAnalyzing regional enrichment by treatment...")
     treatment_results = {}
     
     for treatment in TREATMENTS:
+        print(f"\nAnalyzing enrichment for {treatment} treatment...")
         logging.info(f"\nAnalyzing enrichment for {treatment} treatment...")
         
         treatment_data = mutation_data[mutation_data['Treatment'] == treatment]
         if len(treatment_data) == 0:
+            print(f"No data available for {treatment}")
             logging.warning(f"No data available for {treatment}")
             continue
         
@@ -1335,15 +1352,18 @@ def main():
             treatment_results[treatment] = enriched
     
     # Perform adaptation-specific enrichment analysis
+    print("\nAnalyzing regional enrichment by adaptation type...")
     logging.info("\nAnalyzing regional enrichment by adaptation type...")
     adaptation_results = {}
     
     # Group by adaptation type
     for adaptation in mutation_data['Adaptation'].unique():
+        print(f"\nAnalyzing enrichment for {adaptation} adaptation...")
         logging.info(f"\nAnalyzing enrichment for {adaptation} adaptation...")
         
         adaptation_data = mutation_data[mutation_data['Adaptation'] == adaptation]
         if len(adaptation_data) == 0:
+            print(f"No data available for {adaptation} adaptation")
             logging.warning(f"No data available for {adaptation} adaptation")
             continue
         
@@ -1354,11 +1374,13 @@ def main():
             adaptation_results[adaptation] = enriched
     
     # Perform gene-modification enrichment analysis
+    print("\nAnalyzing regional enrichment by gene modification status...")
     logging.info("\nAnalyzing regional enrichment by gene modification status...")
     gene_results = {}
     
     # Split by gene modification status
     for gene_status in mutation_data['Has_Gene'].unique():
+        print(f"\nAnalyzing enrichment for {'gene-modified' if gene_status == 'Yes' else 'non-modified'} strains...")
         logging.info(f"\nAnalyzing enrichment for {'gene-modified' if gene_status == 'Yes' else 'non-modified'} strains...")
         
         gene_data = mutation_data[mutation_data['Has_Gene'] == gene_status]
@@ -1372,10 +1394,12 @@ def main():
             gene_results[gene_status] = enriched
     
     # Find consistently enriched regions across treatments
+    print("\nFinding regions consistently enriched across treatments...")
     logging.info("\nFinding regions consistently enriched across treatments...")
     shared_regions = find_consistently_enriched_regions(treatment_results)
     
     # Analyze adaptation-specific patterns
+    print("\nAnalyzing adaptation-specific enrichment patterns...")
     logging.info("\nAnalyzing adaptation-specific enrichment patterns...")
     adaptation_specific = analyze_adaptation_patterns(treatment_results)
     
@@ -1388,10 +1412,12 @@ def main():
     
     # Generate visualizations if we have results
     if treatment_results:
+        print("\nGenerating visualizations...")
         logging.info("\nGenerating visualizations...")
         plot_enrichment_patterns(treatment_results, OUTPUT_DIR)
         
         # Create detailed reports
+        print("\nCreating detailed enrichment reports...")
         logging.info("\nCreating detailed enrichment reports...")
         create_enrichment_reports(
             treatment_results, 
@@ -1403,6 +1429,7 @@ def main():
         )
         
         # Create summary report
+        print("\nCreating summary report...")
         logging.info("\nCreating summary report...")
         create_summary_report(
             treatment_results,
