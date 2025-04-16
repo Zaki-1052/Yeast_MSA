@@ -1,0 +1,33 @@
+LOCUS       w303_scaffold_339          321 bp    dna     linear   PLN 13-APR-2025
+DEFINITION  w303-annotated_by_ygap
+ACCESSION   unknown
+KEYWORDS    .
+COMMENT     Annotated using the "Yeast Genome Annotation Pipeline" (YGAP)
+            URL:http://wolfe.ucd.ie/annotation/
+            PMID:22984983
+FEATURES             Location/Qualifiers
+     source          1..321
+                     /mol_type="genomic DNA"
+                     /note="JRIU01000206.1"
+                     /note="scaffold 339"
+                     /organism="w303-annotated_by_ygap"
+     gene            4..213
+                     /gene="W3030MA00100"
+     CDS             4..213
+                     /codon_start=1
+                     /gene="W3030MA00100"
+                     /inference="similar to DNA sequence:INSDC:YAR075W"
+                     /locus_tag="W303_0MA00100"
+                     /note="similar to Saccharomyces cerevisiae YAR075W"
+                     /product="hypothetical protein"
+                     /transl_table=1
+                     /translation="VVDKGSIKKFIPYLYNGLQHSCQDIGCKSLSLLKENVQRGKVRF
+                     EFRTASAQLEGGVHNLHSYEKRLHN"
+ORIGIN      
+        1 gctgtcgttg acaaaggatc cattaagaaa tttattccat atttgtacaa tggtttacaa
+       61 cattcctgtc aagatatcgg ttgtaagtcg ctaagtttat taaaggagaa tgttcaaagg
+      121 ggtaaagtta gatttgaatt cagaaccgct tctgctcaac tagaaggtgg cgttcataat
+      181 ttacattctt acgaaaagcg tttacataac tgaatgttaa aatggcatca tcaatacagt
+      241 attactgatg ttatgttatt tagtgctgtc cgtatgtcct cctgttcttt tttgggctac
+      301 aatttaattg atggggtgtt a
+//

@@ -1,0 +1,31 @@
+LOCUS       w303_scaffold_386          241 bp    dna     linear   PLN 13-APR-2025
+DEFINITION  w303-annotated_by_ygap
+ACCESSION   unknown
+KEYWORDS    .
+COMMENT     Annotated using the "Yeast Genome Annotation Pipeline" (YGAP)
+            URL:http://wolfe.ucd.ie/annotation/
+            PMID:22984983
+FEATURES             Location/Qualifiers
+     source          1..241
+                     /mol_type="genomic DNA"
+                     /note="JRIU01000329.1"
+                     /note="scaffold 386"
+                     /organism="w303-annotated_by_ygap"
+     gene            3..158
+                     /gene="W3030NV00100"
+     CDS             3..158
+                     /gene="W3030NV00100"
+                     /inference="similar to DNA sequence:INSDC:YAL065C"
+                     /locus_tag="W303_0NV00100"
+                     /note="similar to Saccharomyces cerevisiae YAL065C"
+                     /product="hypothetical protein"
+                     /transl_table=1
+                     /translation="MSQQPRSTPASSMVGSSTASLEISTYAGSANSLLAGSGLSVFIA
+                     SLLLAII"
+ORIGIN      
+        1 ctatgtcgca acagcctcgt agcacaccag caagtagcat ggtaggatct agtacagctt
+       61 ctttagaaat ttcaacgtat gctggcagtg ccaacagctt actggccggt agtggtttaa
+      121 gtgtcttcat tgcgtcctta ttgctggcaa ttatttaata aaattcgcgt tctttttacg
+      181 tatctgtgta tcttttcttt gctaaatata cgctgacatg aattattttt taactgtttc
+      241 t
+//

@@ -1,0 +1,84 @@
+LOCUS       w303_scaffold_223         2184 bp    dna     linear   PLN 13-APR-2025
+DEFINITION  w303-annotated_by_ygap
+ACCESSION   unknown
+KEYWORDS    .
+COMMENT     Annotated using the "Yeast Genome Annotation Pipeline" (YGAP)
+            URL:http://wolfe.ucd.ie/annotation/
+            PMID:22984983
+FEATURES             Location/Qualifiers
+     source          1..2184
+                     /mol_type="genomic DNA"
+                     /note="JRIU01000193.1"
+                     /note="scaffold 223"
+                     /organism="w303-annotated_by_ygap"
+     gene            160..307
+                     /gene="W3030HOtrna4?"
+     tRNA            160..307
+                     /gene="W3030HOtrna4?"
+                     /locus_tag="W303_0HOtrna4?"
+                     /note="codon recognized: NNN"
+                     /product="tRNA-Undet"
+     gene            complement(612..1781)
+                     /gene="W3030HO00100"
+     CDS             complement(612..1781)
+                     /gene="W3030HO00100"
+                     /inference="similar to DNA sequence:INSDC:YNL035C"
+                     /locus_tag="W303_0HO00100"
+                     /note="similar to Saccharomyces cerevisiae YNL035C;
+                     ancestral locus Anc_2.283"
+                     /note="ancestral locus Anc_2.283"
+                     /product="hypothetical protein"
+                     /transl_table=1
+                     /translation="MASYSLVESNSFGSENWCLKLQPSYKHGLLTGLSNGEIRLLDWS
+                     TGKSVQKIKASETAINDMKVIGSDFSAGHLVSSASIDAVKVFDIRTNDRIAQIQNEAN
+                     SPFISLDSRHGLLACGTELQGIDAAVYIYDIRKWDTPLRSLIDSHHDDVTCIKFHPSD
+                     VNILLSGSTDGYTNIYDLKQDEEEDALHQVINYASIHSCGWLSPKRIFTLSHMETFAI
+                     HELNDKSDELKEPQPLDFGDVREIWNCDYVVDIYPGLIATGKTQENCGELCLLPFKDE
+                     KVDTENGIVIPHAHGDEVVRDIFIPAQHSNMLYSCGEDGCVKIWENKQGPLDIPENFW
+                     DYSKKMNVLGDDDREGSINLDEPLIIQKESVSTRPRKEKHKKAKKHSMKSRFKPY"
+     gene            complement(1957..2050)
+                     /gene="W3030HOtrna5?"
+     tRNA            complement(1957..2050)
+                     /gene="W3030HOtrna5?"
+                     /locus_tag="W303_0HOtrna5?"
+                     /note="codon recognized: NNN"
+                     /product="tRNA-Undet"
+ORIGIN      
+        1 actagttagt agatgatagt tgatttttat tccaacacat tccaatacca ctgataagta
+       61 cattctgcat gtctatttat aaaaccttct ttaagacaaa tatgctattt atcctttgat
+      121 aacaatttcc tgtgagacag aaatcaccat aaaataatcg ggcgtgtggt ctagtggtat
+      181 gattctcgct tnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
+      241 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nngcgagagg ccctgggttc aattcccagc
+      301 tcgccccttt atattttttc accatcaacg tggtgtttca cttattcctt ttctagtatt
+      361 ttttttccac cttatagaag cgtgcacgtt taatgctgga gataaaaaaa aaaaatgcat
+      421 taatactcta tatagcagaa atatagttgt tataacattg taccaacaaa agaagcccta
+      481 tgaagataaa ctatgatcta gaagtatcaa cttgtttgga atgtatgctt cgttttttaa
+      541 gttatagagt agttctgccg aaatctcttg cagatgttag gcatctcttt agatgtattg
+      601 tctttatgaa actagtatgg tttgaaacga cttttcatgg aatgtttctt ggctttcttg
+      661 tgtttctcct tccttggcct cgtggaaacc gattcttttt gaataataag aggttcgtct
+      721 aaattaatgg aaccttctct gtcgtcatct cctaagacgt tcattttttt agagtaatcc
+      781 caaaaatttt ctggaatatc taacggcccc tgtttgtttt cccaaatttt aacgcaacca
+      841 tcttcaccac aggagtataa catgttgcta tgttgtgctg gtataaaaat atctctgacg
+      901 acctcgtctc catgggcgtg tgggataaca ataccgtttt cagtatccac cttctcatct
+      961 ttaaatggta ggaggcacaa ctctccacaa ttttcttggg ttttaccggt tgcaatgagt
+     1021 ccagggtaaa tatctaccac gtagtcacag ttccatattt ctcttacatc accaaagtcc
+     1081 aagggttgtg gctctttcaa ttcgtcagat ttgtcgttca attcgtgaat tgcaaatgtt
+     1141 tccatatgtg atagtgtaaa tatcctcttt ggggacaacc atccacagga atgtattgac
+     1201 gcataattaa taacttggtg taaagcgtcc tcctcctcat cttgtttcaa gtcataaatg
+     1261 ttcgtgtaac catcagttga accactgagc aaaatattga cgtcagaagg atgaaattta
+     1321 atacaggtaa cgtcatcatg gtgagagtca attaatgatc tcaatggagt gtcccatttg
+     1381 cgaatatcat atatgtatac agcagcgtca attccctgca attcggtacc acaggccaat
+     1441 agaccatgac gagaatctaa ggaaataaag ggggagttgg cctcgttttg aatttgagca
+     1501 atgcggtcat tcgtccttat atcgaaaact ttcaccgcgt cgatagaggc gctactaact
+     1561 agatgaccag cagagaagtc gctaccgatg accttcatat cattgattgc agtttcgctc
+     1621 gccttaatct tttgtactga tttaccagta ctccagtcta gcaaacgtat ttcgccatta
+     1681 cttaatccag ttaaaagacc atgtttataa ctaggctgta acttaagaca ccaattttct
+     1741 gacccgaaag aattcgattc aactaaagaa taactagcca tgctctagaa gttaatttga
+     1801 gattctcgaa cttaagtagt ttttatttac acagtaagac gagccagtgc ctatgtccta
+     1861 atgactgcgt acgtgcactg tagtcccatc taacattttt acaatctgga ctaagaaaac
+     1921 ttttataaat cacattgcca atgcaaaaaa aaagaatggt ctctagcggg atcgaaccgc
+     1981 tgatccnnnn nnnnnnnnnn nnnnnnnnnn nttattagca cggtgcctta accaactggg
+     2041 ccaagagacc actgttatct gttttccacc gtccctccac actaccaaac caacgtcact
+     2101 actgtgtgcc agcaccaccg ctcattatcc ctgtgccaca aaactcaact tacactgtca
+     2161 ttcgaatttc cggcaaactc cgac
+//
