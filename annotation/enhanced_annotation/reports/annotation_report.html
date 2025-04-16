@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JRIU-Based Variant Annotation Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2, h3 { color: #333366; }
+        .chart-container { width: 800px; height: 400px; margin: 20px 0; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .note { background-color: #ffffdd; padding: 10px; border-left: 5px solid #ffcc00; margin: 20px 0; }
+        .warning { background-color: #ffeeee; padding: 10px; border-left: 5px solid #ff0000; margin: 20px 0; }
+        .info { background-color: #eeeeff; padding: 10px; border-left: 5px solid #0000ff; margin: 20px 0; }
+        img { max-width: 100%; height: auto; margin: 20px 0; }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            margin-top: 20px;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>JRIU-Based Variant Annotation Report</h1>
+    <p>Generated on: Wed Apr 16 10:13:30 PDT 2025</p>
+    
+    <div class="warning">
+        <h3>Important Note on Analysis Approach</h3>
+        <p>This analysis uses a JRIU-based approach rather than position-based matching, due to coordinate system differences between the VCF variants and gene annotations. Variants are associated with genes if they occur on the same JRIU ID (genomic segment).</p>
+        <p>While this approach cannot determine the precise impact of variants on gene function, it allows for meaningful comparative analysis between treatment groups and identification of segments with high variant density.</p>
+    </div>
+    
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Summary')" id="defaultOpen">Summary</button>
+        <button class="tablinks" onclick="openTab(event, 'Treatments')">Treatments</button>
+        <button class="tablinks" onclick="openTab(event, 'Genes')">Genes</button>
+        <button class="tablinks" onclick="openTab(event, 'Enrichment')">Enrichment</button>
+        <button class="tablinks" onclick="openTab(event, 'Plots')">Plots</button>
+    </div>
+    
+    <div id="Summary" class="tabcontent">
+        <h2>Analysis Summary</h2>
+        <div class="info">
+            <p><strong>Total Files Analyzed:</strong> 15</p>
+            <p><strong>Total Genes of Interest:</strong> 13</p>
+            <p><strong>Total JRIUs with Genes:</strong> 11</p>
+            <p><strong>Total Variants Analyzed:</strong> 15078</p>
+            <p><strong>Variants on Gene JRIUs:</strong> 838</p>
+        </div>
+        
+        <h3>Key Findings</h3>
+        <ul><li><strong>YNL280C</strong> has the highest number of associated variants (694)</li>
+<li><strong>YHR190W</strong> has the highest number of associated variants (270)</li>
+<li><strong>YGR175C</strong> has the highest number of associated variants (266)</li>
+<li><strong>WT-37</strong> treatment has 344 variants on gene JRIUs</li>
+<li><strong>CAS</strong> treatment has 336 variants on gene JRIUs</li>
+<li><strong>STC</strong> treatment has 336 variants on gene JRIUs</li>
+</ul>
+        
+        <h3>Data Distribution</h3>
+        <div class="chart-container">
+            <canvas id="summaryChart"></canvas>
+        </div>
+    </div>
+    
+    <div id="Treatments" class="tabcontent">
+        <h2>Treatment Analysis</h2>
+        <p>This section shows the distribution of variants across different treatments.</p>
+        
+        <h3>Treatment Statistics</h3>
+        <table>
+            <tr>
+                <th>Treatment</th>
+                <th>Samples</th>
+                <th>Total Variants</th>
+                <th>Gene JRIU Variants</th>
+                <th>Percentage</th>
+                <th>Avg. per Sample</th>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>6</td>
+                <td>5816</td>
+                <td>336</td>
+                <td>5.78%</td>
+                <td>969.33</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL</td>
+                <td>2</td>
+                <td>1912</td>
+                <td>116</td>
+                <td>6.07%</td>
+                <td>956.00</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>6</td>
+                <td>5912</td>
+                <td>336</td>
+                <td>5.68%</td>
+                <td>985.33</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL</td>
+                <td>2</td>
+                <td>2150</td>
+                <td>112</td>
+                <td>5.21%</td>
+                <td>1075.00</td>
+            </tr>
+            <tr>
+                <td>WT</td>
+                <td>2</td>
+                <td>1888</td>
+                <td>104</td>
+                <td>5.51%</td>
+                <td>944.00</td>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>6</td>
+                <td>6440</td>
+                <td>344</td>
+                <td>5.34%</td>
+                <td>1073.33</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>6</td>
+                <td>6038</td>
+                <td>328</td>
+                <td>5.43%</td>
+                <td>1006.33</td>
+            </tr>
+        </table>
+        
+        <h3>Treatment Variant Distribution</h3>
+        <div class="chart-container">
+            <canvas id="treatmentChart"></canvas>
+        </div>
+        
+        <h3>Treatment Comparison</h3>
+        <div class="chart-container">
+            <canvas id="treatmentComparisonChart"></canvas>
+        </div>
+    </div>
+    
+    <div id="Genes" class="tabcontent">
+        <h2>Gene Analysis</h2>
+        <p>This section shows the distribution of variants associated with genes of interest.</p>
+        
+        <h3>Gene Statistics</h3>
+        <table>
+            <tr>
+                <th>Gene ID</th>
+                <th>SC Gene ID</th>
+                <th>Name</th>
+                <th>Total Variants</th>
+                <th>Most Abundant Treatment</th>
+            </tr>
+            <tr>
+                <td>W3030O00140</td>
+                <td>YNL280C</td>
+                <td></td>
+                <td>694</td>
+                <td>CAS (144 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030BY00190</td>
+                <td>YHR190W</td>
+                <td></td>
+                <td>270</td>
+                <td>CAS (54 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030AJ00440</td>
+                <td>YGR175C</td>
+                <td></td>
+                <td>266</td>
+                <td>CAS (54 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030S00270</td>
+                <td>YML008C</td>
+                <td></td>
+                <td>170</td>
+                <td>WT-37 (38 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030S00490</td>
+                <td>YMR015C</td>
+                <td></td>
+                <td>170</td>
+                <td>WT-37 (38 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030E01010</td>
+                <td>YLR056W</td>
+                <td></td>
+                <td>124</td>
+                <td>STC (30 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030W00270</td>
+                <td>YGR060W</td>
+                <td></td>
+                <td>58</td>
+                <td>CAS (12 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030X00260</td>
+                <td>YHR190W</td>
+                <td></td>
+                <td>56</td>
+                <td>STC (12 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030EI00110</td>
+                <td>YHR007C</td>
+                <td></td>
+                <td>30</td>
+                <td>CAS (6 variants)</td>
+            </tr>
+            <tr>
+                <td>W3030AD00260</td>
+                <td>YMR202W</td>
+                <td></td>
+                <td>8</td>
+                <td>WT-37 (6 variants)</td>
+            </tr>
+        </table>
+        
+        <h3>Gene Variant Distribution</h3>
+        <div class="chart-container">
+            <canvas id="geneChart"></canvas>
+        </div>
+        
+        <h3>Gene by Treatment Heatmap</h3>
+        <img src="../plots/gene_treatment_heatmap.png" alt="Gene by Treatment Heatmap">
+    </div>
+    
+    <div id="Enrichment" class="tabcontent">
+        <h2>Statistical Enrichment Analysis</h2>
+        <p>This section shows statistical enrichment of variants on JRIUs containing genes of interest.</p>
+        
+        <h3>Treatment Enrichment</h3>
+        <table>
+            <tr>
+                <th>Treatment</th>
+                <th>Variants on Gene JRIUs</th>
+                <th>Expected Count</th>
+                <th>Enrichment Factor</th>
+                <th>P-Value</th>
+                <th>Significant</th>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>336</td>
+                <td>323.24</td>
+                <td>1.04x</td>
+                <td>4.5685e-01</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL</td>
+                <td>116</td>
+                <td>106.26</td>
+                <td>1.09x</td>
+                <td>3.1833e-01</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>336</td>
+                <td>328.58</td>
+                <td>1.02x</td>
+                <td>6.7023e-01</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL</td>
+                <td>112</td>
+                <td>119.49</td>
+                <td>0.94x</td>
+                <td>5.0996e-01</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>WT</td>
+                <td>104</td>
+                <td>104.93</td>
+                <td>0.99x</td>
+                <td>1.0000e+00</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>344</td>
+                <td>357.92</td>
+                <td>0.96x</td>
+                <td>4.6282e-01</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>328</td>
+                <td>335.58</td>
+                <td>0.98x</td>
+                <td>6.9416e-01</td>
+                <td>No</td>
+            </tr>
+        </table>
+        
+        <h3>Gene Enrichment by Treatment</h3>
+        <p>This table shows which genes are enriched for variants in specific treatments.</p>
+        
+        <table>
+            <tr>
+                <th>Gene</th>
+                <th>Treatment</th>
+                <th>Actual Count</th>
+                <th>Expected Count</th>
+                <th>Enrichment</th>
+                <th>P-Value</th>
+                <th>Significant</th>
+            </tr>
+            <tr>
+                <td> (YMR202W)</td>
+                <td>WT-37</td>
+                <td>6</td>
+                <td>3.42</td>
+                <td>1.76x</td>
+                <td>1.3160e-01</td>
+                <td>No</td>
+            </tr>
+        </table>
+        
+        <h3>Enrichment Visualization</h3>
+        <img src="../plots/gene_enrichment.png" alt="Gene Enrichment by Treatment">
+    </div>
+    
+    <div id="Plots" class="tabcontent">
+        <h2>Visualization Plots</h2>
+        <p>This section contains all visualization plots generated from the analysis.</p>
+        
+        <h3>Treatment Variant Counts</h3>
+        <img src="../plots/treatment_variant_counts.png" alt="Treatment Variant Counts">
+        
+        <h3>Gene Variant Counts</h3>
+        <img src="../plots/gene_variant_counts.png" alt="Gene Variant Counts">
+        
+        <h3>Gene Treatment Heatmap</h3>
+        <img src="../plots/gene_treatment_heatmap.png" alt="Gene Treatment Heatmap">
+        
+        <h3>Gene Enrichment</h3>
+        <img src="../plots/gene_enrichment.png" alt="Gene Enrichment">
+        
+        <h3>Treatment Percentages</h3>
+        <img src="../plots/treatment_percentages.png" alt="Treatment Percentages">
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+        
+        // Summary chart
+        const summaryCtx = document.getElementById('summaryChart').getContext('2d');
+        const summaryChart = new Chart(summaryCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Variants on Gene JRIUs', 'Other Variants'],
+                datasets: [{
+                    data: [838, 14240],
+                    backgroundColor: ['rgba(54, 162, 235, 0.7)', 'rgba(200, 200, 200, 0.7)'],
+                    borderWidth: 1
+                }]
+            }
+        });
+        
+        // Treatment chart
+        const treatmentCtx = document.getElementById('treatmentChart').getContext('2d');
+        const treatmentChart = new Chart(treatmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['CAS', 'CAS-CTRL', 'STC', 'STC-CTRL', 'WT-37', 'WT', 'WTA'],
+                datasets: [{
+                    label: 'Variants on Gene JRIUs',
+                    data: [336, 116, 336, 112, 344, 104, 328],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Variants'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Treatment'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Treatment comparison chart
+        const treatmentComparisonCtx = document.getElementById('treatmentComparisonChart').getContext('2d');
+        const treatmentComparisonChart = new Chart(treatmentComparisonCtx, {
+            type: 'bar',
+            data: {
+                labels: ['CAS', 'CAS-CTRL', 'STC', 'STC-CTRL', 'WT-37', 'WT', 'WTA'],
+                datasets: [{
+                    label: 'Gene JRIU Variants',
+                    data: [336, 116, 336, 112, 104, 344, 328],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Other Variants',
+                    data: [5480, 1796, 5576, 2038, 1784, 6096, 5710],
+                    backgroundColor: 'rgba(200, 200, 200, 0.7)',
+                    borderColor: 'rgba(200, 200, 200, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Gene chart
+        const geneCtx = document.getElementById('geneChart').getContext('2d');
+        const geneChart = new Chart(geneCtx, {
+            type: 'bar',
+            data: {
+                labels: [''],
+                datasets: [{
+                    label: 'Number of Variants',
+                    data: [8],
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Variants'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Gene'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

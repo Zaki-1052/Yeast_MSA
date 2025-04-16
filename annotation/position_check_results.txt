@@ -1,0 +1,68 @@
+=== Variant-Gene Position Check Results ===
+
+VCF File: vcf/individual/WT-CTRL.vcf
+Total variants: 944
+Total genes of interest: 13
+JRIUs with both genes and variants: 8
+Total overlapping variants found: 0
+
+Gene-specific results:
+JRIU JRIU01000062.1:
+  Variants: 3 (Range: 24283-88723)
+  Gene W3030E01010 (YLR056W):
+    Position: 196479-197577
+    Overlaps: 0 within, 3 upstream, 0 downstream
+
+JRIU JRIU01000065.1:
+  Variants: 2 (Range: 20042-116693)
+  Gene W3030X00260 (YHR190W):
+    Position: 34330-35362
+    Overlaps: 0 within, 1 upstream, 1 downstream
+
+JRIU JRIU01000072.1:
+  Variants: 21 (Range: 3534-149891)
+  Gene W3030O00140 (YNL280C):
+    Position: 6597-7914
+    Overlaps: 0 within, 1 upstream, 20 downstream
+
+JRIU JRIU01000164.1:
+  Variants: 6 (Range: 3166-15479)
+  Gene W3030S00270 (YML008C):
+    Position: 28555-29707
+    Overlaps: 0 within, 6 upstream, 0 downstream
+  Gene W3030S00490 (YMR015C):
+    Position: 77541-79158
+    Overlaps: 0 within, 6 upstream, 0 downstream
+
+JRIU JRIU01000176.1:
+  Variants: 1 (Range: 65023-65023)
+  Gene W3030W00270 (YGR060W):
+    Position: 35899-36829
+    Overlaps: 0 within, 0 upstream, 1 downstream
+
+JRIU JRIU01000199.1:
+  Variants: 9 (Range: 1004-43975)
+  Gene W3030AJ00440 (YGR175C):
+    Position: 71491-72982
+    Overlaps: 0 within, 9 upstream, 0 downstream
+
+JRIU JRIU01000221.1:
+  Variants: 9 (Range: 38822-39233)
+  Gene W3030BY00190 (YHR190W):
+    Position: 19025-20360
+    Overlaps: 0 within, 0 upstream, 9 downstream
+
+JRIU JRIU01000265.1:
+  Variants: 1 (Range: 9109-9109)
+  Gene W3030EI00110 (YHR007C):
+    Position: 3374-4967
+    Overlaps: 0 within, 0 upstream, 1 downstream
+
+
+No overlapping variants found.
+
+Possible explanations for no overlaps:
+1. Coordinate system mismatch (0-based vs 1-based)
+2. Different reference versions for VCF and gene annotations
+3. Off-by-one error in position comparison
+4. Issues in parsing gene positions from GenBank files

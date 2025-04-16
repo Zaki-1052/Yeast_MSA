@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gene JRIU Variant Annotation Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { color: #333366; }
+        .chart-container { width: 800px; height: 400px; margin: 20px 0; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .note { background-color: #ffffdd; padding: 10px; border-left: 5px solid #ffcc00; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Gene JRIU Variant Annotation Report</h1>
+    <p>Generated on: Wed Apr 16 09:44:03 PDT 2025</p>
+    
+    <div class="note">
+        <strong>Note:</strong> This report uses a JRIU-based approach rather than position-based matching, 
+        due to coordinate system differences between the VCF variants and gene annotations.
+        Variants are associated with genes if they occur on the same JRIU ID.
+    </div>
+    
+    <div class="grid-container">
+        <div>
+            <h2>Variants by Treatment</h2>
+            <div class="chart-container">
+                <canvas id="treatmentChart"></canvas>
+            </div>
+        </div>
+        
+        <div>
+            <h2>Variants by Gene</h2>
+            <div class="chart-container">
+                <canvas id="geneChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <h2>Gene Variants by Treatment</h2>
+    <div class="chart-container" style="width: 100%;">
+        <canvas id="geneTreatmentChart"></canvas>
+    </div>
+    
+    <h2>Sample Details</h2>
+    <table>
+        <tr>
+            <th>Sample</th>
+            <th>Treatment</th>
+            <th>Total Variants</th>
+            <th>Variants on Gene JRIUs</th>
+            <th>Percentage</th>
+        </tr>
+        <tr>
+            <td>CAS-55-1</td>
+            <td>CAS</td>
+            <td>907</td>
+            <td>56</td>
+            <td>6.17%</td>
+        </tr>
+        <tr>
+            <td>CAS-55-1</td>
+            <td>CAS</td>
+            <td>907</td>
+            <td>56</td>
+            <td>6.17%</td>
+        </tr>
+        <tr>
+            <td>CAS-55-2</td>
+            <td>CAS</td>
+            <td>954</td>
+            <td>54</td>
+            <td>5.66%</td>
+        </tr>
+        <tr>
+            <td>CAS-55-2</td>
+            <td>CAS</td>
+            <td>954</td>
+            <td>54</td>
+            <td>5.66%</td>
+        </tr>
+        <tr>
+            <td>CAS-55-3</td>
+            <td>CAS</td>
+            <td>1047</td>
+            <td>58</td>
+            <td>5.54%</td>
+        </tr>
+        <tr>
+            <td>CAS-55-3</td>
+            <td>CAS</td>
+            <td>1047</td>
+            <td>58</td>
+            <td>5.54%</td>
+        </tr>
+        <tr>
+            <td>CAS-CTRL</td>
+            <td>CAS-CTRL</td>
+            <td>956</td>
+            <td>58</td>
+            <td>6.07%</td>
+        </tr>
+        <tr>
+            <td>CAS-CTRL</td>
+            <td>CAS-CTRL</td>
+            <td>956</td>
+            <td>58</td>
+            <td>6.07%</td>
+        </tr>
+        <tr>
+            <td>STC-55-1</td>
+            <td>STC</td>
+            <td>1010</td>
+            <td>56</td>
+            <td>5.54%</td>
+        </tr>
+        <tr>
+            <td>STC-55-1</td>
+            <td>STC</td>
+            <td>1010</td>
+            <td>56</td>
+            <td>5.54%</td>
+        </tr>
+        <tr>
+            <td>STC-55-2</td>
+            <td>STC</td>
+            <td>1002</td>
+            <td>59</td>
+            <td>5.89%</td>
+        </tr>
+        <tr>
+            <td>STC-55-2</td>
+            <td>STC</td>
+            <td>1002</td>
+            <td>59</td>
+            <td>5.89%</td>
+        </tr>
+        <tr>
+            <td>STC-55-3</td>
+            <td>STC</td>
+            <td>944</td>
+            <td>53</td>
+            <td>5.61%</td>
+        </tr>
+        <tr>
+            <td>STC-55-3</td>
+            <td>STC</td>
+            <td>944</td>
+            <td>53</td>
+            <td>5.61%</td>
+        </tr>
+        <tr>
+            <td>STC-CTRL</td>
+            <td>STC-CTRL</td>
+            <td>1075</td>
+            <td>56</td>
+            <td>5.21%</td>
+        </tr>
+        <tr>
+            <td>STC-CTRL</td>
+            <td>STC-CTRL</td>
+            <td>1075</td>
+            <td>56</td>
+            <td>5.21%</td>
+        </tr>
+        <tr>
+            <td>WT-37-55-1</td>
+            <td>WT-37</td>
+            <td>1078</td>
+            <td>57</td>
+            <td>5.29%</td>
+        </tr>
+        <tr>
+            <td>WT-37-55-1</td>
+            <td>WT-37</td>
+            <td>1078</td>
+            <td>57</td>
+            <td>5.29%</td>
+        </tr>
+        <tr>
+            <td>WT-37-55-2</td>
+            <td>WT-37</td>
+            <td>1077</td>
+            <td>57</td>
+            <td>5.29%</td>
+        </tr>
+        <tr>
+            <td>WT-37-55-2</td>
+            <td>WT-37</td>
+            <td>1077</td>
+            <td>57</td>
+            <td>5.29%</td>
+        </tr>
+        <tr>
+            <td>WT-37-55-3</td>
+            <td>WT-37</td>
+            <td>1065</td>
+            <td>58</td>
+            <td>5.45%</td>
+        </tr>
+        <tr>
+            <td>WT-37-55-3</td>
+            <td>WT-37</td>
+            <td>1065</td>
+            <td>58</td>
+            <td>5.45%</td>
+        </tr>
+        <tr>
+            <td>WT-CTRL</td>
+            <td>WT</td>
+            <td>944</td>
+            <td>52</td>
+            <td>5.51%</td>
+        </tr>
+        <tr>
+            <td>WT-CTRL</td>
+            <td>WT</td>
+            <td>944</td>
+            <td>52</td>
+            <td>5.51%</td>
+        </tr>
+        <tr>
+            <td>WTA-55-1</td>
+            <td>WTA</td>
+            <td>987</td>
+            <td>55</td>
+            <td>5.57%</td>
+        </tr>
+        <tr>
+            <td>WTA-55-1</td>
+            <td>WTA</td>
+            <td>987</td>
+            <td>55</td>
+            <td>5.57%</td>
+        </tr>
+        <tr>
+            <td>WTA-55-2</td>
+            <td>WTA</td>
+            <td>1032</td>
+            <td>55</td>
+            <td>5.33%</td>
+        </tr>
+        <tr>
+            <td>WTA-55-2</td>
+            <td>WTA</td>
+            <td>1032</td>
+            <td>55</td>
+            <td>5.33%</td>
+        </tr>
+        <tr>
+            <td>WTA-55-3</td>
+            <td>WTA</td>
+            <td>1000</td>
+            <td>54</td>
+            <td>5.40%</td>
+        </tr>
+        <tr>
+            <td>WTA-55-3</td>
+            <td>WTA</td>
+            <td>1000</td>
+            <td>54</td>
+            <td>5.40%</td>
+        </tr>
+    </table>
+    
+    <script>
+        // Treatment chart
+        const treatmentCtx = document.getElementById('treatmentChart').getContext('2d');
+        const treatmentChart = new Chart(treatmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['CAS', 'CAS-CTRL', 'STC', 'STC-CTRL', 'WT-37', 'WT', 'WTA'],
+                datasets: [{
+                    label: 'Variant Count',
+                    data: [336, 116, 336, 112, 344, 104, 328],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Variant Count'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Treatment'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Gene chart
+        const geneCtx = document.getElementById('geneChart').getContext('2d');
+        const geneChart = new Chart(geneCtx, {
+            type: 'bar',
+            data: {
+                labels: ['', '', '', '', '', '', '', 'W3030X00260', '', ''],
+                datasets: [{
+                    label: 'Variant Count',
+                    data: [694, 270, 266, 170, 170, 124, 58, 56, 30, 8],
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Variant Count'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Gene'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Gene Treatment chart
+        const geneTreatmentCtx = document.getElementById('geneTreatmentChart').getContext('2d');
+        const geneTreatmentChart = new Chart(geneTreatmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['', 'W3030X00260'],
+                datasets: [{"label": "CAS", "data": [24, 10], "backgroundColor": "rgba(153, 102, 255, 0.5)", "borderColor": "rgba(153, 102, 255, 1)", "borderWidth": 1},
+{"label": "CAS-CTRL", "data": [8, 4], "backgroundColor": "rgba(100, 100, 100, 0.5)", "borderColor": "rgba(100, 100, 100, 1)", "borderWidth": 1},
+{"label": "STC", "data": [2, 12], "backgroundColor": "rgba(255, 206, 86, 0.5)", "borderColor": "rgba(255, 206, 86, 1)", "borderWidth": 1},
+{"label": "STC-CTRL", "data": [8, 4], "backgroundColor": "rgba(100, 100, 100, 0.5)", "borderColor": "rgba(100, 100, 100, 1)", "borderWidth": 1},
+{"label": "WT", "data": [6, 4], "backgroundColor": "rgba(54, 162, 235, 0.5)", "borderColor": "rgba(54, 162, 235, 1)", "borderWidth": 1},
+{"label": "WT-37", "data": [24, 10], "backgroundColor": "rgba(255, 99, 132, 0.5)", "borderColor": "rgba(255, 99, 132, 1)", "borderWidth": 1},
+{"label": "WTA", "data": [24, 12], "backgroundColor": "rgba(75, 192, 192, 0.5)", "borderColor": "rgba(75, 192, 192, 1)", "borderWidth": 1}
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Variant Count'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Gene'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
