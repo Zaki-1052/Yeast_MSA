@@ -1,0 +1,92 @@
+Scaffold Distribution Analysis Summary
+=====================================
+
+Overall Statistics:
+-----------------
+WT-37 Treatment (Temperature-adapted wild type (Temperature adaptation)):
+  Adaptation: Temperature
+  Total Variants: 172
+  Scaffolds with Variants: 9
+  Global Variant Density: 0.1625 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000072.1: 0.4777 variants/kb (Count: 72, Length: 150714bp)
+    JRIU01000221.1: 0.4526 variants/kb (Count: 27, Length: 59649bp)
+    JRIU01000199.1: 0.2517 variants/kb (Count: 26, Length: 103298bp)
+    JRIU01000265.1: 0.1836 variants/kb (Count: 3, Length: 16337bp)
+    JRIU01000164.1: 0.1420 variants/kb (Count: 19, Length: 133823bp)
+
+CAS Treatment (CAS gene with temperature adaptation (Temperature adaptation)):
+  Adaptation: Temperature
+  Total Variants: 168
+  Scaffolds with Variants: 8
+  Global Variant Density: 0.1779 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000072.1: 0.4777 variants/kb (Count: 72, Length: 150714bp)
+    JRIU01000221.1: 0.4526 variants/kb (Count: 27, Length: 59649bp)
+    JRIU01000199.1: 0.2614 variants/kb (Count: 27, Length: 103298bp)
+    JRIU01000265.1: 0.1836 variants/kb (Count: 3, Length: 16337bp)
+    JRIU01000164.1: 0.1196 variants/kb (Count: 16, Length: 133823bp)
+
+STC Treatment (STC gene with low oxygen adaptation (Low Oxygen adaptation)):
+  Adaptation: Low Oxygen
+  Total Variants: 168
+  Scaffolds with Variants: 9
+  Global Variant Density: 0.1588 variants/kb
+  Top 5 Scaffolds by Variant Density:
+    JRIU01000072.1: 0.4578 variants/kb (Count: 69, Length: 150714bp)
+    JRIU01000221.1: 0.4526 variants/kb (Count: 27, Length: 59649bp)
+    JRIU01000199.1: 0.2517 variants/kb (Count: 26, Length: 103298bp)
+    JRIU01000265.1: 0.1836 variants/kb (Count: 3, Length: 16337bp)
+    JRIU01000164.1: 0.1121 variants/kb (Count: 15, Length: 133823bp)
+
+Adaptation Type Comparison:
+-------------------------
+Temperature Adaptation:
+  Average Variants: 170.0
+  Total Unique Scaffolds: 9
+  Average Variant Density: 0.1698 variants/kb
+
+Low Oxygen Adaptation:
+  Average Variants: 166.0
+  Total Unique Scaffolds: 9
+  Average Variant Density: 0.1658 variants/kb
+
+Gene Modification Effects:
+------------------------
+Low Oxygen Adaptation:
+  Gene-Modified Variants: 168
+  Non-Modified Variants: 164
+  Gene/Non-Gene Ratio: 1.02
+
+Temperature Adaptation:
+  Gene-Modified Variants: 168
+  Non-Modified Variants: 172
+  Gene/Non-Gene Ratio: 0.98
+
+Treatment Correlation Summary:
+----------------------------
+  Most Similar Treatments: CAS and CAS-CTRL (ρ = 1.0000)
+  Most Different Treatments: CAS-CTRL and WT (ρ = 0.9705)
+
+  Full Correlation Matrix:
+         CAS     CAS-CTRL     STC     STC-CTRL     WT     WT-37     WTA
+  CAS    1.0000 1.0000 0.9874 0.9958 0.9705 0.9874 0.9958
+  CAS-CTRL  1.0000 1.0000 0.9874 0.9958 0.9705 0.9874 0.9958
+  STC    0.9874 0.9874 1.0000 0.9915 0.9788 0.9915 0.9915
+  STC-CTRL  0.9958 0.9958 0.9915 1.0000 0.9873 0.9915 1.0000
+  WT     0.9705 0.9705 0.9788 0.9873 1.0000 0.9746 0.9873
+  WT-37  0.9874 0.9874 0.9915 0.9915 0.9746 1.0000 0.9915
+  WTA    0.9958 0.9958 0.9915 1.0000 0.9873 0.9915 1.0000
+
+  Adaptation Correlation:
+    Temperature vs Low Oxygen: 0.9958
+    Low Oxygen vs Temperature: 0.9958
+
+Main Conclusions:
+---------------
+1. This analysis identifies scaffolds with high variant densities across treatments.
+2. Several scaffolds show treatment-specific enrichment.
+3. The pattern of variant distribution provides insights into adaptation mechanisms.
+4. Temperature and low oxygen adaptations show distinct scaffold distribution patterns.
+5. Gene modifications (STC, CAS) appear to influence scaffold enrichment patterns.
+6. Further sequence analysis of enriched scaffolds may reveal functional implications.

@@ -1,0 +1,105 @@
+Gene-Scaffold Analysis Summary
+============================
+
+Overall Statistics:
+-----------------
+Total Variants: 838
+Genes with Variants: 8
+Enriched Genes: 11
+
+WT-37 Treatment (Temperature-adapted wild type (Temperature adaptation)):
+  Variants: 172
+  Genes with Variants: 8
+  Global Gene Density: 0.0000 variants/kb
+  Top 3 Genes by Density:
+    ERG24: 54.6282 variants/kb - Unknown
+    ERG9: 30.9777 variants/kb - Unknown
+    ERG1: 17.4263 variants/kb - Unknown
+
+CAS Treatment (CAS gene with temperature adaptation (Temperature adaptation)):
+  Variants: 168
+  Genes with Variants: 7
+  Global Gene Density: 0.0000 variants/kb
+  Top 3 Genes by Density:
+    ERG24: 54.6282 variants/kb - Unknown
+    ERG9: 30.9777 variants/kb - Unknown
+    ERG1: 18.0965 variants/kb - Unknown
+
+STC Treatment (STC gene with low oxygen adaptation (Low Oxygen adaptation)):
+  Variants: 168
+  Genes with Variants: 8
+  Global Gene Density: 0.0000 variants/kb
+  Top 3 Genes by Density:
+    ERG24: 52.3520 variants/kb - Unknown
+    ERG9: 31.9458 variants/kb - Unknown
+    ERG1: 17.4263 variants/kb - Unknown
+
+Top 5 Genes by Average Variant Density:
+------------------------------------
+1. ERG24 (Scaffold: Unknown)
+   Density: 37.6111 variants/kb
+   Product: Unknown
+2. ERG9 (Scaffold: Unknown)
+   Density: 22.5418 variants/kb
+   Product: Unknown
+3. ERG1 (Scaffold: Unknown)
+   Density: 12.7346 variants/kb
+   Product: Unknown
+4. ERG6 (Scaffold: Unknown)
+   Density: 10.5315 variants/kb
+   Product: Unknown
+5. ERG3 (Scaffold: Unknown)
+   Density: 8.0593 variants/kb
+   Product: Unknown
+
+Top 5 Enriched Genes:
+-------------------
+1. ERG24 (Scaffold: scaffold_15)
+   Treatment: WT-37
+   Fold Enrichment: 2.95x
+   Product: hypothetical protein
+2. ERG24 (Scaffold: scaffold_15)
+   Treatment: STC
+   Fold Enrichment: 2.89x
+   Product: hypothetical protein
+3. ERG24 (Scaffold: scaffold_15)
+   Treatment: CAS
+   Fold Enrichment: 2.80x
+   Product: hypothetical protein
+4. ERG24 (Scaffold: scaffold_15)
+   Treatment: STC-CTRL
+   Fold Enrichment: 2.69x
+   Product: hypothetical protein
+5. ERG24 (Scaffold: scaffold_15)
+   Treatment: WTA
+   Fold Enrichment: 2.67x
+   Product: hypothetical protein
+
+Adaptation Comparison:
+---------------------
+Temperature Adaptation:
+  Variants: 340
+  Genes with Variants: 8
+  Global Gene Density: 0.0000 variants/kb
+  Top 3 Genes by Variant Count:
+    ERG24: 144 variants - Unknown
+    ERG9: 64 variants - Unknown
+    ERG1: 53 variants - Unknown
+
+Low Oxygen Adaptation:
+  Variants: 332
+  Genes with Variants: 8
+  Global Gene Density: 0.0000 variants/kb
+  Top 3 Genes by Variant Count:
+    ERG24: 136 variants - Unknown
+    ERG9: 66 variants - Unknown
+    ERG1: 53 variants - Unknown
+
+Main Conclusions:
+---------------
+1. This analysis identifies genes with high variant density across treatments.
+2. Several genes show treatment-specific enrichment of variants.
+3. The pattern of variant distribution provides insights into adaptation mechanisms.
+4. Temperature and low oxygen adaptations show distinct gene impact patterns.
+5. Gene modifications (STC, CAS) appear to influence gene variant patterns.
+6. Further analysis of enriched genes may reveal functional implications of adaptations.

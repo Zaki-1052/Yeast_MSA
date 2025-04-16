@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scaffold-Level Variant Analysis Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2, h3 { color: #333366; }
+        .chart-container { width: 800px; height: 400px; margin: 20px 0; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .note { background-color: #ffffdd; padding: 10px; border-left: 5px solid #ffcc00; margin: 20px 0; }
+        .warning { background-color: #ffeeee; padding: 10px; border-left: 5px solid #ff0000; margin: 20px 0; }
+        .info { background-color: #eeeeff; padding: 10px; border-left: 5px solid #0000ff; margin: 20px 0; }
+        img { max-width: 100%; height: auto; margin: 20px 0; }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            margin-top: 20px;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scaffold-Level Variant Analysis Report</h1>
+    <p>Generated on: Wed Apr 16 14:40:40 PDT 2025</p>
+    
+    <div class="info">
+        <h3>Analysis Overview</h3>
+        <p>This report presents a comprehensive analysis of genomic variants at the scaffold level across different treatments and adaptations.</p>
+        <p>The analysis focuses on the distribution patterns of variants, identifying enriched scaffolds, and comparing patterns between treatments.</p>
+    </div>
+    
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Summary')" id="defaultOpen">Summary</button>
+        <button class="tablinks" onclick="openTab(event, 'Treatments')">Treatments</button>
+        <button class="tablinks" onclick="openTab(event, 'Scaffolds')">Scaffolds</button>
+        <button class="tablinks" onclick="openTab(event, 'Enrichment')">Enrichment</button>
+        <button class="tablinks" onclick="openTab(event, 'Comparisons')">Comparisons</button>
+    </div>
+    
+    <div id="Summary" class="tabcontent">
+        <h2>Analysis Summary</h2>
+        <div class="info">
+            <p><strong>Total Treatments Analyzed:</strong> 7</p>
+            <p><strong>Total Variants:</strong> 838</p>
+            <p><strong>Total Unique Scaffolds:</strong> 9</p>
+            <p><strong>Enriched Scaffolds Identified:</strong> 14</p>
+        </div>
+        
+        <h3>Key Findings</h3>
+        <ul><li><strong>WT-37</strong> (Temperature-adapted wild type) has the highest number of variants (172)</li>
+<li><strong>CAS</strong> (CAS gene with temperature adaptation) has the highest number of variants (168)</li>
+<li><strong>STC</strong> (STC gene with low oxygen adaptation) has the highest number of variants (168)</li>
+<li>Scaffold <strong>JRIU01000072.1</strong> shows 2.9x enrichment in the <strong>WT-37</strong> treatment</li>
+<li>Scaffold <strong>JRIU01000072.1</strong> shows 2.9x enrichment in the <strong>STC</strong> treatment</li>
+<li>Scaffold <strong>JRIU01000221.1</strong> shows 2.9x enrichment in the <strong>STC</strong> treatment</li>
+<li>The most similar treatments in terms of scaffold variant patterns are <strong>CAS vs CAS-CTRL</strong> (correlation: 1.00)</li>
+</ul>
+        
+        <h3>Variant Distribution by Treatment</h3>
+        <img src="../plots/treatment_variant_counts.png" alt="Treatment Variant Counts">
+        
+        <h3>Variant Distribution by Adaptation</h3>
+        <img src="../plots/adaptation_variant_counts.png" alt="Adaptation Variant Counts">
+        
+        <h3>Shared Scaffolds Between Adaptations</h3>
+        <img src="../plots/shared_scaffolds.png" alt="Shared Scaffolds">
+    </div>
+    
+    <div id="Treatments" class="tabcontent">
+        <h2>Treatment Analysis</h2>
+        <p>This section shows the distribution of variants across different treatments and adaptations.</p>
+        
+        <h3>Treatment Statistics</h3>
+        <table>
+            <tr>
+                <th>Treatment</th>
+                <th>Description</th>
+                <th>Adaptation</th>
+                <th>Gene Modified</th>
+                <th>Total Variants</th>
+                <th>Scaffolds</th>
+                <th>Global Density</th>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>Temperature-adapted wild type</td>
+                <td>Temperature</td>
+                <td>No</td>
+                <td>172</td>
+                <td>9</td>
+                <td>0.1625</td>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>CAS gene with temperature adaptation</td>
+                <td>Temperature</td>
+                <td>Yes</td>
+                <td>168</td>
+                <td>8</td>
+                <td>0.1779</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>STC gene with low oxygen adaptation</td>
+                <td>Low Oxygen</td>
+                <td>Yes</td>
+                <td>168</td>
+                <td>9</td>
+                <td>0.1588</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>Low oxygen-adapted wild type</td>
+                <td>Low Oxygen</td>
+                <td>No</td>
+                <td>164</td>
+                <td>8</td>
+                <td>0.1737</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL</td>
+                <td>CAS gene control</td>
+                <td>None</td>
+                <td>Yes</td>
+                <td>58</td>
+                <td>8</td>
+                <td>0.0614</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL</td>
+                <td>STC gene control</td>
+                <td>None</td>
+                <td>Yes</td>
+                <td>56</td>
+                <td>8</td>
+                <td>0.0593</td>
+            </tr>
+            <tr>
+                <td>WT</td>
+                <td>Wild type control</td>
+                <td>None</td>
+                <td>No</td>
+                <td>52</td>
+                <td>8</td>
+                <td>0.0551</td>
+            </tr>
+        </table>
+        
+        <h3>Treatment Bubble Charts</h3>
+        <p>These bubble charts show the top 20 scaffolds by variant density for each treatment.
+           The size of each bubble represents the number of variants, and the color represents the scaffold length.</p>
+        
+        <h4>CAS Treatment</h4>
+        <img src="../plots/CAS_bubble_chart.png" alt="CAS Bubble Chart">
+        
+        <h4>CAS-CTRL Treatment</h4>
+        <img src="../plots/CAS-CTRL_bubble_chart.png" alt="CAS-CTRL Bubble Chart">
+        
+        <h4>STC Treatment</h4>
+        <img src="../plots/STC_bubble_chart.png" alt="STC Bubble Chart">
+        
+        <h4>STC-CTRL Treatment</h4>
+        <img src="../plots/STC-CTRL_bubble_chart.png" alt="STC-CTRL Bubble Chart">
+        
+        <h4>WT Treatment</h4>
+        <img src="../plots/WT_bubble_chart.png" alt="WT Bubble Chart">
+        
+        <h4>WT-37 Treatment</h4>
+        <img src="../plots/WT-37_bubble_chart.png" alt="WT-37 Bubble Chart">
+        
+        <h4>WTA Treatment</h4>
+        <img src="../plots/WTA_bubble_chart.png" alt="WTA Bubble Chart">
+        
+    </div>
+    
+    <div id="Scaffolds" class="tabcontent">
+        <h2>Scaffold Analysis</h2>
+        <p>This section provides details on the distribution of variants across scaffolds.</p>
+        
+        <h3>Top Scaffolds by Variant Density</h3>
+        <img src="../plots/top_scaffolds_by_density.png" alt="Top Scaffolds by Density">
+        
+        <h3>Clustered Heatmap of Scaffold Variant Densities</h3>
+        <p>This heatmap shows the variant densities for the top 50 scaffolds across all treatments,
+           clustered to reveal patterns of similarity.</p>
+        <img src="../plots/clustered_variant_density.png" alt="Clustered Variant Density Heatmap">
+    </div>
+    
+    <div id="Enrichment" class="tabcontent">
+        <h2>Scaffold Enrichment Analysis</h2>
+        <p>This section shows statistical enrichment of variants on specific scaffolds.</p>
+        
+        <h3>Enrichment Heatmap</h3>
+        <p>This heatmap shows the fold enrichment of the top enriched scaffolds across treatments.</p>
+        <img src="../plots/enrichment_heatmap.png" alt="Enrichment Heatmap">
+        
+        <h3>Top Enriched Scaffolds</h3>
+        <table>
+            <tr>
+                <th>Treatment</th>
+                <th>Scaffold</th>
+                <th>Density</th>
+                <th>Fold Enrichment</th>
+                <th>P-Value</th>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>JRIU01000072.1</td>
+                <td>0.4777</td>
+                <td>2.94x</td>
+                <td>5.82e-15</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>JRIU01000072.1</td>
+                <td>0.4578</td>
+                <td>2.88x</td>
+                <td>4.99e-14</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>JRIU01000221.1</td>
+                <td>0.4526</td>
+                <td>2.85x</td>
+                <td>2.44e-06</td>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>JRIU01000221.1</td>
+                <td>0.4526</td>
+                <td>2.79x</td>
+                <td>3.71e-06</td>
+            </tr>
+            <tr>
+                <td>WT</td>
+                <td>JRIU01000221.1</td>
+                <td>0.1509</td>
+                <td>2.74x</td>
+                <td>6.72e-03</td>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>JRIU01000072.1</td>
+                <td>0.4777</td>
+                <td>2.68x</td>
+                <td>4.07e-13</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>JRIU01000221.1</td>
+                <td>0.4526</td>
+                <td>2.61x</td>
+                <td>1.19e-05</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL</td>
+                <td>JRIU01000072.1</td>
+                <td>0.1526</td>
+                <td>2.57x</td>
+                <td>6.06e-05</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>JRIU01000072.1</td>
+                <td>0.4446</td>
+                <td>2.56x</td>
+                <td>1.91e-11</td>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>JRIU01000221.1</td>
+                <td>0.4526</td>
+                <td>2.54x</td>
+                <td>1.80e-05</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL</td>
+                <td>JRIU01000221.1</td>
+                <td>0.1509</td>
+                <td>2.54x</td>
+                <td>1.05e-02</td>
+            </tr>
+            <tr>
+                <td>WT</td>
+                <td>JRIU01000072.1</td>
+                <td>0.1393</td>
+                <td>2.53x</td>
+                <td>1.54e-04</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL</td>
+                <td>JRIU01000072.1</td>
+                <td>0.1526</td>
+                <td>2.48x</td>
+                <td>1.01e-04</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL</td>
+                <td>JRIU01000221.1</td>
+                <td>0.1509</td>
+                <td>2.46x</td>
+                <td>1.30e-02</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div id="Comparisons" class="tabcontent">
+        <h2>Comparative Analysis</h2>
+        <p>This section compares variant patterns between treatments and adaptations.</p>
+        
+        <h3>Treatment Correlation Heatmap</h3>
+        <p>This heatmap shows the correlation of scaffold variant patterns between treatments.</p>
+        <img src="../plots/correlation_heatmap.png" alt="Correlation Heatmap">
+        
+        <h3>Top Treatment Correlations</h3>
+        <table>
+            <tr>
+                <th>Treatment Pair</th>
+                <th>Correlation</th>
+            </tr>
+            <tr>
+                <td>CAS vs CAS-CTRL</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL vs WTA</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>CAS vs STC-CTRL</td>
+                <td>0.9958</td>
+            </tr>
+            <tr>
+                <td>CAS vs WTA</td>
+                <td>0.9958</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL vs STC-CTRL</td>
+                <td>0.9958</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL vs WTA</td>
+                <td>0.9958</td>
+            </tr>
+            <tr>
+                <td>STC vs STC-CTRL</td>
+                <td>0.9915</td>
+            </tr>
+            <tr>
+                <td>STC vs WT-37</td>
+                <td>0.9915</td>
+            </tr>
+            <tr>
+                <td>STC vs WTA</td>
+                <td>0.9915</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL vs WT-37</td>
+                <td>0.9915</td>
+            </tr>
+        </table>
+        
+        <h3>Adaptation Comparison</h3>
+        <div class="grid-container">
+            <div>
+                <h4>Variant Counts</h4>
+                <img src="../plots/adaptation_variant_counts.png" alt="Adaptation Variant Counts">
+            </div>
+            <div>
+                <h4>Scaffold Distribution</h4>
+                <img src="../plots/shared_scaffolds.png" alt="Shared Scaffolds">
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+</body>
+</html>

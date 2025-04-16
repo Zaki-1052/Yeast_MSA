@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gene-Scaffold Variant Analysis Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2, h3 { color: #333366; }
+        .chart-container { width: 800px; height: 400px; margin: 20px 0; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .note { background-color: #ffffdd; padding: 10px; border-left: 5px solid #ffcc00; margin: 20px 0; }
+        .warning { background-color: #ffeeee; padding: 10px; border-left: 5px solid #ff0000; margin: 20px 0; }
+        .info { background-color: #eeeeff; padding: 10px; border-left: 5px solid #0000ff; margin: 20px 0; }
+        img { max-width: 100%; height: auto; margin: 20px 0; }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            margin-top: 20px;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gene-Scaffold Variant Analysis Report</h1>
+    <p>Generated on: Wed Apr 16 15:40:24 PDT 2025</p>
+    
+    <div class="info">
+        <h3>Analysis Overview</h3>
+        <p>This report presents a comprehensive gene-centric analysis of genomic variants across different treatments and adaptations.</p>
+        <p>The analysis maps variants to genes based on scaffold assignments, identifying genes that are enriched for variants in specific conditions.</p>
+    </div>
+    
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Summary')" id="defaultOpen">Summary</button>
+        <button class="tablinks" onclick="openTab(event, 'Treatments')">Treatments</button>
+        <button class="tablinks" onclick="openTab(event, 'Genes')">Genes</button>
+        <button class="tablinks" onclick="openTab(event, 'Enrichment')">Enrichment</button>
+        <button class="tablinks" onclick="openTab(event, 'Comparisons')">Comparisons</button>
+    </div>
+    
+    <div id="Summary" class="tabcontent">
+        <h2>Analysis Summary</h2>
+        <div class="info">
+            <p><strong>Total Treatments Analyzed:</strong> 7</p>
+            <p><strong>Total Variants:</strong> 838</p>
+            <p><strong>Total Genes with Variants:</strong> 8</p>
+            <p><strong>Enriched Genes Identified:</strong> 11</p>
+        </div>
+        
+        <h3>Key Findings</h3>
+        <ul><li><strong>WT-37</strong> (Temperature-adapted wild type) has the highest number of variants (172)</li>
+<li><strong>CAS</strong> (CAS gene with temperature adaptation) has the highest number of variants (168)</li>
+<li><strong>STC</strong> (STC gene with low oxygen adaptation) has the highest number of variants (168)</li>
+<li>Gene <strong>ERG24</strong> (hypothetical protein) shows 3.0x enrichment in the <strong>WT-37</strong> treatment</li>
+<li>Gene <strong>ERG24</strong> (hypothetical protein) shows 2.9x enrichment in the <strong>STC</strong> treatment</li>
+<li>Gene <strong>ERG24</strong> (hypothetical protein) shows 2.8x enrichment in the <strong>CAS</strong> treatment</li>
+<li>The most similar treatments in terms of gene variant patterns are <strong>CAS vs CAS-CTRL</strong> (correlation: 1.00)</li>
+</ul>
+        
+        <h3>Variant Distribution by Treatment</h3>
+        <img src="../plots/treatment_variant_counts.png" alt="Treatment Variant Counts">
+        
+        <h3>Variant Distribution by Adaptation</h3>
+        <img src="../plots/adaptation_variant_counts.png" alt="Adaptation Variant Counts">
+        
+        <h3>Gene Categories with Variants</h3>
+        <img src="../plots/gene_categories.png" alt="Gene Categories">
+    </div>
+    
+    <div id="Treatments" class="tabcontent">
+        <h2>Treatment Analysis</h2>
+        <p>This section shows the distribution of variants across different treatments and adaptations.</p>
+        
+        <h3>Treatment Statistics</h3>
+        <table>
+            <tr>
+                <th>Treatment</th>
+                <th>Description</th>
+                <th>Adaptation</th>
+                <th>Gene Modified</th>
+                <th>Total Variants</th>
+                <th>Genes</th>
+                <th>Global Density</th>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>Temperature-adapted wild type</td>
+                <td>Temperature</td>
+                <td>No</td>
+                <td>172</td>
+                <td>8</td>
+                <td>0.0000</td>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>CAS gene with temperature adaptation</td>
+                <td>Temperature</td>
+                <td>Yes</td>
+                <td>168</td>
+                <td>7</td>
+                <td>0.0000</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>STC gene with low oxygen adaptation</td>
+                <td>Low Oxygen</td>
+                <td>Yes</td>
+                <td>168</td>
+                <td>8</td>
+                <td>0.0000</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>Low oxygen-adapted wild type</td>
+                <td>Low Oxygen</td>
+                <td>No</td>
+                <td>164</td>
+                <td>7</td>
+                <td>0.0000</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL</td>
+                <td>CAS gene control</td>
+                <td>None</td>
+                <td>Yes</td>
+                <td>58</td>
+                <td>7</td>
+                <td>0.0000</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL</td>
+                <td>STC gene control</td>
+                <td>None</td>
+                <td>Yes</td>
+                <td>56</td>
+                <td>7</td>
+                <td>0.0000</td>
+            </tr>
+            <tr>
+                <td>WT</td>
+                <td>Wild type control</td>
+                <td>None</td>
+                <td>No</td>
+                <td>52</td>
+                <td>7</td>
+                <td>0.0000</td>
+            </tr>
+        </table>
+        
+        <h3>Genes with Variants by Treatment</h3>
+        <img src="../plots/treatment_gene_counts.png" alt="Treatment Gene Counts">
+        
+        <h3>Treatment Enrichment Plots</h3>
+        <p>These bubble charts show gene enrichment by treatment, with bubble size indicating variant count.</p>
+        
+        <h4>CAS Treatment</h4>
+        <img src="../plots/CAS_gene_enrichment.png" alt="CAS Gene Enrichment">
+        
+        <h4>CAS-CTRL Treatment</h4>
+        <img src="../plots/CAS-CTRL_gene_enrichment.png" alt="CAS-CTRL Gene Enrichment">
+        
+        <h4>STC Treatment</h4>
+        <img src="../plots/STC_gene_enrichment.png" alt="STC Gene Enrichment">
+        
+        <h4>STC-CTRL Treatment</h4>
+        <img src="../plots/STC-CTRL_gene_enrichment.png" alt="STC-CTRL Gene Enrichment">
+        
+        <h4>WT Treatment</h4>
+        <img src="../plots/WT_gene_enrichment.png" alt="WT Gene Enrichment">
+        
+        <h4>WT-37 Treatment</h4>
+        <img src="../plots/WT-37_gene_enrichment.png" alt="WT-37 Gene Enrichment">
+        
+        <h4>WTA Treatment</h4>
+        <img src="../plots/WTA_gene_enrichment.png" alt="WTA Gene Enrichment">
+        
+    </div>
+    
+    <div id="Genes" class="tabcontent">
+        <h2>Gene Analysis</h2>
+        <p>This section provides details on the distribution of variants across genes.</p>
+        
+        <h3>Top Genes by Variant Density</h3>
+        <img src="../plots/top_genes_by_density.png" alt="Top Genes by Density">
+        
+        <h3>Clustered Heatmap of Gene Variant Densities</h3>
+        <p>This heatmap shows the variant densities for the top 50 genes across all treatments,
+           clustered to reveal patterns of similarity.</p>
+        <img src="../plots/clustered_gene_density.png" alt="Clustered Gene Density Heatmap">
+    </div>
+    
+    <div id="Enrichment" class="tabcontent">
+        <h2>Gene Enrichment Analysis</h2>
+        <p>This section shows statistical enrichment of variants in specific genes.</p>
+        
+        <h3>Enrichment Heatmap</h3>
+        <p>This heatmap shows the fold enrichment of the top enriched genes across treatments.</p>
+        <img src="../plots/gene_enrichment_heatmap.png" alt="Gene Enrichment Heatmap">
+        
+        <h3>Top Enriched Genes</h3>
+        <table>
+            <tr>
+                <th>Treatment</th>
+                <th>Gene</th>
+                <th>Product</th>
+                <th>Density</th>
+                <th>Fold Enrichment</th>
+                <th>P-Value</th>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>ERG24</td>
+                <td>hypothetical protein</td>
+                <td>54.6282</td>
+                <td>2.95x</td>
+                <td>4.85e-15</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>ERG24</td>
+                <td>hypothetical protein</td>
+                <td>52.3520</td>
+                <td>2.89x</td>
+                <td>4.19e-14</td>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>ERG24</td>
+                <td>hypothetical protein</td>
+                <td>54.6282</td>
+                <td>2.80x</td>
+                <td>5.54e-14</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL</td>
+                <td>ERG24</td>
+                <td>hypothetical protein</td>
+                <td>17.4507</td>
+                <td>2.69x</td>
+                <td>3.20e-05</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>ERG24</td>
+                <td>hypothetical protein</td>
+                <td>50.8346</td>
+                <td>2.67x</td>
+                <td>3.13e-12</td>
+            </tr>
+            <tr>
+                <td>WT</td>
+                <td>ERG24</td>
+                <td>hypothetical protein</td>
+                <td>15.9332</td>
+                <td>2.64x</td>
+                <td>8.64e-05</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL</td>
+                <td>ERG24</td>
+                <td>hypothetical protein</td>
+                <td>17.4507</td>
+                <td>2.59x</td>
+                <td>5.39e-05</td>
+            </tr>
+            <tr>
+                <td>STC</td>
+                <td>ERG9</td>
+                <td>hypothetical protein</td>
+                <td>31.9458</td>
+                <td>1.77x</td>
+                <td>1.72e-03</td>
+            </tr>
+            <tr>
+                <td>WTA</td>
+                <td>ERG9</td>
+                <td>hypothetical protein</td>
+                <td>31.9458</td>
+                <td>1.68x</td>
+                <td>3.68e-03</td>
+            </tr>
+            <tr>
+                <td>WT-37</td>
+                <td>ERG9</td>
+                <td>hypothetical protein</td>
+                <td>30.9777</td>
+                <td>1.67x</td>
+                <td>4.39e-03</td>
+            </tr>
+            <tr>
+                <td>CAS</td>
+                <td>ERG9</td>
+                <td>hypothetical protein</td>
+                <td>30.9777</td>
+                <td>1.59x</td>
+                <td>8.83e-03</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div id="Comparisons" class="tabcontent">
+        <h2>Comparative Analysis</h2>
+        <p>This section compares variant patterns between treatments and adaptations.</p>
+        
+        <h3>Treatment Correlation Heatmap</h3>
+        <p>This heatmap shows the correlation of gene variant patterns between treatments.</p>
+        <img src="../plots/gene_correlation_heatmap.png" alt="Gene Correlation Heatmap">
+        
+        <h3>Top Treatment Correlations</h3>
+        <table>
+            <tr>
+                <th>Treatment Pair</th>
+                <th>Correlation</th>
+            </tr>
+            <tr>
+                <td>CAS vs CAS-CTRL</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>CAS vs STC-CTRL</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>CAS vs WTA</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL vs STC-CTRL</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL vs WTA</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>STC-CTRL vs WTA</td>
+                <td>1.0000</td>
+            </tr>
+            <tr>
+                <td>CAS vs STC</td>
+                <td>0.9940</td>
+            </tr>
+            <tr>
+                <td>CAS vs WT</td>
+                <td>0.9940</td>
+            </tr>
+            <tr>
+                <td>CAS vs WT-37</td>
+                <td>0.9940</td>
+            </tr>
+            <tr>
+                <td>CAS-CTRL vs STC</td>
+                <td>0.9940</td>
+            </tr>
+        </table>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+</body>
+</html>

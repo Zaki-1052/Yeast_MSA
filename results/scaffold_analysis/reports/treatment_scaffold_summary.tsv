@@ -1,0 +1,8 @@
+Treatment	Description	Adaptation	Has_Gene	Total_Variants	Scaffolds_With_Variants	Global_Density	Top_Scaffolds
+CAS	CAS gene with temperature adaptation	Temperature	True	168	8	0.177942	JRIU01000072.1 (0.48), JRIU01000221.1 (0.45), JRIU01000199.1 (0.26)
+CAS-CTRL	CAS gene control	None	True	58	8	0.061432	JRIU01000072.1 (0.15), JRIU01000221.1 (0.15), JRIU01000199.1 (0.09)
+STC	STC gene with low oxygen adaptation	Low Oxygen	True	168	9	0.158751	JRIU01000072.1 (0.46), JRIU01000221.1 (0.45), JRIU01000199.1 (0.25)
+STC-CTRL	STC gene control	None	True	56	8	0.059314	JRIU01000072.1 (0.15), JRIU01000221.1 (0.15), JRIU01000199.1 (0.09)
+WT	Wild type control	None	False	52	8	0.055077	JRIU01000221.1 (0.15), JRIU01000072.1 (0.14), JRIU01000199.1 (0.09)
+WT-37	Temperature-adapted wild type	Temperature	False	172	9	0.162530	JRIU01000072.1 (0.48), JRIU01000221.1 (0.45), JRIU01000199.1 (0.25)
+WTA	Low oxygen-adapted wild type	Low Oxygen	False	164	8	0.173705	JRIU01000221.1 (0.45), JRIU01000072.1 (0.44), JRIU01000199.1 (0.26)

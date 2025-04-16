@@ -1,0 +1,8 @@
+Treatment	Description	Adaptation	Has_Gene	Total_Variants	Genes_With_Variants	Global_Density	Top_Genes
+CAS	CAS gene with temperature adaptation	Temperature	True	168	7	19.489559	ERG24 (54.63), ERG9 (30.98), ERG1 (18.10)
+CAS-CTRL	CAS gene control	None	True	58	7	6.728538	ERG24 (17.45), ERG9 (10.65), ERG6 (6.07)
+STC	STC gene with low oxygen adaptation	Low Oxygen	True	168	8	18.083961	ERG24 (52.35), ERG9 (31.95), ERG1 (17.43)
+STC-CTRL	STC gene control	None	True	56	7	6.496520	ERG24 (17.45), ERG9 (10.65), ERG1 (6.03)
+WT	Wild type control	None	False	52	7	6.032483	ERG24 (15.93), ERG9 (10.65), ERG1 (6.03)
+WT-37	Temperature-adapted wild type	Temperature	False	172	8	18.514532	ERG24 (54.63), ERG9 (30.98), ERG1 (17.43)
+WTA	Low oxygen-adapted wild type	Low Oxygen	False	164	7	19.025522	ERG24 (50.83), ERG9 (31.95), ERG1 (18.10)
