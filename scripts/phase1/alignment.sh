@@ -6,7 +6,7 @@ mkdir -p results/stats
 
 # Path to reference genome
 
-REF="reference/yeast_w303.fasta"
+REF="reference/w303_chromosomal.fasta"
 
 #REF="new_reference/sequence.fasta"
 
