@@ -1,6 +1,6 @@
 # Yeast Genomic Analysis Project
 
-See [the project summary](project_summary.md) and [additional documentation](documentation.md) for more details (API generated).
+See [project organization documentation](project_organization.md) and [additional documentation](documentation.md) for more details.
 
 ## Overview
 
@@ -18,115 +18,38 @@ This repository contains a comprehensive bioinformatics pipeline and analysis of
 
 ## Directory Structure
 
-### Data
-
-- `data/`: Contains raw and processed sequencing data (note: raw data files not included in repository)
-
-### Reference
-
-- `reference/`: Reference genome files
-  - `yeast_w303.fasta`: Yeast W303 strain reference genome
-  - Associated index files (`.amb`, `.ann`, `.bwt`, `.fai`, `.pac`, `.sa`)
-  - `sequence_report.tsv`: Reference sequence metadata
+The project follows a modular organization:
 
 ### Scripts
 
-- `scripts/`: Analysis pipeline scripts
-  - `preprocessing.sh`: Quality control and adapter removal
-  - `alignment.sh`: Maps reads to reference genome
-  - `variants.sh`: Calls genetic variants
-  - `comparisons.sh`: Compares variants across treatments
-  - `consistency.sh`: Analyzes variant reproducibility across replicates
-  - `hotspot_analysis.sh`: Identifies mutation hotspots
-  - `position_analysis.sh`: Analyzes mutation positions
-  - `sequence_context_analysis.R`: Examines sequence context around mutations
-  - `*_visualization.R`: Various visualization scripts
+Scripts are organized by their function:
+
+- `scripts/pipeline/`: Sequential scripts for the complete analysis workflow
+- `scripts/analysis/`: Modules for specific types of analyses
+- `scripts/visualization/`: Scripts for generating visualizations
+- `scripts/utils/`: Common utility functions
+- `scripts/reporting/`: Report generation scripts
 
 ### Results
 
-The `results/` directory contains all analysis outputs organized by analysis type:
+Results are organized to mirror the analysis workflow:
 
-#### Quality Control
+- `results/preprocessing/`: Quality control outputs
+- `results/alignment/`: Genome alignment results
+- `results/variants/`: Variant calling results
+- `results/annotation/`: Functional annotations
+- `results/analysis/`: Analysis results by category
+  - `mutation_spectrum/`: Mutation type analysis
+  - `genomic_context/`: Sequence context analysis
+  - `population_structure/`: Population relationships
+  - `regional_enrichment/`: Hotspot identification
+  - `scaffold_distribution/`: Genome-wide distribution
+  - `mutational_signatures/`: Signature analysis
+  - `statistical_patterns/`: Statistical analyses
+- `results/figures/`: Publication-ready visualizations
+- `results/reports/`: Analysis reports
 
-- `results/fastqc/`: Quality reports for raw sequencing data
-- `results/fastp/`: Trimming and filtering reports
-- `results/stats/`: Alignment statistics and quality metrics
-  - `alignment_summary.txt`: Coverage and mapping statistics
-
-#### Variant Calling
-
-- `results/vcf/`: Variant call format files
-  - `individual/`: Variants for each sample
-  - `filtered/`: Quality-filtered variants
-  - `comparison/`: Variant comparisons between treatments
-  - `consistency/`: Replicate consistency analysis
-  - `direct_comparison/`: Control vs treatment comparisons
-  - `merged/`: Combined variant sets
-
-#### Variant Annotation
-
-- `results/annotation/`: Functional annotations of variants
-  - `*_variants.tsv`: Annotated variant tables
-  - `*_scaffold_counts.txt`: Variant distribution by scaffold
-
-#### Functional Analysis
-
-- `results/functional/`: Functional impact analysis
-  - Treatment-specific variant details
-  - Cross-treatment variant comparisons
-  - Overlap analysis between treatments
-
-#### Sequence Context Analysis
-
-- `results/sequence_context/`: Analysis of sequence context around mutations
-  - `*_contexts.txt`: Extracted sequence contexts
-  - `*_logo.png`: Sequence motif logos
-  - `*_frequencies.tsv`: Position-specific nucleotide frequencies
-  - `*_motifs.tsv`: Enriched sequence motifs
-  - `sequence_context_report.html`: Comprehensive sequence context analysis
-
-#### Hotspot Analysis
-
-- `results/analysis/hotspots/`: Mutation clustering analysis
-  - `*_density.tsv`: Mutation density calculations
-  - `*_top_hotspots.txt`: Identified mutation hotspots
-  - `hotspot_summary.txt`: Summary of hotspot findings
-  - `plots/`: Visualizations of hotspot distributions
-  - `position_analysis/`: Detailed positional analysis
-
-#### Position Clustering
-
-- `results/analysis/position_clustering/`: Analysis of mutation proximity
-  - `*_distances.txt`: Distance calculations between mutations
-  - `*_position_density.pdf`: Density plot visualizations
-  - `*_stats.txt`: Statistical summaries of positions
-  - `summary.txt`: Overall clustering findings
-
-#### Mutation Signatures
-
-- `results/analysis/signatures/`: Mutation pattern analysis
-  - `*_specific_variants.tsv`: Treatment-specific variant collections
-  - `mutation_patterns.txt`: Identified mutation signatures
-
-#### Visualizations
-
-- `results/visualization/`: High-level data visualizations
-  - `variant_distribution.png`: Mutation distribution plots
-  - `scaffold_distribution.png`: Variant location across genome
-  - `variant_sharing_heatmap.png`: Similarity between treatments
-  - `indel_percentage.png`: Insertion/deletion statistics
-
-- `results/visualizations/`: Advanced multi-dimensional visualizations
-  - `signatures/`: Mutation spectrum visualizations
-  - `clustering/`: Mutation clustering visualizations
-  - `integrative/`: Combined data visualizations
-  - `interpretation/`: Biological mechanism visualizations
-
-#### Summary Reports
-
-- `results/yeast_analysis_summary.Rmd`: R Markdown summary report
-- `results/yeast_analysis_summary.html`: HTML rendered report
-- `results/summary_document.R`: R script for report generation
+See the [project organization document](project_organization.md) for a complete description of the directory structure.
 
 ## Workflow
 
@@ -158,15 +81,6 @@ The analysis pipeline follows these main steps:
    - Hotspot characterization
    - Treatment comparisons and relationships
 
-## Key Visualizations
-
-- **Mutation Spectra**: `results/visualizations/signatures/mutation_spectrum.png`
-- **Transition vs Transversion**: `results/visualizations/signatures/transition_transversion.png`
-- **Mutation Clustering**: `results/visualizations/clustering/position_distribution.png`
-- **Hotspot Positions**: `results/analysis/hotspots/plots/hotspot_positions.pdf`
-- **Sequence Motifs**: `results/sequence_context/motif_comparison.png`
-- **Treatment Relationships**: `results/visualizations/integrative/treatment_network.png`
-
 ## Summary of Treatment Effects
 
 ### CAS Treatment
@@ -191,25 +105,16 @@ The analysis pipeline follows these main steps:
 - Highest transversion rate (40%)
 - Suggests disruption of multiple DNA repair pathways
 
-## Comprehensive Summary Report
-
-For a complete analysis with interpretations and biological implications, see:
-- `results/yeast_analysis_summary.html`
-
 ## Usage
 
-The scripts directory contains all necessary code to reproduce the analysis. Most scripts are designed to be run sequentially:
+The scripts directory contains all necessary code to reproduce the analysis. The main pipeline can be run with:
 
 ```bash
-# Example workflow
-bash scripts/preprocessing.sh
-bash scripts/alignment.sh
-bash scripts/variants.sh
-bash scripts/comparisons.sh
-bash scripts/hotspot_analysis.sh
-Rscript scripts/sequence_context_analysis.R
-Rscript scripts/visualization.R
-Rscript scripts/summary_document.R
+# Run the entire pipeline
+bash scripts/pipeline/07_run_full_pipeline.sh
+
+# Or run individual analysis modules
+python scripts/analysis/mutation_spectrum/spectrum_analysis.py
 ```
 
 ## Requirements
@@ -218,9 +123,14 @@ Rscript scripts/summary_document.R
 - Samtools/BCFtools
 - FastQC
 - fastp
+- Python 3.6+ with:
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - biopython
 - R with packages:
   - dplyr
   - ggplot2
-  - knitr
-  - kableExtra
-  - seqLogo
+  - pheatmap
+  - RColorBrewer
