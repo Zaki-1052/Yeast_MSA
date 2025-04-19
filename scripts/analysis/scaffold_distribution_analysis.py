@@ -60,11 +60,11 @@ def find_file(base_name, file_patterns):
     return None
 
 # Function to parse the reference genome index to get scaffold lengths
-def parse_genome_index(fai_file="reference/yeast_w303.fasta.fai"):
+def parse_genome_index(fai_file="reference/w303_chromosomal.fasta.fai"):
     """Parse the reference genome fasta index to get scaffold lengths."""
     # Try multiple possible locations for the fai file
     fai_patterns = [
-        "reference/yeast_w303.fasta.fai",
+        "reference/w303_chromosomal.fasta.fai",
         "reference/genome.fasta.fai",
         "reference/yeast/yeast_w303.fasta.fai"
     ]

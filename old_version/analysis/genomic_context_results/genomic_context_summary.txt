@@ -1,0 +1,81 @@
+Genomic Context Analysis Summary
+===============================
+
+Overall Statistics:
+-----------------
+Total variants analyzed: 516
+Variants by treatment:
+  WT-37: 167 variants - Temperature-adapted wild type (Temperature adaptation)
+  WTA: 134 variants - Low oxygen-adapted wild type (Low Oxygen adaptation)
+  STC: 104 variants - STC gene with low oxygen adaptation (Low Oxygen adaptation with STC gene)
+  CAS: 111 variants - CAS gene with temperature adaptation (Temperature adaptation with CAS gene)
+
+Variants by adaptation type:
+  Temperature: 278 variants
+  Low Oxygen: 238 variants
+
+Variants by gene modification status:
+  Non-modified: 301 variants
+  Gene-modified: 215 variants
+
+GC Content Analysis:
+-------------------
+Mean GC content in variant regions: 0.3968
+Mean GC content in control regions: 0.3802
+GC content by treatment:
+  WT-37: 0.4037
+  WTA: 0.3951
+  STC: 0.3991
+  CAS: 0.3866
+
+GC content by adaptation type:
+  Temperature: 0.3969
+  Low Oxygen: 0.3968
+
+GC content by gene modification status:
+  Non-modified: 0.3999
+  Gene-modified: 0.3926
+
+Local Sequence Features:
+----------------------
+Fraction of variants near homopolymers: 0.8992
+Fraction of control sites near homopolymers: 0.9420
+Homopolymer presence by treatment:
+  WT-37: 0.8802
+  WTA: 0.9403
+  STC: 0.8462
+  CAS: 0.9279
+
+Homopolymer presence by adaptation type:
+  Temperature: 0.8993
+  Low Oxygen: 0.8992
+
+Homopolymer presence by gene modification status:
+  Non-modified: 0.9070
+  Gene-modified: 0.8884
+
+Fraction of variants near dinucleotide repeats: 0.8101
+Fraction of control sites near dinucleotide repeats: 0.8950
+Dinucleotide repeat presence by treatment:
+  WT-37: 0.8084
+  WTA: 0.8507
+  STC: 0.7500
+  CAS: 0.8198
+
+Dinucleotide repeat presence by adaptation type:
+  Temperature: 0.8129
+  Low Oxygen: 0.8067
+
+Dinucleotide repeat presence by gene modification status:
+  Non-modified: 0.8272
+  Gene-modified: 0.7860
+
+Main Conclusions:
+---------------
+1. This analysis examines the genomic context of mutations in different treatments.
+2. The GC content analysis reveals potential biases in mutation distribution.
+3. Homopolymer and repeat regions may influence mutation probability.
+4. Adaptation conditions (Temperature vs Low Oxygen) show distinct context preferences.
+5. Gene modifications (STC, CAS) appear to influence the genomic context of mutations.
+6. Sequence composition around mutation sites provides insights into damage mechanisms.
+7. Further analysis of specific motifs may reveal specific DNA damage signatures.

@@ -64,7 +64,7 @@ TRINUCLEOTIDES = [''.join(x) for x in
                   [(a, b, c) for a in NUCLEOTIDES for b in NUCLEOTIDES for c in NUCLEOTIDES]]
 
 # Reference genome path
-REFERENCE_GENOME = "reference/yeast_w303.fasta"
+REFERENCE_GENOME = "reference/w303_chromosomal.fasta"
 
 # Function to find a file trying multiple locations
 def find_file(base_name, file_patterns):

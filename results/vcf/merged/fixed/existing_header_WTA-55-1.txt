@@ -1,7 +1,7 @@
 ##FILTER=<ID=PASS,Description="All filters passed">
 ##bcftoolsVersion=1.21+htslib-1.21
-##bcftoolsCommand=mpileup -f reference/yeast_w303.fasta -a DP,AD results/bam/WTA-55-1.final.bam
-##reference=file://reference/yeast_w303.fasta
+##bcftoolsCommand=mpileup -f reference/w303_chromosomal.fasta -a DP,AD results/bam/WTA-55-1.final.bam
+##reference=file://reference/w303_chromosomal.fasta
 ##ALT=<ID=*,Description="Represents allele(s) other than observed.">
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
 ##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of raw reads supporting an indel">
@@ -24,11 +24,11 @@
 ##INFO=<ID=DP4,Number=4,Type=Integer,Description="Number of high-quality ref-forward , ref-reverse, alt-forward and alt-reverse bases">
 ##INFO=<ID=MQ,Number=1,Type=Integer,Description="Average mapping quality">
 ##bcftools_callVersion=1.21+htslib-1.21
-##bcftools_callCommand=call -mv --ploidy 1 -Ov -o results/vcf/individual/WTA-55-1.vcf; Date=Fri Apr 11 02:57:36 2025
+##bcftools_callCommand=call -mv --ploidy 1 -Ov -o results/vcf/individual/WTA-55-1.vcf; Date=Sat Apr 19 03:15:54 2025
 ##bcftools_normVersion=1.21+htslib-1.21
-##bcftools_normCommand=norm -f reference/yeast_w303.fasta -Ov -o results/vcf/individual/WTA-55-1.norm.vcf results/vcf/individual/WTA-55-1.vcf; Date=Fri Apr 11 02:58:12 2025
+##bcftools_normCommand=norm -f reference/w303_chromosomal.fasta -Ov -o results/vcf/individual/WTA-55-1.norm.vcf results/vcf/individual/WTA-55-1.vcf; Date=Sat Apr 19 03:16:35 2025
 ##bcftools_filterVersion=1.21+htslib-1.21
-##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/WTA-55-1.filtered.vcf results/vcf/individual/WTA-55-1.norm.vcf; Date=Sun Apr 13 01:31:08 2025
+##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/WTA-55-1.filtered.vcf results/vcf/individual/WTA-55-1.norm.vcf; Date=Sat Apr 19 03:18:59 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/WTA-55-1.filtered.vcf.gz; Date=Sun Apr 13 01:39:53 2025
+##bcftools_viewCommand=view -h results/merged/filtered/WTA-55-1.filtered.vcf.gz; Date=Sat Apr 19 03:18:59 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	WTA-55-1

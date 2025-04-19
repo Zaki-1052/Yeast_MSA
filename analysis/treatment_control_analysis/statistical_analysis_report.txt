@@ -1,75 +1,75 @@
 Treatment vs Control Statistical Analysis
 =====================================
 
-STC-vs-STCCTRL Treatment Analysis:
-----------------------------------
-Description: STC vs STC control
-Control: STC-CTRL
-Treatment variants: 126
-Control variants: 1075
-Fold change: 0.12
-Odds ratio: 0.12
-P-value: 3.20e-188
-Q-value (FDR-corrected): 1.92e-187
-Statistical significance: ***
-
-STC Treatment Analysis:
------------------------
-Description: STC gene with low oxygen adaptation
-Control: WT-CTRL
-Treatment variants: 126
-Control variants: 944
-Fold change: 0.13
-Odds ratio: 0.13
-P-value: 1.79e-155
-Q-value (FDR-corrected): 5.37e-155
-Statistical significance: ***
-
-CAS-vs-CASCTRL Treatment Analysis:
-----------------------------------
-Description: CAS vs CAS control
-Control: CAS-CTRL
-Treatment variants: 132
-Control variants: 956
-Fold change: 0.14
-Odds ratio: 0.14
-P-value: 1.06e-154
-Q-value (FDR-corrected): 2.12e-154
-Statistical significance: ***
-
-CAS Treatment Analysis:
------------------------
-Description: CAS gene with temperature adaptation
-Control: WT-CTRL
-Treatment variants: 132
-Control variants: 944
-Fold change: 0.14
-Odds ratio: 0.14
-P-value: 9.15e-152
-Q-value (FDR-corrected): 1.37e-151
-Statistical significance: ***
-
 WTA Treatment Analysis:
 -----------------------
 Description: Low oxygen-adapted wild type
 Control: WT-CTRL
-Treatment variants: 156
-Control variants: 944
-Fold change: 0.17
-Odds ratio: 0.17
-P-value: 6.44e-138
-Q-value (FDR-corrected): 7.73e-138
+Treatment variants: 20
+Control variants: 387
+Fold change: 0.05
+Odds ratio: 0.05
+P-value: 2.53e-89
+Q-value (FDR-corrected): 1.52e-88
+Statistical significance: ***
+
+STC-vs-STCCTRL Treatment Analysis:
+----------------------------------
+Description: STC vs STC control
+Control: STC-CTRL
+Treatment variants: 27
+Control variants: 389
+Fold change: 0.07
+Odds ratio: 0.07
+P-value: 2.55e-83
+Q-value (FDR-corrected): 7.65e-83
 Statistical significance: ***
 
 WT-37 Treatment Analysis:
 -------------------------
 Description: Temperature-adapted wild type
 Control: WT-CTRL
-Treatment variants: 187
-Control variants: 944
-Fold change: 0.20
-Odds ratio: 0.20
-P-value: 4.88e-122
-Q-value (FDR-corrected): 4.88e-122
+Treatment variants: 27
+Control variants: 387
+Fold change: 0.07
+Odds ratio: 0.07
+P-value: 8.92e-83
+Q-value (FDR-corrected): 1.34e-82
+Statistical significance: ***
+
+STC Treatment Analysis:
+-----------------------
+Description: STC gene with low oxygen adaptation
+Control: WT-CTRL
+Treatment variants: 27
+Control variants: 387
+Fold change: 0.07
+Odds ratio: 0.07
+P-value: 8.92e-83
+Q-value (FDR-corrected): 1.34e-82
+Statistical significance: ***
+
+CAS-vs-CASCTRL Treatment Analysis:
+----------------------------------
+Description: CAS vs CAS control
+Control: CAS-CTRL
+Treatment variants: 38
+Control variants: 398
+Fold change: 0.10
+Odds ratio: 0.10
+P-value: 9.01e-77
+Q-value (FDR-corrected): 1.08e-76
+Statistical significance: ***
+
+CAS Treatment Analysis:
+-----------------------
+Description: CAS gene with temperature adaptation
+Control: WT-CTRL
+Treatment variants: 38
+Control variants: 387
+Fold change: 0.10
+Odds ratio: 0.10
+P-value: 6.71e-74
+Q-value (FDR-corrected): 6.71e-74
 Statistical significance: ***
 

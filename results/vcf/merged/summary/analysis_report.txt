@@ -1,47 +1,68 @@
 === Variant Analysis Summary Report ===
-Date: Sun Apr 13 01:39:58 PDT 2025
+Date: Sat Apr 19 03:19:01 PDT 2025
 
 Treatment-Specific Variants:
-  WT:      768 total,      187 high-confidence
-  STC:      646 total,       79 high-confidence
-  CAS:      768 total,      147 high-confidence
-  WTA:      768 total,      156 high-confidence
+  WT-37:      236 total,       27 high-confidence
+  WTA:      236 total,       20 high-confidence
+  STC:      236 total,       27 high-confidence
+  CAS:      236 total,       38 high-confidence
+  STC-vs-STCCTRL:      229 total,       24 high-confidence
+  CAS-vs-CASCTRL:      220 total,       33 high-confidence
 
 Treatment-Unique Variants:
   Treatment	Unique_Variants
-  WT	77
-  STC	45
-  CAS	95
-  WTA	56
+  WT-37	15
+  STC	14
+  CAS	25
+  WTA	8
 
 Variant Consistency Within Replicates:
-  WT consistency:
-    Variants in all 3 replicates:      675
-    Variants in exactly 2 replicates: 219
-    Variants in only 1 replicate:      528
-    Total variants: 1422
-
-  STC consistency:
-    Variants in all 3 replicates:      619
-    Variants in exactly 2 replicates: 181
-    Variants in only 1 replicate:      523
-    Total variants: 1323
-
-  CAS consistency:
-    Variants in all 3 replicates:      598
-    Variants in exactly 2 replicates: 217
-    Variants in only 1 replicate:      537
-    Total variants: 1352
+  WT-37 consistency:
+    Variants in all 3 replicates:      320
+    Variants in exactly 2 replicates: 34
+    Variants in only 1 replicate:       95
+    Total variants: 449
 
   WTA consistency:
-    Variants in all 3 replicates:      655
-    Variants in exactly 2 replicates: 198
-    Variants in only 1 replicate:      517
-    Total variants: 1370
+    Variants in all 3 replicates:      312
+    Variants in exactly 2 replicates: 37
+    Variants in only 1 replicate:       89
+    Total variants: 438
+
+  STC consistency:
+    Variants in all 3 replicates:      323
+    Variants in exactly 2 replicates: 34
+    Variants in only 1 replicate:       91
+    Total variants: 448
+
+  CAS consistency:
+    Variants in all 3 replicates:      320
+    Variants in exactly 2 replicates: 36
+    Variants in only 1 replicate:      116
+    Total variants: 472
 
 Variant Analysis Method Comparison:
   Method Comparison:
-    WT:      187 high-conf variants (merged),      186 high-conf variants (direct)
-    STC:       79 high-conf variants (merged),       82 high-conf variants (direct)
-    CAS:      147 high-conf variants (merged),      150 high-conf variants (direct)
-    WTA:      156 high-conf variants (merged),      156 high-conf variants (direct)
+    WT-37:       27 high-conf variants (merged),       30 high-conf variants (direct)
+    WTA:       20 high-conf variants (merged),       23 high-conf variants (direct)
+    STC:       27 high-conf variants (merged),       31 high-conf variants (direct)
+    CAS:       38 high-conf variants (merged),       40 high-conf variants (direct)
+    STC-vs-STCCTRL:       24 high-conf variants (merged),       24 high-conf variants (direct)
+    CAS-vs-CASCTRL:       33 high-conf variants (merged),       39 high-conf variants (direct)
+
+Treatment Group Comparisons:
+  STC-vs-WTA:
+    Group 1 specific:       24 variants
+    Group 2 specific:       16 variants
+    Shared:      333 variants
+
+  CAS-vs-WT37:
+    Group 1 specific:       31 variants
+    Group 2 specific:       29 variants
+    Shared:      325 variants
+
+  WT37-vs-WTA:
+    Group 1 specific:       20 variants
+    Group 2 specific:       15 variants
+    Shared:      334 variants
+

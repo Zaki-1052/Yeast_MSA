@@ -3,40 +3,40 @@ Statistical Pattern Analysis Summary
 
 Basic Statistics:
 -----------------
-Total Variants: 601.0
-Unique Scaffolds: 288.0
+Total Variants: 112.0
+Unique Scaffolds: 77.0
 Average Ti/Tv Ratio: 0.0
-Low Oxygen Adaptation Variants: 282.0
-Temperature Adaptation Variants: 319.0
-Variants in Gene-Modified Strains: 258.0
-Variants in Non-Modified Strains: 343.0
+Low Oxygen Adaptation Variants: 47.0
+Temperature Adaptation Variants: 65.0
+Variants in Gene-Modified Strains: 65.0
+Variants in Non-Modified Strains: 47.0
 
 Regression Analysis Results:
 --------------------------
 
-CAS Treatment (Temperature adaptation with gene modification):
-  R-squared: 0.0000
-  Coefficients:
-    Log_Length: 0.2950 ***
-  Sample size: 126
-
 STC Treatment (Low Oxygen adaptation with gene modification):
   R-squared: 0.0000
   Coefficients:
-    Log_Length: 0.2987 ***
-  Sample size: 122
+    Log_Length: 0.0546 ***
+  Sample size: 27
 
 WTA Treatment (Low Oxygen adaptation):
   R-squared: 0.0000
   Coefficients:
-    Log_Length: 0.2834 ***
-  Sample size: 148
+    Log_Length: 0.0637 ***
+  Sample size: 20
+
+CAS Treatment (Temperature adaptation with gene modification):
+  R-squared: 0.0000
+  Coefficients:
+    Log_Length: 0.0461 ***
+  Sample size: 38
 
 WT-37 Treatment (Temperature adaptation):
   R-squared: 0.0000
   Coefficients:
-    Log_Length: 0.2598 ***
-  Sample size: 179
+    Log_Length: 0.0537 ***
+  Sample size: 27
 
 Regression Analysis by Adaptation Type:
 -----------------------------------
@@ -44,14 +44,14 @@ Regression Analysis by Adaptation Type:
 Low Oxygen Adaptation:
   R-squared: 0.0000
   Coefficients:
-    Log_Length: 0.2616 ***
-  Sample size: 200
+    Log_Length: 0.0486 ***
+  Sample size: 37
 
 Temperature Adaptation:
   R-squared: 0.0000
   Coefficients:
-    Log_Length: 0.2427 ***
-  Sample size: 228
+    Log_Length: 0.0409 ***
+  Sample size: 55
 
 Biological Context Summary:
 -------------------------

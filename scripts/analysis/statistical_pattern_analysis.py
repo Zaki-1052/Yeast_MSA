@@ -181,7 +181,7 @@ def load_scaffold_info():
     
     # Try to load scaffold lengths from fai file
     fai_patterns = [
-        "reference/yeast_w303.fasta.fai",
+        "reference/w303_chromosomal.fasta.fai",
         "reference/yeast/yeast_w303.fasta.fai",
         "reference/genome.fasta.fai"
     ]

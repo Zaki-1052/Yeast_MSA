@@ -13,61 +13,61 @@ Samples by treatment:
 Variant Statistics:
 -----------------
 Variant count by treatment:
-  CAS: 100.33 variants (range: 90-107)
-  STC: 94.00 variants (range: 89-100)
-  WT-37: 146.67 variants (range: 141-152)
-  WTA: 122.33 variants (range: 117-125)
+  CAS: 31.67 variants (range: 28-34)
+  STC: 21.33 variants (range: 19-24)
+  WT-37: 23.00 variants (range: 22-24)
+  WTA: 15.33 variants (range: 12-18)
 
 Variant count by adaptation type:
-  Low Oxygen: 108.17 variants (range: 89-125)
-  Temperature: 123.50 variants (range: 90-152)
+  Low Oxygen: 18.33 variants (range: 12-24)
+  Temperature: 27.33 variants (range: 22-34)
 
 Variant count by gene modification status:
-  Non-modified: 134.50 variants (range: 117-152)
-  Gene-modified: 97.17 variants (range: 89-107)
+  Non-modified: 19.17 variants (range: 12-24)
+  Gene-modified: 26.50 variants (range: 19-34)
 
 Genetic Similarity Statistics:
 ---------------------------
 Variant sharing by relationship type:
   Different Treatment:
     Sample pairs: 54
-    Mean shared variants: 48.54
-    Mean Jaccard similarity: 0.2648
+    Mean shared variants: 7.30
+    Mean Jaccard similarity: 0.1974
   Same Treatment:
     Sample pairs: 12
-    Mean shared variants: 82.00
-    Mean Jaccard similarity: 0.5431
+    Mean shared variants: 18.00
+    Mean Jaccard similarity: 0.6424
 
 Variant sharing by adaptation relationship:
   Different Adaptation:
     Sample pairs: 36
-    Mean shared variants: 49.42
-    Mean Jaccard similarity: 0.2703
+    Mean shared variants: 7.42
+    Mean Jaccard similarity: 0.1986
   Same Adaptation:
     Sample pairs: 30
-    Mean shared variants: 60.87
-    Mean Jaccard similarity: 0.3696
+    Mean shared variants: 11.43
+    Mean Jaccard similarity: 0.3740
 
 Variant sharing by gene modification relationship:
   Different Gene Status:
     Sample pairs: 36
-    Mean shared variants: 47.78
-    Mean Jaccard similarity: 0.2610
+    Mean shared variants: 7.42
+    Mean Jaccard similarity: 0.2010
   Same Gene Status:
     Sample pairs: 30
-    Mean shared variants: 62.83
-    Mean Jaccard similarity: 0.3807
+    Mean shared variants: 11.43
+    Mean Jaccard similarity: 0.3711
 
 Variant sharing between treatment pairs (top 3):
-  WTA-WTA:
-    Mean Jaccard similarity: 0.5819
-    Mean shared variants: 90.00
   WT-37-WT-37:
-    Mean Jaccard similarity: 0.5743
-    Mean shared variants: 107.00
+    Mean Jaccard similarity: 0.7260
+    Mean shared variants: 19.33
   CAS-CAS:
-    Mean Jaccard similarity: 0.5202
-    Mean shared variants: 68.67
+    Mean Jaccard similarity: 0.6811
+    Mean shared variants: 25.67
+  STC-STC:
+    Mean Jaccard similarity: 0.5992
+    Mean shared variants: 16.00
 
 Clustering and PCA Analysis:
 -------------------------

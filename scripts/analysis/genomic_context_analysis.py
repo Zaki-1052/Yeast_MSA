@@ -56,7 +56,7 @@ ADAPTATION_COLORS = {
 COMPLEMENT = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
 
 # Reference genome path - adjust as needed
-REFERENCE_GENOME = "reference/yeast_w303.fasta"
+REFERENCE_GENOME = "reference/w303_chromosomal.fasta"
 
 # Function to find a file trying multiple locations
 def find_file(base_name, file_patterns):
@@ -83,7 +83,7 @@ def load_reference_genome(fasta_file=REFERENCE_GENOME):
     """Load the reference genome from a FASTA file."""
     # Define possible reference file patterns
     ref_patterns = [
-        "reference/yeast_w303.fasta",
+        "reference/w303_chromosomal.fasta",
         "reference/genome.fasta",
         "reference/yeast/yeast_w303.fasta"
     ]

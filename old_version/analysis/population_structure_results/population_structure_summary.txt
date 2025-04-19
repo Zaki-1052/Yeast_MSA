@@ -1,0 +1,90 @@
+Population Structure Analysis Summary
+===================================
+
+Overall Statistics:
+-----------------
+Total samples analyzed: 12
+Samples by treatment:
+  CAS: 3 samples - CAS gene with temperature adaptation
+  STC: 3 samples - STC gene with low oxygen adaptation
+  WT-37: 3 samples - Temperature-adapted wild type
+  WTA: 3 samples - Low oxygen-adapted wild type
+
+Variant Statistics:
+-----------------
+Variant count by treatment:
+  CAS: 100.33 variants (range: 90-107)
+  STC: 94.00 variants (range: 89-100)
+  WT-37: 146.67 variants (range: 141-152)
+  WTA: 122.33 variants (range: 117-125)
+
+Variant count by adaptation type:
+  Low Oxygen: 108.17 variants (range: 89-125)
+  Temperature: 123.50 variants (range: 90-152)
+
+Variant count by gene modification status:
+  Non-modified: 134.50 variants (range: 117-152)
+  Gene-modified: 97.17 variants (range: 89-107)
+
+Genetic Similarity Statistics:
+---------------------------
+Variant sharing by relationship type:
+  Different Treatment:
+    Sample pairs: 54
+    Mean shared variants: 48.54
+    Mean Jaccard similarity: 0.2648
+  Same Treatment:
+    Sample pairs: 12
+    Mean shared variants: 82.00
+    Mean Jaccard similarity: 0.5431
+
+Variant sharing by adaptation relationship:
+  Different Adaptation:
+    Sample pairs: 36
+    Mean shared variants: 49.42
+    Mean Jaccard similarity: 0.2703
+  Same Adaptation:
+    Sample pairs: 30
+    Mean shared variants: 60.87
+    Mean Jaccard similarity: 0.3696
+
+Variant sharing by gene modification relationship:
+  Different Gene Status:
+    Sample pairs: 36
+    Mean shared variants: 47.78
+    Mean Jaccard similarity: 0.2610
+  Same Gene Status:
+    Sample pairs: 30
+    Mean shared variants: 62.83
+    Mean Jaccard similarity: 0.3807
+
+Variant sharing between treatment pairs (top 3):
+  WTA-WTA:
+    Mean Jaccard similarity: 0.5819
+    Mean shared variants: 90.00
+  WT-37-WT-37:
+    Mean Jaccard similarity: 0.5743
+    Mean shared variants: 107.00
+  CAS-CAS:
+    Mean Jaccard similarity: 0.5202
+    Mean shared variants: 68.67
+
+Clustering and PCA Analysis:
+-------------------------
+1. PCA analysis highlights the major axes of variation in the dataset.
+2. Hierarchical clustering reveals sample groups based on genetic similarity.
+3. Samples tend to cluster by adaptation type, suggesting that temperature and
+   low oxygen adaptations involve distinct genomic changes.
+4. Gene-modified strains show specific population structure characteristics
+   compared to their non-modified counterparts.
+
+Main Conclusions:
+---------------
+1. This analysis examines the genetic relationships between samples based on their variant profiles.
+2. Principal Component Analysis reveals the major axes of variation in the dataset.
+3. Hierarchical clustering identifies sample groups based on genetic similarity.
+4. Treatment-specific variant patterns provide insights into adaptation mechanisms.
+5. Temperature and low oxygen adaptations show distinct population structures,
+   suggesting different evolutionary trajectories.
+6. Gene modifications influence variant profiles and population structure,
+   potentially through interactions with adaptation mechanisms.
