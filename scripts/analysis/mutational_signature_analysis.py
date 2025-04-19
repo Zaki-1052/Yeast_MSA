@@ -91,7 +91,7 @@ def load_reference_genome(fasta_file=REFERENCE_GENOME):
     """Load the reference genome from a FASTA file."""
     # Define possible reference file patterns
     ref_patterns = [
-        "reference/yeast_w303.fasta",
+        "reference/w303_chromosomal.fasta",
         "reference/genome.fasta",
         "reference/yeast/yeast_w303.fasta"
     ]

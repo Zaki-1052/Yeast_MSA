@@ -30,5 +30,5 @@
 ##bcftools_filterVersion=1.21+htslib-1.21
 ##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/WTA-55-1.filtered.vcf results/vcf/individual/WTA-55-1.norm.vcf; Date=Sat Apr 19 03:18:59 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/WTA-55-1.filtered.vcf.gz; Date=Sat Apr 19 03:18:59 2025
+##bcftools_viewCommand=view -h results/merged/filtered/WTA-55-1.filtered.vcf.gz; Date=Sat Apr 19 03:36:09 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	WTA-55-1

@@ -31,7 +31,7 @@
 ##bcftools_filterVersion=1.21+htslib-1.21
 ##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/CAS-55-1.filtered.vcf results/vcf/individual/CAS-55-1.norm.vcf; Date=Sat Apr 19 03:18:58 2025
 ##bcftools_viewVersion=1.21+htslib-1.21
-##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-1.filtered.vcf.gz; Date=Sat Apr 19 03:18:59 2025
+##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-1.filtered.vcf.gz; Date=Sat Apr 19 03:36:09 2025
 ##contig=<ID=CM007964.1>
 ##contig=<ID=CM007965.1>
 ##contig=<ID=CM007966.1>
@@ -52,8 +52,8 @@
 ##contig=<ID=CM007981.1>
 ##contig=<ID=CM007980.1>
 ##bcftools_mergeVersion=1.21+htslib-1.21
-##bcftools_mergeCommand=merge -l results/merged/fixed/vcf_list.txt -Oz -o results/merged/fixed/all_samples.vcf.gz; Date=Sat Apr 19 03:18:59 2025
-##bcftools_viewCommand=view -s WT-CTRL -o results/merged/fixed/test_selection.vcf results/merged/fixed/all_samples.vcf.gz; Date=Sat Apr 19 03:18:59 2025
+##bcftools_mergeCommand=merge -l results/merged/fixed/vcf_list.txt -Oz -o results/merged/fixed/all_samples.vcf.gz; Date=Sat Apr 19 03:36:09 2025
+##bcftools_viewCommand=view -s WT-CTRL -o results/merged/fixed/test_selection.vcf results/merged/fixed/all_samples.vcf.gz; Date=Sat Apr 19 03:36:09 2025
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	WT-CTRL
 CM007964.1	257	.	A	ACAC	219.214	PASS	INDEL;IDV=11;IMF=0.423077;VDB=0.00981221;SGB=-0.590765;RPBZ=-0.571388;MQBZ=0.591696;BQBZ=-0.58585;SCBZ=-0.894824;MQ0F=0;MQ=46;MQSBZ=-0.598134;DP=105;DP4=37,3,17,12;AN=0;AC=0	GT:PL:DP:AD	.:.:.:.
 CM007964.1	263	.	C	CA	50.1446	PASS	INDEL;IDV=13;IMF=0.684211;VDB=0.000491352;SGB=-0.662043;RPBZ=-3.42654;MQBZ=3.95663;MQSBZ=0.566558;BQBZ=-1.65193;SCBZ=-0.792594;MQ0F=0;MQ=53;DP=19;DP4=3,0,6,3;AN=0;AC=0	GT:PL:DP:AD	.:.:.:.

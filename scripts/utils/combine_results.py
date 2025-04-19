@@ -27,7 +27,7 @@ def main():
     ]
     
     # Get current directory
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     # Create header with timestamp
     now = datetime.now()

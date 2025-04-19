@@ -1,0 +1,78 @@
+Mutational Signatures Analysis Summary
+=====================================
+
+Overall Statistics:
+-----------------
+Total variants analyzed: 48
+Variants by treatment:
+  WT-37: 11 variants - Temperature-adapted wild type (Temperature adaptation)
+  WTA: 9 variants - Low oxygen-adapted wild type (Low Oxygen adaptation)
+  STC: 9 variants - STC gene with low oxygen adaptation (Low Oxygen adaptation with STC gene)
+  CAS: 19 variants - CAS gene with temperature adaptation (Temperature adaptation with CAS gene)
+
+Variants by adaptation type:
+  Temperature: 30 variants
+  Low Oxygen: 18 variants
+
+Variants by gene modification status:
+  Non-modified: 20 variants
+  Gene-modified: 28 variants
+
+Variants by mutation type:
+  C>A: 12 variants (25.00%)
+  C>G: 11 variants (22.92%)
+  C>T: 9 variants (18.75%)
+  T>A: 6 variants (12.50%)
+  T>C: 5 variants (10.42%)
+  T>G: 5 variants (10.42%)
+
+Signature Similarity Analysis:
+----------------------------
+Most similar treatment signatures: WTA and CAS (similarity: 0.5120)
+  Low oxygen-adapted wild type and CAS gene with temperature adaptation
+  Same adaptation type: No
+  Gene modification similarity: One has gene modification, one does not
+
+Least similar treatment signatures: WT-37 and WTA (similarity: 0.2435)
+  Temperature-adapted wild type and Low oxygen-adapted wild type
+  Different adaptation types: Yes
+  Gene modification difference: No
+
+Adaptation-Specific Signature Analysis:
+-----------------------------------
+Signature similarity between Temperature and Low Oxygen: 0.5145
+
+Characteristic features of adaptation types:
+
+Temperature Adaptation:
+  Top enriched trinucleotide contexts:
+    TCT (C>A): 19.20-fold enrichment
+
+Low Oxygen Adaptation:
+  No significantly enriched trinucleotide contexts
+
+Gene Modification Effects:
+-----------------------
+Signature similarity between gene-modified and non-modified strains: 0.5365
+
+Characteristic features of gene status:
+
+Non-modified strains:
+  Top enriched trinucleotide contexts:
+    TCT (C>A): 27.43-fold enrichment
+
+Gene-modified strains:
+  No significantly enriched trinucleotide contexts
+
+Enriched Trinucleotide Contexts by Treatment:
+----------------------------------------
+
+Main Conclusions:
+---------------
+1. This analysis examines the sequence context of mutations in different treatments.
+2. The mutational signatures reveal preferred sequence contexts for mutations.
+3. Adaptation types (Temperature vs Low Oxygen) show distinct mutational patterns.
+4. Gene modifications (STC/CAS) influence the sequence context preferences.
+5. The analysis of enriched trinucleotide contexts provides insights into the
+   mechanisms of mutagenesis and DNA damage repair under different conditions.
+6. Sequence logos reveal position-specific nucleotide preferences around mutations.
