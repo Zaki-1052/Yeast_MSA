@@ -249,7 +249,7 @@ class GeneScaffoldAnalyzer:
                     if w303_gene_id and sc_gene_id not in self.sc_gene_map:
                         self.sc_gene_map[sc_gene_id] = w303_gene_id
                         
-        print(f"Loaded information for {len(self.sc_gene_info)} SC genes")
+                    print(f"Loaded information for {len(self.sc_gene_info)} SC genes")
                     
                     if sc_gene_id and sc_gene_name:
                         self.sc_id_to_name_map[sc_gene_id] = sc_gene_name
