@@ -1,0 +1,79 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##bcftoolsVersion=1.21+htslib-1.21
+##bcftoolsCommand=mpileup -f reference/w303_chromosomal.fasta -a DP,AD results/bam/CAS-55-1.final.bam
+##reference=file://reference/w303_chromosomal.fasta
+##ALT=<ID=*,Description="Represents allele(s) other than observed.">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
+##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of raw reads supporting an indel">
+##INFO=<ID=IMF,Number=1,Type=Float,Description="Maximum fraction of raw reads supporting an indel">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw read depth">
+##INFO=<ID=VDB,Number=1,Type=Float,Description="Variant Distance Bias for filtering splice-site artefacts in RNA-seq data (bigger is better)",Version="3">
+##INFO=<ID=RPBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Read Position Bias (closer to 0 is better)">
+##INFO=<ID=MQBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Mapping Quality Bias (closer to 0 is better)">
+##INFO=<ID=BQBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Base Quality Bias (closer to 0 is better)">
+##INFO=<ID=MQSBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Mapping Quality vs Strand Bias (closer to 0 is better)">
+##INFO=<ID=SCBZ,Number=1,Type=Float,Description="Mann-Whitney U-z test of Soft-Clip Length Bias (closer to 0 is better)">
+##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric, http://samtools.github.io/bcftools/rd-SegBias.pdf">
+##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Number of high-quality bases">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths (high-quality bases)">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes for each ALT allele, in the same order as listed">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+##INFO=<ID=DP4,Number=4,Type=Integer,Description="Number of high-quality ref-forward , ref-reverse, alt-forward and alt-reverse bases">
+##INFO=<ID=MQ,Number=1,Type=Integer,Description="Average mapping quality">
+##bcftools_callVersion=1.21+htslib-1.21
+##bcftools_callCommand=call -mv --ploidy 1 -Ov -o results/vcf/individual/CAS-55-1.vcf; Date=Sat Apr 19 03:07:51 2025
+##bcftools_normVersion=1.21+htslib-1.21
+##bcftools_normCommand=norm -f reference/w303_chromosomal.fasta -Ov -o results/vcf/individual/CAS-55-1.norm.vcf results/vcf/individual/CAS-55-1.vcf; Date=Sat Apr 19 03:08:31 2025
+##bcftools_filterVersion=1.21+htslib-1.21
+##bcftools_filterCommand=filter -i 'QUAL>=20 && FORMAT/DP>=10' -o results/merged/filtered/CAS-55-1.filtered.vcf results/vcf/individual/CAS-55-1.norm.vcf; Date=Sat Apr 19 03:18:58 2025
+##bcftools_viewVersion=1.21+htslib-1.21
+##bcftools_viewCommand=view -h results/merged/filtered/CAS-55-1.filtered.vcf.gz; Date=Sat Apr 19 03:18:59 2025
+##contig=<ID=CM007964.1>
+##contig=<ID=CM007965.1>
+##contig=<ID=CM007966.1>
+##contig=<ID=CM007967.1>
+##contig=<ID=CM007968.1>
+##contig=<ID=CM007969.1>
+##contig=<ID=CM007970.1>
+##contig=<ID=CM007971.1>
+##contig=<ID=CM007972.1>
+##contig=<ID=CM007973.1>
+##contig=<ID=CM007974.1>
+##contig=<ID=CM007975.1>
+##contig=<ID=LYZE01000020.1>
+##contig=<ID=CM007976.1>
+##contig=<ID=CM007977.1>
+##contig=<ID=CM007978.1>
+##contig=<ID=CM007979.1>
+##contig=<ID=CM007981.1>
+##contig=<ID=CM007980.1>
+##bcftools_mergeVersion=1.21+htslib-1.21
+##bcftools_mergeCommand=merge -l results/merged/fixed/vcf_list.txt -Oz -o results/merged/fixed/all_samples.vcf.gz; Date=Sat Apr 19 03:18:59 2025
+##bcftools_viewCommand=view -s WT-37-55-1,WT-37-55-2,WT-37-55-3 -c 2 -Oz -o results/merged/group_comparisons/WT37-vs-WTA/group1.vcf.gz results/merged/fixed/all_samples.vcf.gz; Date=Sat Apr 19 03:19:00 2025
+##bcftools_isecVersion=1.21+htslib-1.21
+##bcftools_isecCommand=isec -p results/merged/group_comparisons/WT37-vs-WTA/isec results/merged/group_comparisons/WT37-vs-WTA/group1.vcf.gz results/merged/group_comparisons/WT37-vs-WTA/group2.vcf.gz; Date=Sat Apr 19 03:19:00 2025
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	WT-37-55-1	WT-37-55-2	WT-37-55-3
+CM007965.1	510350	.	GAA	GA,G	106.495	PASS	INDEL;IDV=16;IMF=0.533333;VDB=0.0574661;SGB=-0.689466;RPBZ=-3.57586;MQBZ=0;MQSBZ=0;BQBZ=-1.33537;SCBZ=-1.06904;MQ0F=0;MQ=60;DP=303;DP4=84,39,69,96;AN=3;AC=1,2	GT:PL:DP:AD	1:154,81,.:27:12,10,.	2:143,.,75:37:19,.,7	2:175,.,104:35:16,.,6
+CM007965.1	843759	.	g	gT	86.4406	PASS	INDEL;IDV=98;IMF=0.457944;VDB=7.49432e-05;SGB=-0.693147;RPBZ=-1.24101;MQBZ=5.32579;MQSBZ=3.42157;BQBZ=-1.06014;SCBZ=-1.89195;MQ0F=0.0373832;MQ=47;DP=301;DP4=50,105,27,64;AN=2;AC=2	GT:PL:DP:AD	1:255,141:175:98,77	.:.:.:.	1:129,65:71:57,14
+CM007966.1	56723	.	CA	C	102.073	PASS	INDEL;IDV=16;IMF=0.5;VDB=0.714384;SGB=-0.689466;RPBZ=-3.09276;MQBZ=0;MQSBZ=0;BQBZ=0;SCBZ=-1.43684;MQ0F=0;MQ=60;DP=221;DP4=54,21,40,85;AN=3;AC=3	GT:PL:DP:AD	1:85,16:12:3,7	1:79,24:31:17,14	1:129,0:24:6,18
+CM007966.1	175478	.	A	T	135.135	PASS	VDB=0.00414998;SGB=-0.680642;RPBZ=3.97839;MQBZ=5.87878;MQSBZ=4.64758;BQBZ=-0.027906;SCBZ=2.95228;MQ0F=0.648649;MQ=12;DP=68;DP4=32,8,0,23;AN=2;AC=2	GT:PL:DP:AD	1:152,0:36:24,12	.:.:.:.	1:162,0:27:16,11
+CM007967.1	683431	.	G	T	225.417	PASS	VDB=0.104129;SGB=-0.69311;MQSBZ=0;MQ0F=0;MQ=60;DP=95;DP4=0,0,45,43;AN=3;AC=3	GT:PL:DP:AD	1:255,0:31:0,31	1:255,0:31:0,31	1:255,0:26:0,26
+CM007967.1	1197162	.	C	T	225.422	PASS	VDB=0.93953;SGB=-0.693143;MQSBZ=0;MQ0F=0;MQ=60;DP=115;DP4=0,0,49,59;AN=3;AC=3	GT:PL:DP:AD	1:255,0:38:0,38	1:255,0:37:0,36	1:255,0:33:0,33
+CM007968.1	192210	.	C	A	225.417	PASS	VDB=0.699758;SGB=-0.692562;MQSBZ=0;MQ0F=0;MQ=60;DP=111;DP4=0,0,57,49;AN=3;AC=3	GT:PL:DP:AD	1:255,0:22:0,22	1:255,0:48:0,48	1:255,0:36:0,36
+CM007971.1	74766	.	GCAGCCACCAAGCCGGTTTTTACAGATCTACCGGCGGGGGGNNNNNNNNNN	G	56.2445	PASS	INDEL;IDV=5;IMF=0.131579;VDB=0.005772;SGB=-0.590765;RPBZ=-3.56614;MQBZ=0;MQSBZ=0;BQBZ=-1.86655;SCBZ=-2.19457;MQ0F=0;MQ=60;DP=118;DP4=49,48,8,11;AN=2;AC=2	GT:PL:DP:AD	.:.:.:.	1:126,42:27:21,6	1:112,36:20:17,3
+CM007973.1	470323	.	TG	T	85.415	PASS	INDEL;IDV=13;IMF=1;VDB=0.0117256;SGB=-0.683931;MQSBZ=1.81597;BQBZ=-1.88165;MQ0F=0;MQ=20;RPBZ=-2.54598;MQBZ=-1.75662;SCBZ=-1.82574;DP=88;DP4=1,11,4,72;AN=2;AC=2	GT:PL:DP:AD	.:.:.:.	1:84,0:14:2,12	1:86,0:11:1,10
+CM007974.1	224698	.	G	GAA	77.1783	PASS	INDEL;IDV=8;IMF=0.615385;VDB=0.117011;SGB=-0.670168;RPBZ=-2.1255;MQBZ=-0.547723;MQSBZ=-0.774597;BQBZ=-1.75;SCBZ=0;MQ0F=0.615385;MQ=13;DP=71;DP4=15,1,40,13;AN=2;AC=2	GT:PL:DP:AD	1:86,0:12:1,9	1:80,5:18:7,9	.:.:.:.
+CM007974.1	588163	.	G	GT	126.345	PASS	INDEL;IDV=8;IMF=0.615385;VDB=0.0941654;SGB=-0.662043;RPBZ=-2.34862;MQBZ=-1.8374;MQSBZ=-0.958171;BQBZ=-2.39656;SCBZ=-1.8619;MQ0F=0.153846;MQ=15;DP=45;DP4=3,4,13,24;AN=2;AC=2	GT:PL:DP:AD	1:56,0:10:2,8	1:153,0:12:1,11	.:.:.:.
+CM007975.1	790476	.	TA	T	228.393	PASS	INDEL;IDV=28;IMF=0.933333;VDB=0.0498313;SGB=-0.693054;RPBZ=-2.16408;MQBZ=0;MQSBZ=0;BQBZ=-2.61886;SCBZ=0;MQ0F=0;MQ=60;DP=92;DP4=7,2,38,43;AN=3;AC=3	GT:PL:DP:AD	1:255,0:29:1,26	1:240,0:35:7,28	1:239,4:26:1,23
+CM007975.1	1078297	.	G	GGT	57.6167	PASS	INDEL;IDV=7;IMF=0.35;VDB=0.00721959;SGB=-0.651104;RPBZ=-1.11024;MQBZ=-1.30242;MQSBZ=-0.127059;BQBZ=-1.86413;SCBZ=0.260533;MQ0F=0;MQ=52;DP=88;DP4=22,25,16,15;AN=2;AC=2	GT:PL:DP:AD	.:.:.:.	1:72,0:10:4,6	1:76,16:25:19,6
+CM007976.1	192167	.	ATTT	AT,ATT,A	119.091	PASS	INDEL;IDV=11;IMF=0.423077;VDB=0.00467669;SGB=-0.676189;RPBZ=-2.49547;MQBZ=0;MQSBZ=0;BQBZ=-1.51101;SCBZ=-2.32079;MQ0F=0;MQ=60;DP=306;DP4=56,40,103,62;AN=2;AC=1,0,1	GT:PL:DP:AD	.:.:.:.	1:148,80,.,.:33:15,5,.,.	3:219,.,.,73:25:6,.,.,6
+CM007976.1	343681	.	C	A	225.417	PASS	VDB=0.381173;SGB=-0.693079;MQSBZ=0;MQ0F=0;MQ=60;DP=106;DP4=0,0,60,41;AN=3;AC=3	GT:PL:DP:AD	1:255,0:29:0,29	1:255,0:32:0,32	1:255,0:40:0,40
+CM007976.1	722830	.	A	G	225.417	PASS	VDB=0.603472;SGB=-0.693132;MQSBZ=0;MQ0F=0;MQ=60;DP=113;DP4=0,0,50,61;AN=3;AC=3	GT:PL:DP:AD	1:255,0:34:0,34	1:255,0:43:0,43	1:255,0:34:0,34
+CM007977.1	119029	.	G	T	228.354	PASS	VDB=0.766212;SGB=-0.693145;MQSBZ=0;MQ0F=0;MQ=60;RPBZ=0.782861;MQBZ=0;BQBZ=-0.32695;SCBZ=0;DP=102;DP4=1,0,50,48;AN=3;AC=3	GT:PL:DP:AD	1:255,0:40:0,40	1:255,0:28:0,28	1:255,0:31:1,30
+CM007978.1	889937	.	GTTT	GTT,GT,G	122.728	PASS	INDEL;IDV=13;IMF=0.619048;VDB=0.133035;SGB=-0.683931;RPBZ=-0.362457;MQBZ=0;MQSBZ=0;BQBZ=-1.43836;SCBZ=0;MQ0F=0;MQ=60;DP=213;DP4=45,46,66,44;AN=2;AC=0,0,2	GT:PL:DP:AD	.:.:.:.	3:89,.,.,38:23:13,.,.,4	3:81,.,.,31:19:10,.,.,3
+CM007979.1	126270	.	G	T	225.417	PASS	VDB=0.664243;SGB=-0.693136;MQSBZ=0;MQ0F=0;MQ=60;DP=102;DP4=0,0,47,51;AN=3;AC=3	GT:PL:DP:AD	1:255,0:35:0,35	1:255,0:29:0,29	1:255,0:34:0,34
+CM007979.1	445265	.	C	A	225.417	PASS	VDB=0.0582294;SGB=-0.693021;MQSBZ=0;MQ0F=0;MQ=60;DP=97;DP4=0,0,49,43;AN=3;AC=3	GT:PL:DP:AD	1:255,0:27:0,27	1:255,0:33:0,33	1:255,0:32:0,32
