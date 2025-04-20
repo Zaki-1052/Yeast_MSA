@@ -10,7 +10,7 @@ import sys
 def main():
     # Possible locations to check
     locations = [
-        "annotation/reference/w303_scaffolds",
+        "annotation/reference/w303_annotations",
         "annotation/reference",
         "annotation",
         "."
