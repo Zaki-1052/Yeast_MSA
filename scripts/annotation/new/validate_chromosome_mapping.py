@@ -85,7 +85,7 @@ def validate_mapping(vcf_chromosomes, mapping_file):
     mapping_df = pd.read_csv(mapping_file, sep='\t')
     
     # Get list of chromosomes in mapping
-    mapped_chromosomes = set(mapping_df['cm_identifier'])
+    mapped_chromosomes = set(mapping_df['chromosome_id'])
     
     # Find missing chromosomes
     missing = vcf_chromosomes - mapped_chromosomes
