@@ -10,10 +10,7 @@ import sys
 def main():
     # Possible locations to check
     locations = [
-        "annotation/reference/w303_annotations/genbank",
-        "annotation/reference",
-        "annotation",
-        "."
+        "reference/w303_annotations",
     ]
     
     genbank_files = []
