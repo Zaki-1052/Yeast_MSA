@@ -18,7 +18,7 @@ mkdir -p results/gene_verification
 
 # Run the Python script
 echo "Verifying gene coordinates..."
-python scripts/verify_gene_coordinates.py \
+python scripts/variants/verify_gene_coordinates.py \
   --gene_mapping reference/genes_of_interest_mapping.tsv \
   --genbank_dir reference/w303_annotations \
   --output_dir results/gene_verification

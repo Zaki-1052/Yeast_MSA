@@ -8,7 +8,7 @@ to ensure we're targeting the correct regions in our analysis.
 Usage:
     python verify_gene_coordinates.py --gene_mapping <gene_mapping_file> --genbank_dir <genbank_directory> --output_dir <output_directory>
 """
-
+import re
 import os
 import sys
 import argparse
@@ -66,11 +66,12 @@ def load_gene_mapping(mapping_file):
 
 def parse_genbank_files(genbank_dir, sc_genes):
     """
-    Parse GenBank files to extract gene information.
+    Parse GenBank files to extract gene information with improved SC gene ID extraction.
     
     Returns:
         dict: Dictionary mapping SC gene ID to GenBank gene information
         dict: Dictionary mapping W303 gene ID to GenBank gene information
+        dict: Dictionary mapping scaffold to info about the scaffold
     """
     genbank_sc_genes = {}
     genbank_w303_genes = {}
@@ -91,7 +92,10 @@ def parse_genbank_files(genbank_dir, sc_genes):
         
         # Parse the GenBank file
         for record in SeqIO.parse(file_path, "genbank"):
-            scaffold_id = record.id
+            # Use record.name for scaffold ID (fixed in previous step)
+            scaffold_id = record.name
+            
+            # Store scaffold information
             scaffolds_info[scaffold_id] = {
                 'length': len(record.seq),
                 'description': record.description
@@ -117,16 +121,38 @@ def parse_genbank_files(genbank_dir, sc_genes):
                     if 'gene' in feature.qualifiers:
                         gene_id = feature.qualifiers['gene'][0]
                     
-                    # Extract S. cerevisiae homolog
-                    notes = feature.qualifiers.get('note', [])
-                    for note in notes:
-                        if 'similar to Saccharomyces cerevisiae' in note:
-                            # Try to extract SC gene ID
-                            words = note.split()
-                            for word in words:
-                                if word.startswith('Y') and len(word) == 7 and word in sc_gene_ids:
-                                    sc_id = word
+                    # NEW: Check inference field for SC gene ID using regex
+                    inferences = feature.qualifiers.get('inference', [])
+                    for inference in inferences:
+                        sc_match = re.search(r'Y[A-Z]{2}\d{3}[WC](-A)?', inference)
+                        if sc_match:
+                            potential_sc_id = sc_match.group(0)
+                            # Remove -A suffix if present (e.g., YHR072W-A)
+                            base_sc_id = potential_sc_id.split('-')[0]
+                            if base_sc_id in sc_gene_ids:
+                                sc_id = base_sc_id
+                                break
+                    
+                    # Check note field if SC gene ID not found in inference
+                    if not sc_id:
+                        notes = feature.qualifiers.get('note', [])
+                        for note in notes:
+                            # Look for pattern: similar to Saccharomyces cerevisiae GENE (YXX123W)
+                            sc_match = re.search(r'similar to Saccharomyces cerevisiae\s+\S+\s+\(([A-Z]{3}\d{3}[WC])\)', note)
+                            if sc_match:
+                                potential_sc_id = sc_match.group(1)
+                                if potential_sc_id in sc_gene_ids:
+                                    sc_id = potential_sc_id
                                     break
+                            
+                            # Fallback: direct search for SC gene ID pattern
+                            if not sc_id:
+                                sc_match = re.search(r'Y[A-Z]{2}\d{3}[WC]', note)
+                                if sc_match:
+                                    potential_sc_id = sc_match.group(0)
+                                    if potential_sc_id in sc_gene_ids:
+                                        sc_id = potential_sc_id
+                                        break
                     
                     # Extract product
                     if 'product' in feature.qualifiers:

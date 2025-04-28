@@ -1,0 +1,592 @@
+GenBank Scaffold Naming Debugging Report
+=======================================
+
+Found 21 GenBank files
+
+File 1: w303_20Apr2025_scaffold_1.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_1
+
+Record ID: unknown
+Record Name: w303_scaffold_1
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_1       252221 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007964.1', 'scaffold 1']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007964.1
+
+================================================================================
+
+File 2: w303_20Apr2025_scaffold_10.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_10
+
+Record ID: unknown
+Record Name: w303_scaffold_10
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_10       762303 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007973.1', 'scaffold 10']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007973.1
+
+================================================================================
+
+File 3: w303_20Apr2025_scaffold_11.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_11
+
+Record ID: unknown
+Record Name: w303_scaffold_11
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_11       683383 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007974.1', 'scaffold 11']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007974.1
+
+================================================================================
+
+File 4: w303_20Apr2025_scaffold_12.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_12
+
+Record ID: unknown
+Record Name: w303_scaffold_12
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_12      1084257 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007975.1', 'scaffold 12']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007975.1
+
+Found gene YLR056W in this file
+  W303 Gene ID: W3030L01320
+  Locus Tag: W303_0L01320
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_12
+
+================================================================================
+
+File 5: w303_20Apr2025_scaffold_13.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_13
+
+Record ID: unknown
+Record Name: w303_scaffold_13
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_13         3688 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['LYZE01000019.1', 'scaffold 13']
+  organism: ['w303-annotated_by_ygap']
+
+================================================================================
+
+File 6: w303_20Apr2025_scaffold_14.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_14
+
+Record ID: unknown
+Record Name: w303_scaffold_14
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_14        19305 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['LYZE01000020.1', 'scaffold 14']
+  organism: ['w303-annotated_by_ygap']
+
+================================================================================
+
+File 7: w303_20Apr2025_scaffold_15.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_15
+
+Record ID: unknown
+Record Name: w303_scaffold_15
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_15        11673 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['LYZE01000021.1', 'scaffold 15']
+  organism: ['w303-annotated_by_ygap']
+
+================================================================================
+
+File 8: w303_20Apr2025_scaffold_16.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_16
+
+Record ID: unknown
+Record Name: w303_scaffold_16
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_16       929095 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007976.1', 'scaffold 16']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007976.1
+
+Found gene YML008C in this file
+  W303 Gene ID: W3030P01300
+  Locus Tag: W303_0P01300
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_16
+
+Found gene YMR015C in this file
+  W303 Gene ID: W3030P01520
+  Locus Tag: W303_0P01520
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_16
+
+Found gene YMR202W in this file
+  W303 Gene ID: W3030P03320
+  Locus Tag: W303_0P03320
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_16
+
+================================================================================
+
+File 9: w303_20Apr2025_scaffold_17.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_17
+
+Record ID: unknown
+Record Name: w303_scaffold_17
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_17       793416 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007977.1', 'scaffold 17']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007977.1
+
+Found gene YNL280C in this file
+  W303 Gene ID: W3030Q00650
+  Locus Tag: W303_0Q00650
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_17
+
+================================================================================
+
+File 10: w303_20Apr2025_scaffold_18.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_18
+
+Record ID: unknown
+Record Name: w303_scaffold_18
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_18      1108329 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007978.1', 'scaffold 18']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007978.1
+
+================================================================================
+
+File 11: w303_20Apr2025_scaffold_19.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_19
+
+Record ID: unknown
+Record Name: w303_scaffold_19
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_19       986200 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007979.1', 'scaffold 19']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007979.1
+
+================================================================================
+
+File 12: w303_20Apr2025_scaffold_2.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_2
+
+Record ID: unknown
+Record Name: w303_scaffold_2
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_2       844051 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007965.1', 'scaffold 2']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007965.1
+
+================================================================================
+
+File 13: w303_20Apr2025_scaffold_20.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_20
+
+Record ID: unknown
+Record Name: w303_scaffold_20
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_20         6300 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007980.1', 'scaffold 20']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007980.1
+
+================================================================================
+
+File 14: w303_20Apr2025_scaffold_21.genbank
+------------------------------------------
+Expected scaffold from filename: w303_scaffold_21
+
+Record ID: unknown
+Record Name: w303_scaffold_21
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_21        94871 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007981.1', 'scaffold 21']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007981.1
+
+================================================================================
+
+File 15: w303_20Apr2025_scaffold_3.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_3
+
+Record ID: unknown
+Record Name: w303_scaffold_3
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_3       341087 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007966.1', 'scaffold 3']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007966.1
+
+================================================================================
+
+File 16: w303_20Apr2025_scaffold_4.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_4
+
+Record ID: unknown
+Record Name: w303_scaffold_4
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_4      1575129 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007967.1', 'scaffold 4']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007967.1
+
+================================================================================
+
+File 17: w303_20Apr2025_scaffold_5.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_5
+
+Record ID: unknown
+Record Name: w303_scaffold_5
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_5       572496 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007968.1', 'scaffold 5']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007968.1
+
+================================================================================
+
+File 18: w303_20Apr2025_scaffold_6.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_6
+
+Record ID: unknown
+Record Name: w303_scaffold_6
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_6       277781 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007969.1', 'scaffold 6']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007969.1
+
+================================================================================
+
+File 19: w303_20Apr2025_scaffold_7.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_7
+
+Record ID: unknown
+Record Name: w303_scaffold_7
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_7      1092105 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007970.1', 'scaffold 7']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007970.1
+
+Found gene YGL012W in this file
+  W303 Gene ID: W3030G02340
+  Locus Tag: W303_0G02340
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_7
+
+Found gene YGR060W in this file
+  W303 Gene ID: W3030G02990
+  Locus Tag: W303_0G02990
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_7
+
+Found gene YGR175C in this file
+  W303 Gene ID: W3030G04090
+  Locus Tag: W303_0G04090
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_7
+
+================================================================================
+
+File 20: w303_20Apr2025_scaffold_8.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_8
+
+Record ID: unknown
+Record Name: w303_scaffold_8
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_8       564939 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007971.1', 'scaffold 8']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007971.1
+
+Found gene YHR007C in this file
+  W303 Gene ID: W3030H00650
+  Locus Tag: W303_0H00650
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+Found gene YHR072W in this file
+  W303 Gene ID: W3030H01430
+  Locus Tag: W303_0H01430
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+Found gene YHR072W in this file
+  W303 Gene ID: W3030H01430
+  Locus Tag: W303_0H01440
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+Found gene YHR072W in this file
+  W303 Gene ID: W3030H01440
+  Locus Tag: W303_0H01430
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+Found gene YHR072W in this file
+  W303 Gene ID: W3030H01440
+  Locus Tag: W303_0H01440
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+Found gene YHR190W in this file
+  W303 Gene ID: W3030H02610
+  Locus Tag: W303_0H02610
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+================================================================================
+
+File 21: w303_20Apr2025_scaffold_9.genbank
+-----------------------------------------
+Expected scaffold from filename: w303_scaffold_9
+
+Record ID: unknown
+Record Name: w303_scaffold_9
+Record Description: w303-annotated_by_ygap
+LOCUS Line: LOCUS       w303_scaffold_9       430780 bp    dna     linear   PLN 20-APR-2025
+
+Source Feature Qualifiers:
+  mol_type: ['genomic DNA']
+  note: ['CM007972.1', 'scaffold 9']
+  organism: ['w303-annotated_by_ygap']
+
+Found CM007 ID in note: CM007972.1
+
+================================================================================
+
+
+Summary
+=======
+
+Scaffold Format Examples:
+File: w303_20Apr2025_scaffold_1.genbank
+  ID: unknown
+  Name: w303_scaffold_1
+  Description: w303-annotated_by_ygap
+  LOCUS: LOCUS       w303_scaffold_1       252221 bp    dna     linear   PLN 20-APR-2025
+
+File: w303_20Apr2025_scaffold_10.genbank
+  ID: unknown
+  Name: w303_scaffold_10
+  Description: w303-annotated_by_ygap
+  LOCUS: LOCUS       w303_scaffold_10       762303 bp    dna     linear   PLN 20-APR-2025
+
+File: w303_20Apr2025_scaffold_11.genbank
+  ID: unknown
+  Name: w303_scaffold_11
+  Description: w303-annotated_by_ygap
+  LOCUS: LOCUS       w303_scaffold_11       683383 bp    dna     linear   PLN 20-APR-2025
+
+Found Genes of Interest:
+YLR056W:
+  File: w303_20Apr2025_scaffold_12.genbank
+  W303 ID: W3030L01320
+  Locus Tag: W303_0L01320
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_12
+
+YML008C:
+  File: w303_20Apr2025_scaffold_16.genbank
+  W303 ID: W3030P01300
+  Locus Tag: W303_0P01300
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_16
+
+YMR015C:
+  File: w303_20Apr2025_scaffold_16.genbank
+  W303 ID: W3030P01520
+  Locus Tag: W303_0P01520
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_16
+
+YMR202W:
+  File: w303_20Apr2025_scaffold_16.genbank
+  W303 ID: W3030P03320
+  Locus Tag: W303_0P03320
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_16
+
+YNL280C:
+  File: w303_20Apr2025_scaffold_17.genbank
+  W303 ID: W3030Q00650
+  Locus Tag: W303_0Q00650
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_17
+
+YGL012W:
+  File: w303_20Apr2025_scaffold_7.genbank
+  W303 ID: W3030G02340
+  Locus Tag: W303_0G02340
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_7
+
+YGR060W:
+  File: w303_20Apr2025_scaffold_7.genbank
+  W303 ID: W3030G02990
+  Locus Tag: W303_0G02990
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_7
+
+YGR175C:
+  File: w303_20Apr2025_scaffold_7.genbank
+  W303 ID: W3030G04090
+  Locus Tag: W303_0G04090
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_7
+
+YHR007C:
+  File: w303_20Apr2025_scaffold_8.genbank
+  W303 ID: W3030H00650
+  Locus Tag: W303_0H00650
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+YHR072W:
+  File: w303_20Apr2025_scaffold_8.genbank
+  W303 ID: W3030H01440
+  Locus Tag: W303_0H01440
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+YHR190W:
+  File: w303_20Apr2025_scaffold_8.genbank
+  W303 ID: W3030H02610
+  Locus Tag: W303_0H02610
+  GenBank Scaffold: unknown
+  Expected Scaffold: w303_scaffold_8
+
+Mapped Scaffolds:
+  w303_scaffold_1 -> CM007964.1
+  w303_scaffold_10 -> CM007973.1
+  w303_scaffold_11 -> CM007974.1
+  w303_scaffold_12 -> CM007975.1
+  w303_scaffold_16 -> CM007976.1
+  w303_scaffold_17 -> CM007977.1
+  w303_scaffold_18 -> CM007978.1
+  w303_scaffold_19 -> CM007979.1
+  w303_scaffold_2 -> CM007965.1
+  w303_scaffold_20 -> CM007980.1
+  w303_scaffold_21 -> CM007981.1
+  w303_scaffold_3 -> CM007966.1
+  w303_scaffold_4 -> CM007967.1
+  w303_scaffold_5 -> CM007968.1
+  w303_scaffold_6 -> CM007969.1
+  w303_scaffold_7 -> CM007970.1
+  w303_scaffold_8 -> CM007971.1
+  w303_scaffold_9 -> CM007972.1
+
+Diagnosis and Fix Recommendation
+==============================
+The issue appears to be that the script is not correctly extracting scaffold IDs from
+the GenBank files. Based on the analysis above, here's the recommended fix:
+
+1. In the verify_gene_coordinates.py script, modify the scaffold ID extraction logic
+   to properly handle the format used in these GenBank files.
+2. Specifically, the GenBank record.id doesn't contain the expected w303_scaffold_X format.
+3. Instead, extract the scaffold ID from either the filename or look for it in the
+   source feature notes with specific regex patterns as shown in this debug script.
