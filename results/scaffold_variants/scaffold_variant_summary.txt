@@ -1,0 +1,64 @@
+Scaffold Variant Analysis Summary
+===============================
+Generated: 2025-04-28 06:42:48
+
+Total variants on target scaffolds: 2087
+Target scaffolds: 5
+Target genes: 12
+
+Variants by scaffold:
+  w303_scaffold_12: 551 variants, Genes: YLR056W (ERG3)
+  w303_scaffold_7: 502 variants, Genes: YGL012W (ERG4), YGR060W (ERG25), YGR175C (ERG1)
+  w303_scaffold_16: 479 variants, Genes: YML008C (ERG6), YMR015C (ERG5), YMR202W (ERG2)
+  w303_scaffold_17: 329 variants, Genes: YNL280C (ERG24)
+  w303_scaffold_8: 226 variants, Genes: YHR007C (ERG11), YHR072W (ERG7), YHR072W (ERG7), YHR190W (ERG9)
+
+Variants by distance category:
+  0-500: 89 (4.26%)
+  1000-5000: 61 (2.92%)
+  10000-50000: 284 (13.61%)
+  5000-10000: 92 (4.41%)
+  >50000: 1561 (74.80%)
+
+Variants by nearest gene:
+  YLR056W (ERG3): 551 (26.40%)
+  YNL280C (ERG24): 329 (15.76%)
+  YMR202W (ERG2): 270 (12.94%)
+  YGR060W (ERG25): 213 (10.21%)
+  YGR175C (ERG1): 164 (7.86%)
+  YML008C (ERG6): 128 (6.13%)
+  YGL012W (ERG4): 125 (5.99%)
+  YHR007C (ERG11): 86 (4.12%)
+  YMR015C (ERG5): 81 (3.88%)
+  YHR190W (ERG9): 57 (2.73%)
+  YHR072W (ERG7): 52 (2.49%)
+  YHR072W (ERG7): 31 (1.49%)
+
+Variants by treatment:
+  CAS: 437 (20.94%)
+  STC: 422 (20.22%)
+  WT-37: 416 (19.93%)
+  WTA: 412 (19.74%)
+  CAS-CTRL: 137 (6.56%)
+  STC-CTRL: 133 (6.37%)
+  WT-CTRL: 130 (6.23%)
+
+Variants by type:
+  INSERTION: 950 (45.52%)
+  DELETION: 590 (28.27%)
+  SNV: 547 (26.21%)
+
+Top 10 variant effects:
+  upstream_gene_variant: 1677 (80.35%)
+  missense_variant: 138 (6.61%)
+  frameshift_variant: 135 (6.47%)
+  synonymous_variant: 61 (2.92%)
+  downstream_gene_variant: 57 (2.73%)
+  disruptive_inframe_deletion: 15 (0.72%)
+  frameshift_variant&stop_lost&splice_region_variant: 4 (0.19%)
+
+Variants by impact:
+  MODIFIER: 1734 (83.09%)
+  MODERATE: 153 (7.33%)
+  HIGH: 139 (6.66%)
+  LOW: 61 (2.92%)
