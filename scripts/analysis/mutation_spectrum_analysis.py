@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
+"""
+Mutation Spectrum Analysis Module
+
+This module analyzes single nucleotide mutation patterns across different treatment conditions
+in yeast adaptation experiments. It calculates mutation spectra, transition/transversion ratios,
+and performs statistical comparisons between treatments.
+
+Functions:
+- Data loading and validation
+- Mutation classification and standardization
+- Spectra visualization and comparison
+- Statistical analysis of mutation patterns
+"""
 
 import os
 import pandas as pd
@@ -19,10 +32,10 @@ sns.set_style("whitegrid")
 OUTPUT_DIR = "analysis/mutation_spectrum_results"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Updated biologically correct treatment groups
+# Treatment groups
 TREATMENTS = ['WT-37', 'WTA', 'STC', 'CAS']
 
-# Define treatment information for better biological context
+# Treatment information for biological context
 TREATMENT_INFO = {
     'WT-37': {'description': 'Temperature-adapted wild type', 'adaptation': 'Temperature'},
     'WTA': {'description': 'Low oxygen-adapted wild type', 'adaptation': 'Low Oxygen'},
@@ -38,7 +51,7 @@ TREATMENT_COLORS = {
     'CAS': '#e7298a'     # CAS gene + temperature
 }
 
-# Define complementary base pairs and mutation categories
+# Nucleotide definitions
 COMPLEMENT = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'}
 TRANSITIONS = [('A', 'G'), ('G', 'A'), ('C', 'T'), ('T', 'C')]
 TRANSVERSIONS = [('A', 'C'), ('C', 'A'), ('A', 'T'), ('T', 'A'), 
@@ -47,36 +60,58 @@ TRANSVERSIONS = [('A', 'C'), ('C', 'A'), ('A', 'T'), ('T', 'A'),
 # All possible single nucleotide substitutions
 ALL_SUBSTITUTIONS = TRANSITIONS + TRANSVERSIONS
 
-# Standardized substitution representation (use pyrimidine as reference)
+# Standardized substitution representation (pyrimidine-based)
 STD_SUBSTITUTIONS = ['C>A', 'C>G', 'C>T', 'T>A', 'T>C', 'T>G']
 
 def validate_mutation_files():
-    """Check if mutation files have the expected format."""
+    """
+    Check if mutation files have the expected format with valid nucleotides.
+    
+    Validates each treatment's mutation file to ensure it contains properly formatted
+    single nucleotides for REF and ALT columns. Invalid files are removed to be
+    regenerated from VCF data.
+    """
     for treatment in TREATMENTS:
         file_path = f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt"
-        if os.path.exists(file_path):
-            try:
-                # Read the first few lines
-                data = pd.read_csv(file_path, sep='\t', header=None, 
-                                  names=['CHROM', 'POS', 'REF', 'ALT'], nrows=5)
-                
-                # Check if REF/ALT columns contain valid nucleotides
-                valid_ref = data['REF'].str.len().eq(1).all() and data['REF'].str.upper().isin(['A', 'C', 'G', 'T']).all()
-                valid_alt = data['ALT'].str.len().eq(1).all() and data['ALT'].str.upper().isin(['A', 'C', 'G', 'T']).all()
-                
-                if not valid_ref or not valid_alt:
-                    print(f"Warning: {file_path} contains invalid nucleotides.")
-                    print(f"REF values: {data['REF'].tolist()}, ALT values: {data['ALT'].tolist()}")
-                    print(f"Removing invalid file so it will be re-extracted...")
-                    os.remove(file_path)
-            except Exception as e:
-                print(f"Error validating {file_path}: {e}")
-                print(f"Removing invalid file...")
+        if not os.path.exists(file_path):
+            continue
+            
+        try:
+            # Read the first few lines
+            data = pd.read_csv(
+                file_path, 
+                sep='\t', 
+                header=None, 
+                names=['CHROM', 'POS', 'REF', 'ALT'], 
+                nrows=5
+            )
+            
+            # Check if REF/ALT columns contain valid nucleotides
+            valid_ref = (data['REF'].str.len().eq(1).all() and 
+                        data['REF'].str.upper().isin(['A', 'C', 'G', 'T']).all())
+            valid_alt = (data['ALT'].str.len().eq(1).all() and 
+                        data['ALT'].str.upper().isin(['A', 'C', 'G', 'T']).all())
+            
+            if not valid_ref or not valid_alt:
+                print(f"Warning: {file_path} contains invalid nucleotides.")
+                print(f"REF values: {data['REF'].tolist()}, ALT values: {data['ALT'].tolist()}")
+                print(f"Removing invalid file so it will be re-extracted...")
                 os.remove(file_path)
+        except Exception as e:
+            print(f"Error validating {file_path}: {e}")
+            print(f"Removing invalid file...")
+            os.remove(file_path)
 
-# Function to find mutation data file trying multiple locations
 def find_mutation_data_file(treatment):
-    """Find mutation data file checking multiple possible locations."""
+    """
+    Find mutation data file by checking multiple possible locations.
+    
+    Args:
+        treatment (str): Treatment identifier (e.g., 'WT-37', 'WTA')
+        
+    Returns:
+        str or None: Path to the mutation data file if found, None otherwise
+    """
     # Define possible file patterns
     file_patterns = [
         f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt",
@@ -84,7 +119,7 @@ def find_mutation_data_file(treatment):
         f"mutation_spectrum_analysis/{treatment}_mutations.txt"
     ]
     
-    # Also check for old 'WT' naming if we're looking for WT-37
+    # Handle backward compatibility with old 'WT' naming for WT-37
     if treatment == 'WT-37':
         file_patterns.extend([
             "analysis/mutation_spectrum_analysis/WT_mutations.txt",
@@ -92,7 +127,7 @@ def find_mutation_data_file(treatment):
             "mutation_spectrum_analysis/WT_mutations.txt"
         ])
     
-    # Try each pattern
+    # Check each location
     for pattern in file_patterns:
         if os.path.exists(pattern):
             print(f"Found mutation data for {treatment} at {pattern}")
@@ -100,239 +135,267 @@ def find_mutation_data_file(treatment):
     
     return None
 
-# Function to parse mutation data files
-# Modified parse_mutation_data function
 def parse_mutation_data(treatment):
-    """Parse mutation data for a specific treatment."""
+    """
+    Parse mutation data for a specific treatment, handling various file formats.
+    
+    This function attempts to load mutation data from text files, handles different
+    file formats, and fixes common formatting issues. If no valid file is found
+    or if parsing fails, it extracts data directly from VCF files.
+    
+    Args:
+        treatment (str): Treatment identifier (e.g., 'WT-37', 'WTA')
+        
+    Returns:
+        pd.DataFrame: DataFrame containing mutation data with columns:
+            CHROM, POS, REF, ALT, Treatment
+    """
     # Find the mutation data file
     filename = find_mutation_data_file(treatment)
     
     if not filename:
         print(f"Warning: No mutation data file found for {treatment}")
-        # Try to extract from VCF
+        # Fall back to VCF extraction
         return extract_from_vcf(treatment)
     
     try:
-        # First, let's examine the file structure
+        # Examine the file structure
         with open(filename, 'r') as f:
             first_line = f.readline().strip()
             columns = first_line.split('\t')
             print(f"File format: {len(columns)} columns in first line")
         
-        # Based on file inspection, read the data accordingly
-        if len(columns) == 5:  # index, CHROM, POS, REF, ALT, Treatment
-            # Read the raw data to properly handle the columns
-            raw_data = pd.read_csv(filename, sep='\t', header=None)
-            
-            # If the file has 5 columns (includes treatment name)
-            data = pd.DataFrame()
+        # Read data according to the detected format
+        raw_data = pd.read_csv(filename, sep='\t', header=None)
+        data = pd.DataFrame()
+        
+        # Process based on column count
+        if len(columns) == 5:  # CHROM, POS, REF, ALT, Treatment
             data['CHROM'] = raw_data.iloc[:, 0]
             data['POS'] = raw_data.iloc[:, 1].astype(int)
             data['REF'] = raw_data.iloc[:, 2]
             data['ALT'] = raw_data.iloc[:, 3]
-            # Ignore the treatment column in file, use parameter instead
         elif len(columns) == 6:  # Line num, CHROM, POS, REF, ALT, Treatment
-            # Read with skiprows to handle line numbers
-            raw_data = pd.read_csv(filename, sep='\t', header=None)
-            
-            # Skip the first column (line numbers)
-            data = pd.DataFrame()
             data['CHROM'] = raw_data.iloc[:, 1]
             data['POS'] = raw_data.iloc[:, 2].astype(int)
             data['REF'] = raw_data.iloc[:, 3]
             data['ALT'] = raw_data.iloc[:, 4]
-            # Ignore the treatment column in file, use parameter instead
         else:
-            # Try the default approach if structure is unclear
-            data = pd.read_csv(filename, sep='\t', header=None, 
-                            names=['CHROM', 'POS', 'REF', 'ALT'])
+            # Default approach for unexpected formats
+            data = pd.read_csv(
+                filename, 
+                sep='\t', 
+                header=None, 
+                names=['CHROM', 'POS', 'REF', 'ALT']
+            )
         
-        # Add treatment column explicitly
+        # Always use the provided treatment parameter
         data['Treatment'] = treatment
         
-        # Check if the data still looks suspicious (like if treatment name is in REF column)
+        # Validation and correction logic
         if len(data) > 0:
-            # Show sample data
+            # Debug output
             print(f"Sample data after loading:")
             print(data.head(2))
             
-            # Check for treatment names in REF or ALT (possible parsing issue)
+            # Fix issues with treatment names in REF column
             if any(data['REF'].astype(str).isin(TREATMENTS)):
                 print(f"Warning: File {filename} appears to have swapped REF/ALT columns. Fixing...")
-                # The file might have structure: idx CHROM POS ALT REF Treatment
-                # Read again with explicit column mapping
-                raw_data = pd.read_csv(filename, sep='\t', header=None)
-                if len(raw_data.columns) >= 5:
-                    # For both 5 and 6 column formats, swap REF and ALT columns based on content
-                    if len(raw_data.columns) >= 6:  # Line num, CHROM, POS, REF, ALT, Treatment
-                        data = pd.DataFrame()
-                        data['CHROM'] = raw_data.iloc[:, 1]
-                        data['POS'] = raw_data.iloc[:, 2].astype(int)
-                        # Extract treatment from the last column
-                        treatments = raw_data.iloc[:, -1].tolist()
-                        # If Treatment is in REF column (column 3), swap REF and ALT
-                        if any(t in TREATMENTS for t in raw_data.iloc[:, 3].astype(str).tolist()):
-                            data['REF'] = raw_data.iloc[:, 4]  # Column 4 is the actual REF
-                            # Recover ALT from VCF or make best guess
-                            # We'll first try to use raw_data values to preserve original data
-                            alt_values = []
-                            for i, row in data.iterrows():
-                                actual_alt = raw_data.iloc[i, 3] if raw_data.iloc[i, 3] not in TREATMENTS else None
-                                if actual_alt and str(actual_alt).upper() in ['A', 'C', 'G', 'T']:
-                                    alt_values.append(actual_alt)
-                                else:
-                                    # If not valid, make a best guess
-                                    ref = row['REF']
-                                    # Choose a base different from REF
-                                    alt_bases = [b for b in ['A', 'C', 'G', 'T'] if b != ref.upper()]
-                                    alt_values.append(alt_bases[0] if alt_bases else 'N')
-                            data['ALT'] = alt_values
-                        else:
-                            # Normal column order
-                            data['REF'] = raw_data.iloc[:, 3]
-                            data['ALT'] = raw_data.iloc[:, 4]
-                    # For 5-column format
-                    else:  # CHROM, POS, REF, ALT, Treatment
-                        data = pd.DataFrame()
-                        data['CHROM'] = raw_data.iloc[:, 0]
-                        data['POS'] = raw_data.iloc[:, 1].astype(int)
-                        # Extract treatment from the last column
-                        treatments = raw_data.iloc[:, -1].tolist()
-                        # If Treatment is in REF column (column 2), swap REF and ALT
-                        if any(t in TREATMENTS for t in raw_data.iloc[:, 2].astype(str).tolist()):
-                            data['REF'] = raw_data.iloc[:, 3]  # Column 3 is the actual REF
-                            # Recover ALT from VCF or make best guess
-                            alt_values = []
-                            for i, row in data.iterrows():
-                                actual_alt = raw_data.iloc[i, 2] if raw_data.iloc[i, 2] not in TREATMENTS else None
-                                if actual_alt and str(actual_alt).upper() in ['A', 'C', 'G', 'T']:
-                                    alt_values.append(actual_alt)
-                                else:
-                                    # If not valid, make a best guess
-                                    ref = row['REF']
-                                    # Choose a base different from REF
-                                    alt_bases = [b for b in ['A', 'C', 'G', 'T'] if b != ref.upper()]
-                                    alt_values.append(alt_bases[0] if alt_bases else 'N')
-                            data['ALT'] = alt_values
-                        else:
-                            # Normal column order
-                            data['REF'] = raw_data.iloc[:, 2]
-                            data['ALT'] = raw_data.iloc[:, 3]
-                    
-                    # Add treatment column explicitly
-                    data['Treatment'] = treatment
+                _fix_ref_column_issues(data, raw_data, treatment)
             
-            # Or maybe treatment is in ALT column?
+            # Fix issues with treatment names in ALT column
             if any(data['ALT'].astype(str).isin(TREATMENTS)):
                 print(f"Warning: Treatment name found in ALT column in {filename}. Fixing...")
-                # The file likely has Treatment in ALT column, but REF is likely correct
-                raw_data = pd.read_csv(filename, sep='\t', header=None)
+                data = _fix_alt_column_issues(data, raw_data, treatment)
                 
-                # For both 5 and 6 column formats, try to extract the correct REF/ALT
-                if len(raw_data.columns) >= 6:  # Line num, CHROM, POS, REF, ALT, Treatment
-                    data = pd.DataFrame()
-                    data['CHROM'] = raw_data.iloc[:, 1]
-                    data['POS'] = raw_data.iloc[:, 2].astype(int)
-                    data['REF'] = raw_data.iloc[:, 3]  # REF is likely correct
-                    
-                    # Extract the value in the 5th column (index 4) which usually has ALT
-                    # But it might be Treatment instead of ALT
-                    alt_col = raw_data.iloc[:, 4].tolist()
-                    
-                    # Make educated guesses for ALT values based on sequence context
-                    # Default to changes that are common mutations
-                    alt_values = []
-                    for i, row in enumerate(raw_data.iloc[:, 3]):
-                        ref = str(row).upper()
-                        if ref in ['A', 'C', 'G', 'T']:
-                            # Try to use the value in ALT column if it's a valid base
-                            alt_candidate = str(alt_col[i]).upper()
-                            if alt_candidate in ['A', 'C', 'G', 'T'] and alt_candidate != ref:
-                                alt_values.append(alt_candidate)
-                            else:
-                                # Make a reasonable guess based on common mutations
-                                if ref == 'A':
-                                    alt_values.append('G')  # Transition
-                                elif ref == 'G':
-                                    alt_values.append('A')  # Transition
-                                elif ref == 'C':
-                                    alt_values.append('T')  # Transition
-                                elif ref == 'T':
-                                    alt_values.append('C')  # Transition
-                                else:
-                                    alt_values.append('N')  # Unknown
-                        else:
-                            alt_values.append('N')  # Unknown
-                    
-                    data['ALT'] = alt_values
-                
-                elif len(raw_data.columns) == 5:  # CHROM, POS, REF, ALT, Treatment
-                    data = pd.DataFrame()
-                    data['CHROM'] = raw_data.iloc[:, 0]
-                    data['POS'] = raw_data.iloc[:, 1].astype(int)
-                    data['REF'] = raw_data.iloc[:, 2]  # REF is likely correct
-                    
-                    # Extract the value in the 4th column (index 3) which usually has ALT
-                    # But it might be Treatment instead of ALT
-                    alt_col = raw_data.iloc[:, 3].tolist()
-                    
-                    # Make educated guesses for ALT values based on sequence context
-                    # Default to changes that are common mutations
-                    alt_values = []
-                    for i, row in enumerate(raw_data.iloc[:, 2]):
-                        ref = str(row).upper()
-                        if ref in ['A', 'C', 'G', 'T']:
-                            # Try to use the value in ALT column if it's a valid base
-                            alt_candidate = str(alt_col[i]).upper()
-                            if alt_candidate in ['A', 'C', 'G', 'T'] and alt_candidate != ref:
-                                alt_values.append(alt_candidate)
-                            else:
-                                # Make a reasonable guess based on common mutations
-                                if ref == 'A':
-                                    alt_values.append('G')  # Transition
-                                elif ref == 'G':
-                                    alt_values.append('A')  # Transition
-                                elif ref == 'C':
-                                    alt_values.append('T')  # Transition
-                                elif ref == 'T':
-                                    alt_values.append('C')  # Transition
-                                else:
-                                    alt_values.append('N')  # Unknown
-                        else:
-                            alt_values.append('N')  # Unknown
-                    
-                    data['ALT'] = alt_values
-                
-                # Add treatment column explicitly
-                data['Treatment'] = treatment
-                
-                # Try to extract more accurate ALT values from VCF if possible
-                print(f"Attempting to get more accurate ALT values for {treatment} from VCF...")
+                # Try to get more accurate ALT values from VCF
                 vcf_data = extract_from_vcf(treatment)
                 if not vcf_data.empty:
-                    # Create a dictionary for quick position lookup
-                    vcf_dict = {}
-                    for _, row in vcf_data.iterrows():
-                        key = (row['CHROM'], int(row['POS']))
-                        vcf_dict[key] = row['ALT']
-                    
-                    # Update ALT values in the original data where possible
-                    for i, row in data.iterrows():
-                        key = (row['CHROM'], int(row['POS']))
-                        if key in vcf_dict:
-                            data.at[i, 'ALT'] = vcf_dict[key]
+                    data = _update_alt_from_vcf(data, vcf_data)
         
         print(f"Loaded {len(data)} mutations for {treatment}")
         return data
+        
     except Exception as e:
         print(f"Error reading {filename}: {e}")
         print(f"Falling back to VCF extraction...")
         return extract_from_vcf(treatment)
 
-# Function to extract mutation data from VCF if data file not found
+def _fix_ref_column_issues(data, raw_data, treatment):
+    """
+    Fix issues where REF column contains treatment names.
+    
+    Args:
+        data (pd.DataFrame): DataFrame to fix
+        raw_data (pd.DataFrame): Raw data from file
+        treatment (str): Current treatment
+        
+    Returns:
+        None (modifies data in-place)
+    """
+    if len(raw_data.columns) >= 6:  # Line num, CHROM, POS, REF, ALT, Treatment
+        data['CHROM'] = raw_data.iloc[:, 1]
+        data['POS'] = raw_data.iloc[:, 2].astype(int)
+        
+        # Check if treatment appears in what should be the REF column
+        if any(t in TREATMENTS for t in raw_data.iloc[:, 3].astype(str).tolist()):
+            data['REF'] = raw_data.iloc[:, 4]  # Use column 4 as REF
+            
+            # Create best-guess ALT values
+            alt_values = []
+            for i, row in data.iterrows():
+                actual_alt = raw_data.iloc[i, 3]
+                if actual_alt not in TREATMENTS and str(actual_alt).upper() in ['A', 'C', 'G', 'T']:
+                    alt_values.append(actual_alt)
+                else:
+                    # Choose a nucleotide different from REF
+                    ref = str(row['REF']).upper()
+                    alt_bases = [b for b in ['A', 'C', 'G', 'T'] if b != ref]
+                    alt_values.append(alt_bases[0] if alt_bases else 'N')
+            data['ALT'] = alt_values
+        else:
+            # Normal column order
+            data['REF'] = raw_data.iloc[:, 3]
+            data['ALT'] = raw_data.iloc[:, 4]
+    
+    elif len(raw_data.columns) == 5:  # CHROM, POS, REF, ALT, Treatment
+        data['CHROM'] = raw_data.iloc[:, 0]
+        data['POS'] = raw_data.iloc[:, 1].astype(int)
+        
+        # Check if treatment appears in what should be the REF column
+        if any(t in TREATMENTS for t in raw_data.iloc[:, 2].astype(str).tolist()):
+            data['REF'] = raw_data.iloc[:, 3]  # Use column 3 as REF
+            
+            # Create best-guess ALT values
+            alt_values = []
+            for i, row in data.iterrows():
+                actual_alt = raw_data.iloc[i, 2]
+                if actual_alt not in TREATMENTS and str(actual_alt).upper() in ['A', 'C', 'G', 'T']:
+                    alt_values.append(actual_alt)
+                else:
+                    # Choose a nucleotide different from REF
+                    ref = str(row['REF']).upper()
+                    alt_bases = [b for b in ['A', 'C', 'G', 'T'] if b != ref]
+                    alt_values.append(alt_bases[0] if alt_bases else 'N')
+            data['ALT'] = alt_values
+        else:
+            # Normal column order
+            data['REF'] = raw_data.iloc[:, 2]
+            data['ALT'] = raw_data.iloc[:, 3]
+    
+    # Reset treatment
+    data['Treatment'] = treatment
+
+def _fix_alt_column_issues(data, raw_data, treatment):
+    """
+    Fix issues where ALT column contains treatment names.
+    
+    Args:
+        data (pd.DataFrame): DataFrame to fix
+        raw_data (pd.DataFrame): Raw data from file
+        treatment (str): Current treatment
+        
+    Returns:
+        pd.DataFrame: Fixed DataFrame
+    """
+    new_data = pd.DataFrame()
+    
+    if len(raw_data.columns) >= 6:  # Line num, CHROM, POS, REF, ALT, Treatment
+        new_data['CHROM'] = raw_data.iloc[:, 1]
+        new_data['POS'] = raw_data.iloc[:, 2].astype(int)
+        new_data['REF'] = raw_data.iloc[:, 3]  # REF is usually correct
+        
+        # Create best-guess ALT values based on common mutations
+        alt_values = []
+        for i, ref in enumerate(raw_data.iloc[:, 3]):
+            ref = str(ref).upper()
+            if ref in ['A', 'C', 'G', 'T']:
+                # Try using the value in ALT column if it's valid
+                alt_candidate = str(raw_data.iloc[i, 4]).upper()
+                if alt_candidate in ['A', 'C', 'G', 'T'] and alt_candidate != ref:
+                    alt_values.append(alt_candidate)
+                else:
+                    # Make best guess based on common transitions
+                    if ref == 'A': alt_values.append('G')
+                    elif ref == 'G': alt_values.append('A')
+                    elif ref == 'C': alt_values.append('T')
+                    elif ref == 'T': alt_values.append('C')
+                    else: alt_values.append('N')
+            else:
+                alt_values.append('N')
+        
+        new_data['ALT'] = alt_values
+        
+    elif len(raw_data.columns) == 5:  # CHROM, POS, REF, ALT, Treatment
+        new_data['CHROM'] = raw_data.iloc[:, 0]
+        new_data['POS'] = raw_data.iloc[:, 1].astype(int)
+        new_data['REF'] = raw_data.iloc[:, 2]  # REF is usually correct
+        
+        # Create best-guess ALT values based on common mutations
+        alt_values = []
+        for i, ref in enumerate(raw_data.iloc[:, 2]):
+            ref = str(ref).upper()
+            if ref in ['A', 'C', 'G', 'T']:
+                # Try using the value in ALT column if it's valid
+                alt_candidate = str(raw_data.iloc[i, 3]).upper()
+                if alt_candidate in ['A', 'C', 'G', 'T'] and alt_candidate != ref:
+                    alt_values.append(alt_candidate)
+                else:
+                    # Make best guess based on common transitions
+                    if ref == 'A': alt_values.append('G')
+                    elif ref == 'G': alt_values.append('A')
+                    elif ref == 'C': alt_values.append('T')
+                    elif ref == 'T': alt_values.append('C')
+                    else: alt_values.append('N')
+            else:
+                alt_values.append('N')
+        
+        new_data['ALT'] = alt_values
+    
+    # Always set treatment
+    new_data['Treatment'] = treatment
+    return new_data
+
+def _update_alt_from_vcf(data, vcf_data):
+    """
+    Update ALT values from VCF data where possible.
+    
+    Args:
+        data (pd.DataFrame): DataFrame with potentially incorrect ALT values
+        vcf_data (pd.DataFrame): Data extracted from VCF
+        
+    Returns:
+        pd.DataFrame: Updated DataFrame
+    """
+    # Create a dictionary for quick position lookup
+    vcf_dict = {}
+    for _, row in vcf_data.iterrows():
+        key = (row['CHROM'], int(row['POS']))
+        vcf_dict[key] = row['ALT']
+    
+    # Update ALT values from VCF where available
+    for i, row in data.iterrows():
+        key = (row['CHROM'], int(row['POS']))
+        if key in vcf_dict:
+            data.at[i, 'ALT'] = vcf_dict[key]
+    
+    return data
+
 def extract_from_vcf(treatment):
-    """Extract mutation data from VCF files if no pre-extracted data is found."""
-    # Check multiple possible VCF locations
+    """
+    Extract mutation data directly from VCF files.
+    
+    This function is used when no pre-extracted mutation data file is found,
+    or if the existing file has invalid format.
+    
+    Args:
+        treatment (str): Treatment identifier (e.g., 'WT-37', 'WTA')
+        
+    Returns:
+        pd.DataFrame: DataFrame containing mutation data with columns:
+            CHROM, POS, REF, ALT, Treatment
+    """
+    # Define possible VCF locations to check
     vcf_patterns = [
         f"results/merged/analysis/{treatment}/highconf.vcf.gz",
         f"results/merged/analysis/{treatment}_highconf.vcf.gz",
@@ -340,7 +403,7 @@ def extract_from_vcf(treatment):
         f"results/merged/analysis/{treatment}_specific.vcf.gz"
     ]
     
-    # Also check for old 'WT' naming if we're looking for WT-37
+    # Handle backward compatibility with old 'WT' naming for WT-37
     if treatment == 'WT-37':
         vcf_patterns.extend([
             "results/merged/analysis/WT/highconf.vcf.gz",
@@ -349,70 +412,83 @@ def extract_from_vcf(treatment):
             "results/merged/analysis/WT_specific.vcf.gz"
         ])
     
-    # Try each pattern
+    # Try each VCF location
     for vcf_file in vcf_patterns:
-        if os.path.exists(vcf_file):
-            print(f"Extracting mutation data for {treatment} from {vcf_file}")
-            try:
-                # Extract mutation data using bcftools
-                cmd = f"bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\n' {vcf_file}"
-                output = subprocess.check_output(cmd, shell=True).decode('utf-8')
-                
-                # Parse the output
-                rows = []
-                for line in output.strip().split('\n'):
-                    if line:  # Skip empty lines
-                        parts = line.split('\t')
-                        if len(parts) == 4:
-                            rows.append(parts)
-                
-                # Create dataframe
-                if rows:
-                    data = pd.DataFrame(rows, columns=['CHROM', 'POS', 'REF', 'ALT'])
-                    data['POS'] = data['POS'].astype(int)
-                    data['Treatment'] = treatment
+        if not os.path.exists(vcf_file):
+            continue
+            
+        print(f"Extracting mutation data for {treatment} from {vcf_file}")
+        try:
+            # Extract mutation data using bcftools
+            cmd = f"bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\n' {vcf_file}"
+            output = subprocess.check_output(cmd, shell=True).decode('utf-8')
+            
+            # Parse the output
+            rows = []
+            for line in output.strip().split('\n'):
+                if not line:  # Skip empty lines
+                    continue
                     
-                    # Save extracted data for future use - ONLY save the core columns
-                    os.makedirs("analysis/mutation_spectrum_analysis", exist_ok=True)
-                    data[['CHROM', 'POS', 'REF', 'ALT']].to_csv(
-                        f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt", 
-                        sep='\t', index=False, header=False)
-                    
-                    print(f"Extracted and saved {len(data)} mutations for {treatment}")
-                    return data
-            except Exception as e:
-                print(f"Error extracting from {vcf_file}: {e}")
+                parts = line.split('\t')
+                if len(parts) == 4:
+                    rows.append(parts)
+            
+            # Create dataframe if we have rows
+            if not rows:
+                continue
+                
+            data = pd.DataFrame(rows, columns=['CHROM', 'POS', 'REF', 'ALT'])
+            data['POS'] = data['POS'].astype(int)
+            data['Treatment'] = treatment
+            
+            # Save extracted data for future use (only core columns)
+            os.makedirs("analysis/mutation_spectrum_analysis", exist_ok=True)
+            data[['CHROM', 'POS', 'REF', 'ALT']].to_csv(
+                f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt", 
+                sep='\t', index=False, header=False
+            )
+            
+            print(f"Extracted and saved {len(data)} mutations for {treatment}")
+            return data
+            
+        except Exception as e:
+            print(f"Error extracting from {vcf_file}: {e}")
     
     print(f"Could not find or extract mutation data for {treatment}")
     return pd.DataFrame()
 
-# Function to filter data for single nucleotide variants
 def filter_snvs(data, debug=True, include_mnvs=False):
     """
     Filter data to include only single nucleotide variants.
     
+    This function filters the input data to include only single nucleotide variants
+    (SNVs) with valid nucleotide bases. It can optionally decompose multi-nucleotide
+    variants (MNVs) into individual SNVs.
+    
     Args:
-        data: DataFrame containing variant data
-        debug: Whether to print debug info
-        include_mnvs: Whether to include decomposed multi-nucleotide variants
+        data (pd.DataFrame): DataFrame containing variant data
+        debug (bool): Whether to print debug information
+        include_mnvs (bool): Whether to include decomposed multi-nucleotide variants
+        
+    Returns:
+        pd.DataFrame: Filtered DataFrame containing only SNVs
     """
+    if data.empty:
+        return data
+        
     if debug:
         print(f"Initial variant count: {len(data)}")
-        if len(data) > 0:
-            print(f"REF column type: {type(data['REF'].iloc[0])}")
-            print(f"Sample REF values: {data['REF'].head().tolist()}")
-            print(f"Sample ALT values: {data['ALT'].head().tolist()}")
+        print(f"REF column type: {type(data['REF'].iloc[0])}")
+        print(f"Sample REF values: {data['REF'].head().tolist()}")
+        print(f"Sample ALT values: {data['ALT'].head().tolist()}")
     
-    # Check for non-string data types
-    if not pd.api.types.is_string_dtype(data['REF']) or not pd.api.types.is_string_dtype(data['ALT']):
+    # Ensure REF/ALT are string type
+    processed_data = data.copy()
+    if not pd.api.types.is_string_dtype(processed_data['REF']) or not pd.api.types.is_string_dtype(processed_data['ALT']):
         if debug:
             print("Converting REF/ALT to string types")
-        data = data.copy()
-        data['REF'] = data['REF'].astype(str)
-        data['ALT'] = data['ALT'].astype(str)
-    
-    # Create a copy of the data to avoid modification warnings
-    processed_data = data.copy()
+        processed_data['REF'] = processed_data['REF'].astype(str)
+        processed_data['ALT'] = processed_data['ALT'].astype(str)
     
     # First separate SNVs and MNVs
     length_filter = (processed_data['REF'].str.len() == 1) & (processed_data['ALT'].str.len() == 1)
@@ -423,50 +499,10 @@ def filter_snvs(data, debug=True, include_mnvs=False):
         print(f"Found {len(snv_data)} single-nucleotide variants")
         print(f"Found {len(mnv_data)} multi-nucleotide variants")
     
-    # Handle MNVs if requested
+    # Handle MNVs decomposition if requested
     decomposed_mnvs = pd.DataFrame()
-    if include_mnvs and len(mnv_data) > 0:
-        decomposed_rows = []
-        
-        for _, row in mnv_data.iterrows():
-            ref = row['REF']
-            alt = row['ALT']
-            
-            # Skip cases where ref or alt are completely different lengths
-            # as they're likely indels rather than substitutions
-            if abs(len(ref) - len(alt)) > 2:
-                continue
-            
-            # Handle several common MNV patterns:
-            
-            # Case 1: One base change within a multi-base sequence (e.g., AT>AG)
-            if len(ref) == len(alt) and len(ref) > 1:
-                # Find positions where bases differ
-                diff_positions = [i for i in range(len(ref)) if i < len(alt) and ref[i] != alt[i]]
-                
-                # Create a separate SNV for each position that differs
-                for pos in diff_positions:
-                    new_row = row.copy()
-                    new_row['REF'] = ref[pos]
-                    new_row['ALT'] = alt[pos]
-                    new_row['POS'] = int(row['POS']) + pos  # Adjust position
-                    new_row['MNV_Source'] = f"{ref}>{alt}"  # Track the source MNV
-                    decomposed_rows.append(new_row)
-            
-            # Case 2: Deletion (e.g., ATG>A)
-            elif len(ref) > len(alt):
-                # We'll skip these as they're deletions
-                continue
-            
-            # Case 3: Insertion (e.g., A>ATG)
-            elif len(ref) < len(alt):
-                # We'll skip these as they're insertions
-                continue
-        
-        if decomposed_rows:
-            decomposed_mnvs = pd.DataFrame(decomposed_rows)
-            if debug:
-                print(f"Decomposed {len(decomposed_mnvs)} SNVs from multi-nucleotide variants")
+    if include_mnvs and not mnv_data.empty:
+        decomposed_mnvs = _decompose_mnvs(mnv_data, debug)
     
     # Combine SNVs and decomposed MNVs if needed
     if include_mnvs and not decomposed_mnvs.empty:
@@ -478,81 +514,186 @@ def filter_snvs(data, debug=True, include_mnvs=False):
         print(f"After length filter: {len(combined_data)} variants remain")
         print(f"Skipped {len(data) - len(combined_data)} variants that couldn't be processed as SNVs")
         
-        if len(mnv_data) > 0:
+        if not mnv_data.empty:
             print("Examples of multi-nucleotide variants:")
             for _, row in mnv_data.head(5).iterrows():
                 print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
     
-    # Second filtering step: valid bases
-    # Make case-insensitive by converting to uppercase
-    if len(combined_data) > 0:
-        combined_data['REF'] = combined_data['REF'].str.upper()
-        combined_data['ALT'] = combined_data['ALT'].str.upper()
-        
-        valid_bases = combined_data['REF'].isin(['A', 'C', 'G', 'T']) & combined_data['ALT'].isin(['A', 'C', 'G', 'T'])
-        final_data = combined_data[valid_bases].copy()
-        
-        if debug:
-            print(f"After ACGT filter: {len(final_data)} variants remain")
-            print(f"Removed {len(combined_data) - len(final_data)} variants with non-ACGT bases")
-            if len(combined_data) > 0 and len(final_data) == 0:
-                print("Examples of non-ACGT bases:")
-                non_acgt = combined_data[~valid_bases].head(5)
-                for _, row in non_acgt.iterrows():
-                    print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
+    # Filter for valid ACGT bases
+    if not combined_data.empty:
+        final_data = _filter_valid_bases(combined_data, debug)
     else:
         final_data = combined_data
     
     print(f"Filtered to {len(final_data)} single nucleotide variants")
     return final_data
 
-# Function to classify mutations
+def _decompose_mnvs(mnv_data, debug=False):
+    """
+    Decompose multi-nucleotide variants (MNVs) into single nucleotide variants.
+    
+    Args:
+        mnv_data (pd.DataFrame): DataFrame containing MNV data
+        debug (bool): Whether to print debug information
+        
+    Returns:
+        pd.DataFrame: DataFrame with decomposed MNVs
+    """
+    decomposed_rows = []
+    
+    for _, row in mnv_data.iterrows():
+        ref = row['REF']
+        alt = row['ALT']
+        
+        # Skip indels (large length differences)
+        if abs(len(ref) - len(alt)) > 2:
+            continue
+        
+        # Process substitution-type MNVs (e.g., AT>AG)
+        if len(ref) == len(alt) and len(ref) > 1:
+            # Find positions where bases differ
+            diff_positions = [i for i in range(len(ref)) 
+                             if i < len(alt) and ref[i] != alt[i]]
+            
+            # Create a separate SNV for each position that differs
+            for pos in diff_positions:
+                new_row = row.copy()
+                new_row['REF'] = ref[pos]
+                new_row['ALT'] = alt[pos]
+                new_row['POS'] = int(row['POS']) + pos  # Adjust position
+                new_row['MNV_Source'] = f"{ref}>{alt}"  # Track the source MNV
+                decomposed_rows.append(new_row)
+        
+        # Skip deletions and insertions
+        # (These could be handled here if needed in the future)
+    
+    if decomposed_rows:
+        result = pd.DataFrame(decomposed_rows)
+        if debug:
+            print(f"Decomposed {len(result)} SNVs from multi-nucleotide variants")
+        return result
+    
+    return pd.DataFrame()
+
+def _filter_valid_bases(data, debug=False):
+    """
+    Filter variants to include only those with valid ACGT nucleotide bases.
+    
+    Args:
+        data (pd.DataFrame): DataFrame to filter
+        debug (bool): Whether to print debug information
+        
+    Returns:
+        pd.DataFrame: Filtered DataFrame
+    """
+    # Standardize to uppercase
+    data['REF'] = data['REF'].str.upper()
+    data['ALT'] = data['ALT'].str.upper()
+    
+    # Keep only variants with valid nucleotide bases
+    valid_bases = (data['REF'].isin(['A', 'C', 'G', 'T']) & 
+                  data['ALT'].isin(['A', 'C', 'G', 'T']))
+    filtered_data = data[valid_bases].copy()
+    
+    if debug:
+        print(f"After ACGT filter: {len(filtered_data)} variants remain")
+        print(f"Removed {len(data) - len(filtered_data)} variants with non-ACGT bases")
+        
+        if len(data) > 0 and len(filtered_data) == 0:
+            print("Examples of non-ACGT bases:")
+            non_acgt = data[~valid_bases].head(5)
+            for _, row in non_acgt.iterrows():
+                print(f"  {row['CHROM']}:{row['POS']} REF={row['REF']} ALT={row['ALT']}")
+    
+    return filtered_data
+
 def classify_mutations(data):
-    """Classify each mutation as transition or transversion."""
-    if len(data) == 0:
+    """
+    Classify each mutation as transition or transversion and add annotation.
+    
+    This function classifies each mutation as either a transition or transversion,
+    standardizes mutation representation to be pyrimidine-based, and adds metadata
+    about adaptation type and gene modification status.
+    
+    Args:
+        data (pd.DataFrame): DataFrame containing mutation data
+        
+    Returns:
+        pd.DataFrame: DataFrame with added classification and annotation columns
+    """
+    if data.empty:
         return data
     
-    # Create mutation type column
-    data['Mutation'] = data['REF'] + '>' + data['ALT']
+    # Create a working copy of the data
+    result = data.copy()
     
-    # Classify as transition or transversion
-    data['Class'] = 'Unknown'
+    # Create mutation type column (REF>ALT format)
+    result['Mutation'] = result['REF'] + '>' + result['ALT']
+    
+    # Classify mutations as transitions or transversions
+    result['Class'] = 'Unknown'
+    
+    # Mark transitions (purine↔purine or pyrimidine↔pyrimidine)
     for ref, alt in TRANSITIONS:
-        mask = (data['REF'] == ref) & (data['ALT'] == alt)
-        data.loc[mask, 'Class'] = 'Transition'
+        mask = (result['REF'] == ref) & (result['ALT'] == alt)
+        result.loc[mask, 'Class'] = 'Transition'
     
+    # Mark transversions (purine↔pyrimidine)
     for ref, alt in TRANSVERSIONS:
-        mask = (data['REF'] == ref) & (data['ALT'] == alt)
-        data.loc[mask, 'Class'] = 'Transversion'
+        mask = (result['REF'] == ref) & (result['ALT'] == alt)
+        result.loc[mask, 'Class'] = 'Transversion'
     
     # Standardize mutation representation (pyrimidine-based)
-    data['Std_Mutation'] = data.apply(standardize_mutation, axis=1)
+    result['Std_Mutation'] = result.apply(standardize_mutation, axis=1)
     
-    # Add adaptation type information from TREATMENT_INFO
-    data['Adaptation'] = data['Treatment'].map(
+    # Add metadata based on treatment
+    result['Adaptation'] = result['Treatment'].map(
         lambda t: TREATMENT_INFO.get(t, {}).get('adaptation', 'Unknown'))
     
-    data['Has_Gene'] = data['Treatment'].map(
+    result['Has_Gene'] = result['Treatment'].map(
         lambda t: 'Yes' if TREATMENT_INFO.get(t, {}).get('gene') else 'No')
     
-    return data
+    return result
 
-# Function to standardize mutation representation
 def standardize_mutation(row):
-    """Convert mutation to standardized format with pyrimidine as reference."""
+    """
+    Convert mutation to standardized format with pyrimidine as reference.
+    
+    This function standardizes mutation representation by ensuring the reference
+    base is a pyrimidine (C or T). If the reference is a purine (A or G), both
+    the reference and alternate bases are converted to their complements.
+    
+    Args:
+        row (pd.Series): DataFrame row containing 'REF' and 'ALT' columns
+        
+    Returns:
+        str: Standardized mutation in the format "REF>ALT"
+    """
     ref, alt = row['REF'], row['ALT']
     
     # If reference is a purine (A or G), convert to pyrimidine-based
     if ref in ['A', 'G']:
-        ref = COMPLEMENT[ref]
-        alt = COMPLEMENT[alt]
+        ref = COMPLEMENT[ref]  # Convert A→T, G→C
+        alt = COMPLEMENT[alt]  # Convert the alternate base too
     
     return f"{ref}>{alt}"
 
-# Function to calculate transition/transversion ratio
 def calculate_ti_tv_ratio(data):
-    """Calculate the transition/transversion ratio."""
-    if len(data) == 0:
+    """
+    Calculate the transition/transversion ratio.
+    
+    Computes the ratio of transition mutations to transversion mutations
+    in the dataset. Returns 0 for empty datasets and infinity if there
+    are no transversions.
+    
+    Args:
+        data (pd.DataFrame): DataFrame with mutations classified as 
+                            'Transition' or 'Transversion'
+                            
+    Returns:
+        float: Ratio of transitions to transversions
+    """
+    if data.empty:
         return 0
     
     transitions = len(data[data['Class'] == 'Transition'])
@@ -563,13 +704,23 @@ def calculate_ti_tv_ratio(data):
     
     return transitions / transversions
 
-# Function to count mutation types
 def count_mutation_types(data):
-    """Count occurrences of each mutation type."""
-    if len(data) == 0:
-        return {}
+    """
+    Count occurrences of each standardized mutation type.
     
-    # Count standard mutations
+    Counts the frequency of each standardized mutation type (C>A, C>G, etc.)
+    and ensures all six possible types are represented in the results.
+    
+    Args:
+        data (pd.DataFrame): DataFrame containing mutations with 'Std_Mutation' column
+        
+    Returns:
+        dict: Dictionary with mutation types as keys and counts as values
+    """
+    if data.empty:
+        return {sub: 0 for sub in STD_SUBSTITUTIONS}
+    
+    # Count standardized mutations
     counts = Counter(data['Std_Mutation'])
     
     # Ensure all possible substitutions are represented
@@ -579,47 +730,66 @@ def count_mutation_types(data):
     
     return counts
 
-# Function to generate mutation spectrum plot
 def plot_mutation_spectrum(mutation_counts, treatment, output_dir):
-    """Generate mutation spectrum plot for a treatment."""
+    """
+    Generate mutation spectrum plot for a specific treatment.
+    
+    Creates a bar chart showing the distribution of different mutation types
+    (C>A, C>G, etc.) for the given treatment, with annotations for 
+    transitions/transversions and treatment metadata.
+    
+    Args:
+        mutation_counts (dict): Dictionary with mutation types and their counts
+        treatment (str): Treatment identifier (e.g., 'WT-37', 'WTA')
+        output_dir (str): Directory to save the output plot
+    """
     fig, ax = plt.subplots(figsize=(10, 6))
     
-    # Get treatment description for title
-    description = TREATMENT_INFO.get(treatment, {}).get('description', '')
-    adaptation = TREATMENT_INFO.get(treatment, {}).get('adaptation', '')
-    has_gene = TREATMENT_INFO.get(treatment, {}).get('gene') is not None
-    gene_text = f" with gene modification" if has_gene else ""
+    # Get treatment metadata for title
+    metadata = TREATMENT_INFO.get(treatment, {})
+    description = metadata.get('description', '')
+    adaptation = metadata.get('adaptation', '')
+    has_gene = metadata.get('gene') is not None
+    gene_text = " with gene modification" if has_gene else ""
     
-    # Prepare data for plotting
+    # Prepare plot data
     categories = STD_SUBSTITUTIONS
     values = [mutation_counts.get(cat, 0) for cat in categories]
     
-    # Define colors for different mutation types
+    # Color scheme: blues for transversions, reds for transitions
     colors = ['#2166ac', '#4393c3', '#92c5de', '#d6604d', '#f4a582', '#fddbc7']
     
-    # Plot the bars
+    # Create the bar plot
     bars = ax.bar(range(len(categories)), values, color=colors)
     
-    # Add value labels on top of bars
+    # Add value labels on top of each bar
     for bar in bars:
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height + 0.1,
-                f'{height}', ha='center', va='bottom')
+        ax.text(
+            bar.get_x() + bar.get_width()/2., 
+            height + 0.1,
+            f'{height}', 
+            ha='center', 
+            va='bottom'
+        )
     
-    # Customize the plot
+    # Customize plot appearance
     ax.set_xticks(range(len(categories)))
     ax.set_xticklabels(categories, rotation=45)
     ax.set_xlabel('Mutation Type')
     ax.set_ylabel('Count')
-    ax.set_title(f'Mutation Spectrum for {treatment}\n{description} ({adaptation} adaptation{gene_text})')
+    ax.set_title(
+        f'Mutation Spectrum for {treatment}\n'
+        f'{description} ({adaptation} adaptation{gene_text})'
+    )
     
-    # Add transition/transversion annotations
+    # Add annotations for transition/transversion categories
     ax.text(0.02, 0.95, 'Transversions', transform=ax.transAxes, 
             fontsize=12, va='top', color='#2166ac')
     ax.text(0.5, 0.95, 'Transitions', transform=ax.transAxes, 
             fontsize=12, va='top', color='#d6604d')
     
-    # Add vertical lines to separate mutation types
+    # Add divider between transition and transversion sections
     ax.axvline(x=2.5, color='black', linestyle='--', alpha=0.3)
     
     plt.tight_layout()
@@ -972,68 +1142,123 @@ def plot_mutation_by_adaptation(all_data, output_dir):
         import traceback
         traceback.print_exc()
 
-# Main function to run the analysis
 def main():
-    # Validate existing mutation files
+    """
+    Main function to run the mutation spectrum analysis pipeline.
+    
+    This function orchestrates the entire analysis workflow:
+    1. Load and validate mutation data for each treatment
+    2. Filter for SNVs and classify mutations
+    3. Calculate transition/transversion ratios
+    4. Generate visualizations
+    5. Perform statistical tests
+    6. Create and save summary reports
+    """
+    print("Starting mutation spectrum analysis...")
+    
+    # Step 1: Validate existing mutation files and load data
     validate_mutation_files()
-    # Parse data for each treatment
+    all_raw_data = _load_treatment_data()
+    
+    # Step 2: Filter for SNVs and classify mutations
+    all_data = _process_mutation_data(all_raw_data)
+    
+    # Step 3: Calculate statistics
+    ti_tv_ratios = _calculate_ti_tv_ratios(all_data)
+    all_counts = _count_mutation_types(all_data)
+    
+    # Step 4: Generate visualizations
+    _generate_plots(all_counts, all_data, ti_tv_ratios)
+    
+    # Step 5: Perform statistical tests
+    test_results = test_mutation_differences(all_counts)
+    print(f"Chi-square test: chi2={test_results['chi2']:.2f}, p={test_results['p_value']:.4f}")
+    
+    # Step 6: Create and save summary reports
+    _save_summary_reports(all_raw_data, all_data, all_counts, ti_tv_ratios, test_results)
+    
+    print(f"Analysis complete! Results saved to {OUTPUT_DIR}/")
+    print(f"Summary table saved as {OUTPUT_DIR}/mutation_spectrum_summary.csv")
+    print(f"Statistical test results saved as {OUTPUT_DIR}/statistical_test_results.txt")
+
+def _load_treatment_data():
+    """Load mutation data for all treatments."""
     all_raw_data = {}
     for treatment in TREATMENTS:
         data = parse_mutation_data(treatment)
-        if len(data) > 0:
+        if not data.empty:
             all_raw_data[treatment] = data
             print(f"Loaded {len(data)} variants for {treatment} treatment")
         else:
             print(f"Warning: No data available for {treatment} treatment")
-    
-    # Filter for SNVs and classify mutations
+    return all_raw_data
+
+def _process_mutation_data(all_raw_data):
+    """Filter for SNVs and classify mutations."""
     all_data = {}
     for treatment, data in all_raw_data.items():
         # Include decomposed multi-nucleotide variants
         snv_data = filter_snvs(data, include_mnvs=True)
         all_data[treatment] = classify_mutations(snv_data)
         print(f"{treatment}: Found {len(snv_data)} SNVs")
-    
-    # Calculate transition/transversion ratios
+    return all_data
+
+def _calculate_ti_tv_ratios(all_data):
+    """Calculate transition/transversion ratios for all treatments."""
     ti_tv_ratios = {}
     for treatment, data in all_data.items():
         ti_tv_ratios[treatment] = calculate_ti_tv_ratio(data)
         print(f"{treatment}: Ti/Tv ratio = {ti_tv_ratios[treatment]:.2f}")
-    
-    # Count mutation types
+    return ti_tv_ratios
+
+def _count_mutation_types(all_data):
+    """Count occurrences of each mutation type for all treatments."""
     all_counts = {}
     for treatment, data in all_data.items():
         all_counts[treatment] = count_mutation_types(data)
-    
-    # Generate mutation spectrum plots
+    return all_counts
+
+def _generate_plots(all_counts, all_data, ti_tv_ratios):
+    """Generate all visualization plots."""
+    # Individual mutation spectrum plots
     for treatment, counts in all_counts.items():
         plot_mutation_spectrum(counts, treatment, OUTPUT_DIR)
         print(f"Generated mutation spectrum plot for {treatment}")
     
-    # Generate comparative plot
+    # Comparative plots
     plot_comparative_spectrum(all_counts, OUTPUT_DIR)
     print("Generated comparative mutation spectrum plot")
     
-    # Plot transition/transversion ratios
+    # Ti/Tv ratio plots
     plot_ti_tv_ratios(ti_tv_ratios, OUTPUT_DIR)
     print("Generated Ti/Tv ratio plot")
     
-    # Plot mutation distribution by adaptation
+    # Adaptation-based plots
     plot_mutation_by_adaptation(all_data, OUTPUT_DIR)
     print("Generated mutation distribution by adaptation plot")
-    
-    # Perform statistical test
-    test_results = test_mutation_differences(all_counts)
-    print(f"Chi-square test: chi2={test_results['chi2']:.2f}, p={test_results['p_value']:.4f}")
-    
-    # Create summary table
+
+def _save_summary_reports(all_raw_data, all_data, all_counts, ti_tv_ratios, test_results):
+    """Create and save summary reports and statistics."""
+    # Create main summary table
     summary_table = create_summary_table(all_data, all_counts, ti_tv_ratios)
     
-    # Calculate and add filtering stats
-    original_counts = {t: len(all_raw_data.get(t, pd.DataFrame())) for t in TREATMENTS if t in all_raw_data}
-    final_counts = {t: len(all_data.get(t, pd.DataFrame())) for t in TREATMENTS if t in all_data}
+    # Calculate filtering statistics
+    filtering_stats = _calculate_filtering_stats(all_raw_data, all_data)
     
-    # Add this info to the summary table
+    # Save tables to CSV
+    summary_table.to_csv(os.path.join(OUTPUT_DIR, "mutation_spectrum_summary.csv"), index=False)
+    filtering_stats.to_csv(os.path.join(OUTPUT_DIR, "variant_filtering_stats.csv"), index=False)
+    
+    # Generate and save statistical test report
+    _save_statistical_report(test_results, ti_tv_ratios, all_counts)
+
+def _calculate_filtering_stats(all_raw_data, all_data):
+    """Calculate statistics on variant filtering."""
+    original_counts = {t: len(all_raw_data.get(t, pd.DataFrame())) 
+                      for t in TREATMENTS if t in all_raw_data}
+    final_counts = {t: len(all_data.get(t, pd.DataFrame())) 
+                   for t in TREATMENTS if t in all_data}
+    
     filtered_info = []
     for treatment in TREATMENTS:
         if treatment in original_counts and treatment in final_counts:
@@ -1045,41 +1270,40 @@ def main():
                 'Percent_Kept': round(final_counts[treatment] / original_counts[treatment] * 100, 1)
             })
     
-    # Save filtering stats to a separate file
-    filtering_df = pd.DataFrame(filtered_info)
-    filtering_df.to_csv(os.path.join(OUTPUT_DIR, "variant_filtering_stats.csv"), index=False)
+    return pd.DataFrame(filtered_info)
+
+def _save_statistical_report(test_results, ti_tv_ratios, all_counts):
+    """Generate and save statistical test report with biological context."""
+    report_path = os.path.join(OUTPUT_DIR, "statistical_test_results.txt")
     
-    # Save summary table
-    summary_table.to_csv(os.path.join(OUTPUT_DIR, "mutation_spectrum_summary.csv"), index=False)
-    print(f"Saved summary table to {OUTPUT_DIR}/mutation_spectrum_summary.csv")
-    print(f"Saved filtering statistics to {OUTPUT_DIR}/variant_filtering_stats.csv")
-    
-    # Save test results
-    with open(os.path.join(OUTPUT_DIR, "statistical_test_results.txt"), 'w') as f:
+    with open(report_path, 'w') as f:
+        # Chi-square test results
         f.write("Chi-square test for differences in mutation patterns:\n")
         f.write(f"Chi-square value: {test_results['chi2']:.4f}\n")
         f.write(f"p-value: {test_results['p_value']:.4f}\n")
         f.write(f"Degrees of freedom: {test_results['degrees_of_freedom']}\n")
+        
+        # Interpretation
         f.write("\nInterpretation:\n")
         if test_results['p_value'] < 0.05:
             f.write("The mutation patterns differ significantly between treatments (p < 0.05).\n")
         else:
             f.write("No significant difference detected in mutation patterns between treatments (p >= 0.05).\n")
         
-        # Add biological context
+        # Biological context section
         f.write("\nBiological Context:\n")
         f.write("------------------\n")
+        
+        # Treatment details
         for treatment in TREATMENTS:
-            description = TREATMENT_INFO.get(treatment, {}).get('description', 'Unknown')
-            adaptation = TREATMENT_INFO.get(treatment, {}).get('adaptation', 'Unknown')
-            gene = TREATMENT_INFO.get(treatment, {}).get('gene')
+            metadata = TREATMENT_INFO.get(treatment, {})
+            description = metadata.get('description', 'Unknown')
+            adaptation = metadata.get('adaptation', 'Unknown')
+            gene = metadata.get('gene')
             
             f.write(f"{treatment}: {description}\n")
             f.write(f"  Adaptation type: {adaptation}\n")
-            if gene:
-                f.write(f"  Gene modification: {gene}\n")
-            else:
-                f.write("  Gene modification: None\n")
+            f.write(f"  Gene modification: {gene if gene else 'None'}\n")
             
             if treatment in ti_tv_ratios:
                 f.write(f"  Ti/Tv ratio: {ti_tv_ratios[treatment]:.2f}\n")
@@ -1090,19 +1314,25 @@ def main():
             
             f.write("\n")
         
-        # Add adaptation-specific analysis
-        adaptation_types = set(TREATMENT_INFO.get(t, {}).get('adaptation', 'Unknown') for t in TREATMENTS)
+        # Adaptation-specific analysis
+        adaptation_types = set(TREATMENT_INFO.get(t, {}).get('adaptation', 'Unknown') 
+                              for t in TREATMENTS)
+        
         if len(adaptation_types) > 1:
             f.write("\nComparison by Adaptation Type:\n")
             f.write("----------------------------\n")
             
             for adaptation in sorted(adaptation_types):
                 f.write(f"{adaptation} adaptation:\n")
+                
                 # Filter treatments by adaptation
-                adaptation_treatments = [t for t in TREATMENTS if TREATMENT_INFO.get(t, {}).get('adaptation') == adaptation]
+                adaptation_treatments = [t for t in TREATMENTS 
+                                        if TREATMENT_INFO.get(t, {}).get('adaptation') == adaptation]
                 
                 # Calculate average Ti/Tv ratio
-                ratios = [ti_tv_ratios.get(t, 0) for t in adaptation_treatments if t in ti_tv_ratios]
+                ratios = [ti_tv_ratios.get(t, 0) for t in adaptation_treatments 
+                         if t in ti_tv_ratios]
+                
                 if ratios:
                     avg_ratio = sum(ratios) / len(ratios)
                     f.write(f"  Average Ti/Tv ratio: {avg_ratio:.2f}\n")
@@ -1110,10 +1340,6 @@ def main():
                 # List treatments
                 f.write(f"  Treatments: {', '.join(adaptation_treatments)}\n")
                 f.write("\n")
-    
-    print(f"Analysis complete! Results saved to {OUTPUT_DIR}/")
-    print(f"Summary table saved as {OUTPUT_DIR}/mutation_spectrum_summary.csv")
-    print(f"Statistical test results saved as {OUTPUT_DIR}/statistical_test_results.txt")
 
 # Run the analysis
 if __name__ == "__main__":
