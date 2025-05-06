@@ -126,8 +126,13 @@ def load_gene_mapping():
                 gene_id = row['w303_gene_id']
                 scaffold = row['w303_scaffold']
                 
+                # Check if chromosome_id is directly available in the gene_mapping.tsv file
+                chromosome_id = None
+                if 'chromosome_id' in row and not pd.isna(row['chromosome_id']):
+                    chromosome_id = row['chromosome_id']
+                
                 # Store gene data
-                GENE_DATA[gene_id] = {
+                gene_data = {
                     'gene_id': gene_id,
                     'locus_tag': row['locus_tag'] if 'locus_tag' in row else None,
                     'sc_gene_id': row['sc_gene_id'] if 'sc_gene_id' in row else None,
@@ -139,8 +144,92 @@ def load_gene_mapping():
                     'product': row['product'] if 'product' in row else None
                 }
                 
+                # Add chromosome_id if it was found
+                if chromosome_id:
+                    gene_data['chromosome_id'] = chromosome_id
+                
+                GENE_DATA[gene_id] = gene_data
+                
                 # Map scaffold to genes
+                if scaffold not in SCAFFOLD_GENES:
+                    SCAFFOLD_GENES[scaffold] = []
                 SCAFFOLD_GENES[scaffold].append(gene_id)
+                
+                # Also map chromosome_id to genes if available
+                if chromosome_id:
+                    if chromosome_id not in SCAFFOLD_GENES:
+                        SCAFFOLD_GENES[chromosome_id] = []
+                    SCAFFOLD_GENES[chromosome_id].append(gene_id)
+            
+            # Check if we need to load chromosome mapping separately
+            # (only needed if the gene mapping doesn't have chromosome_id)
+            if not any('chromosome_id' in gene_data for gene_data in GENE_DATA.values()):
+                print("No chromosome_id found in gene mapping, attempting to load chromosome mapping files...")
+                
+                # Look for chromosome mapping file to map between scaffold IDs and chromosome IDs
+                chromosome_mapping = {}
+                mapping_paths = [
+                    "reference/chromosome_mapping.tsv",
+                    "reference/chromosome_mapping_reverse.tsv"
+                ]
+                
+                for mapping_path in mapping_paths:
+                    if os.path.exists(mapping_path):
+                        try:
+                            mapping_df = pd.read_csv(mapping_path, sep='\t')
+                            print(f"Loaded chromosome mapping from {mapping_path}")
+                            
+                            # Check columns and create mapping
+                            if mapping_path.endswith('chromosome_mapping.tsv') and 'w303_scaffold' in mapping_df.columns:
+                                for _, row in mapping_df.iterrows():
+                                    chromosome_id = row['chromosome_id']
+                                    scaffold = row['w303_scaffold']
+                                    chromosome_mapping[scaffold] = chromosome_id
+                            elif mapping_path.endswith('chromosome_mapping_reverse.tsv') and 'w303_scaffold' in mapping_df.columns:
+                                for _, row in mapping_df.iterrows():
+                                    chromosome_id = row['chromosome_id']
+                                    scaffold = row['w303_scaffold']
+                                    chromosome_mapping[scaffold] = chromosome_id
+                            elif 'scaffold' in mapping_df.columns and 'chromosome_id' in mapping_df.columns:
+                                for _, row in mapping_df.iterrows():
+                                    scaffold = row['scaffold']
+                                    chromosome_id = row['chromosome_id']
+                                    chromosome_mapping[scaffold] = chromosome_id
+                            else:
+                                print(f"Warning: Unexpected columns in {mapping_path}")
+                                print(f"Available columns: {mapping_df.columns.tolist()}")
+                        except Exception as e:
+                            print(f"Error loading chromosome mapping: {e}")
+                
+                # Apply chromosome mapping to genes
+                if chromosome_mapping:
+                    print(f"Adding chromosome mapping to {len(chromosome_mapping)} genes...")
+                    
+                    for gene_id, gene_data in GENE_DATA.items():
+                        scaffold = gene_data['scaffold']
+                        if scaffold in chromosome_mapping:
+                            chromosome_id = chromosome_mapping[scaffold]
+                            GENE_DATA[gene_id]['chromosome_id'] = chromosome_id
+                            
+                            # Add to SCAFFOLD_GENES
+                            if chromosome_id not in SCAFFOLD_GENES:
+                                SCAFFOLD_GENES[chromosome_id] = []
+                            if gene_id not in SCAFFOLD_GENES[chromosome_id]:
+                                SCAFFOLD_GENES[chromosome_id].append(gene_id)
+            
+            # Debug: Print statistics about loaded data
+            genes_with_chroms = sum(1 for gene_data in GENE_DATA.values() if 'chromosome_id' in gene_data)
+            print(f"Loaded {len(GENE_DATA)} genes, {genes_with_chroms} have chromosome IDs")
+            print(f"Mapped genes to {len(SCAFFOLD_GENES)} scaffolds/chromosomes")
+            
+            # Debug: Print sample of chromosome IDs and scaffolds
+            chrom_ids = set(gene_data.get('chromosome_id') for gene_data in GENE_DATA.values() 
+                         if 'chromosome_id' in gene_data)
+            scaffold_ids = set(gene_data['scaffold'] for gene_data in GENE_DATA.values())
+            
+            print(f"Sample chromosome IDs: {list(chrom_ids)[:5]}")
+            print(f"Sample scaffold IDs: {list(scaffold_ids)[:5]}")
+            print(f"Sample SCAFFOLD_GENES keys: {list(SCAFFOLD_GENES.keys())[:10]}")
             
             # Load genes of interest (ergosterol pathway genes)
             goi_paths = [
@@ -218,6 +307,11 @@ def extract_variants_from_vcf(vcf_file):
             lambda row: f"{row['CHROM']}_{row['POS']}_{row['REF']}_{row['ALT']}", axis=1
         )
         
+        # Debug: Print unique chromosome IDs in variant data
+        unique_chroms = variant_df['CHROM'].unique()
+        print(f"Found {len(unique_chroms)} unique chromosomes in variant data")
+        print(f"First 5 chromosome IDs in variants: {list(unique_chroms)[:5]}")
+        
         # Map variants to genes if gene data is available
         if GENE_DATA and SCAFFOLD_GENES:
             # Initialize gene-related columns
@@ -227,17 +321,33 @@ def extract_variants_from_vcf(vcf_file):
             variant_df['gene_type'] = None
             variant_df['gene_product'] = None
             
+            # Debug: Print scaffold information
+            print(f"Total scaffold entries in SCAFFOLD_GENES: {len(SCAFFOLD_GENES)}")
+            scaffold_keys = list(SCAFFOLD_GENES.keys())
+            print(f"Sample scaffold keys: {scaffold_keys[:5]}")
+            
+            # Count matches and misses for debugging
+            matches = 0
+            misses = 0
+            
             # Map each variant to genes
             for idx, row in variant_df.iterrows():
-                scaffold = row['CHROM']
+                chrom = row['CHROM']
                 position = row['POS']
                 
-                # Skip if scaffold has no mapped genes
-                if scaffold not in SCAFFOLD_GENES:
+                # Skip if chromosome has no mapped genes
+                if chrom not in SCAFFOLD_GENES:
+                    misses += 1
+                    
+                    # Only print first few misses to avoid flooding the log
+                    if misses <= 5:
+                        print(f"Debug: No genes mapped for chromosome {chrom}")
                     continue
+                else:
+                    matches += 1
                 
-                # Check each gene in this scaffold
-                for gene_id in SCAFFOLD_GENES[scaffold]:
+                # Check each gene in this chromosome
+                for gene_id in SCAFFOLD_GENES[chrom]:
                     gene_data = GENE_DATA[gene_id]
                     
                     # Check if position falls within gene coordinates
@@ -270,6 +380,7 @@ def extract_variants_from_vcf(vcf_file):
             
             print(f"Mapped {in_gene_count} out of {len(variant_df)} variants to genes")
             print(f"Found {ergosterol_count} variants in ergosterol pathway genes")
+            print(f"Chromosome matches: {matches}, misses: {misses}")
             
             logging.info(f"Mapped {in_gene_count} out of {len(variant_df)} variants to genes")
             logging.info(f"Found {ergosterol_count} variants in ergosterol pathway genes")

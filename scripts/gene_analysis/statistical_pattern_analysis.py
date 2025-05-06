@@ -31,6 +31,7 @@ from scipy.spatial.distance import pdist, squareform
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from statsmodels.stats.multitest import multipletests
+from collections import defaultdict, Counter
 import re
 import warnings
 import logging
@@ -214,52 +215,93 @@ def map_variants_to_genes(variant_df):
     result_df['gene_product'] = None
     result_df['gene_status'] = 'No Gene'  # For easier grouping
     
+    # Create chromosome_id to scaffold mapping
+    chromosome_to_scaffold = {}
+    for gene_id, gene_data in GENE_DATA.items():
+        if 'chromosome_id' in gene_data and 'w303_scaffold' in gene_data:
+            chromosome_to_scaffold[gene_data['chromosome_id']] = gene_data['w303_scaffold']
+    
+    # Create chromosome_id to gene mapping for faster lookup
+    chromosome_genes = defaultdict(list)
+    for gene_id, gene_data in GENE_DATA.items():
+        if 'chromosome_id' in gene_data:
+            chromosome_genes[gene_data['chromosome_id']].append(gene_id)
+    
+    # Print debug info
+    print(f"Loaded {len(chromosome_to_scaffold)} chromosome to scaffold mappings")
+    print(f"First few mappings: {list(chromosome_to_scaffold.items())[:3]}")
+    
     # Map each variant to genes
     for idx, row in result_df.iterrows():
-        scaffold = row['CHROM']
-        position = int(row['POS'])
-        
-        # Skip if scaffold has no mapped genes
-        if scaffold not in SCAFFOLD_GENES:
-            continue
-        
-        # Check each gene in this scaffold
-        for gene_id in SCAFFOLD_GENES[scaffold]:
-            gene_data = GENE_DATA[gene_id]
+        try:
+            # Skip if missing CHROM or POS
+            if 'CHROM' not in row or 'POS' not in row:
+                continue
+                
+            # Get chromosome and position
+            chrom = row['CHROM']
             
-            # Check if position falls within gene coordinates
-            if gene_data['start'] <= position <= gene_data['end']:
-                result_df.at[idx, 'in_gene'] = True
-                result_df.at[idx, 'gene_id'] = gene_id
-                
-                # Add gene name if available
-                if gene_data['erg_name']:
-                    result_df.at[idx, 'gene_name'] = gene_data['erg_name']
-                elif gene_data['sc_gene_id']:
-                    result_df.at[idx, 'gene_name'] = gene_data['sc_gene_id']
-                
-                # Set gene type based on presence in genes of interest
-                if gene_id in GENES_OF_INTEREST:
-                    result_df.at[idx, 'gene_type'] = 'ERG'
-                    result_df.at[idx, 'gene_status'] = 'ERG'
+            # Try to convert position to int, handling potential format issues
+            try:
+                # If POS is already a number, use it directly
+                if isinstance(row['POS'], (int, float)):
+                    position = int(row['POS'])
+                # If POS is a string that can be converted to a number
+                elif isinstance(row['POS'], str) and row['POS'].isdigit():
+                    position = int(row['POS'])
+                # If we have a different format issue, print debug info and skip
                 else:
-                    result_df.at[idx, 'gene_type'] = 'Non-ERG'
-                    result_df.at[idx, 'gene_status'] = 'Non-ERG'
-                
-                # Add gene product description if available
-                if gene_data['product']:
-                    result_df.at[idx, 'gene_product'] = gene_data['product']
-                
-                # Break since we found a matching gene
-                break
+                    print(f"Cannot convert POS to int: {row['POS']} (type: {type(row['POS'])})")
+                    print(f"Row data: {row}")
+                    continue
+            except (ValueError, TypeError) as e:
+                print(f"Error converting POS to int: {e}")
+                print(f"POS value: {row['POS']} (type: {type(row['POS'])})")
+                continue
+            
+            # Check if chromosome has any mapped genes
+            if chrom in chromosome_genes:
+                # Check each gene for this chromosome
+                for gene_id in chromosome_genes[chrom]:
+                    gene_data = GENE_DATA[gene_id]
+                    
+                    # Check if position falls within gene coordinates
+                    if gene_data['start'] <= position <= gene_data['end']:
+                        result_df.at[idx, 'in_gene'] = True
+                        result_df.at[idx, 'gene_id'] = gene_id
+                        
+                        # Add gene name if available
+                        if gene_data['erg_name']:
+                            result_df.at[idx, 'gene_name'] = gene_data['erg_name']
+                        elif gene_data['sc_gene_id']:
+                            result_df.at[idx, 'gene_name'] = gene_data['sc_gene_id']
+                        
+                        # Set gene type based on presence in genes of interest
+                        if gene_id in GENES_OF_INTEREST:
+                            result_df.at[idx, 'gene_type'] = 'ERG'
+                            result_df.at[idx, 'gene_status'] = 'ERG'
+                        else:
+                            result_df.at[idx, 'gene_type'] = 'Non-ERG'
+                            result_df.at[idx, 'gene_status'] = 'Non-ERG'
+                        
+                        # Add gene product description if available
+                        if 'product' in gene_data and gene_data['product']:
+                            result_df.at[idx, 'gene_product'] = gene_data['product']
+                        
+                        # We found a gene match, so break the loop
+                        break
+        except Exception as e:
+            print(f"Error mapping variant at index {idx}: {e}")
+            continue
     
-    # Log the mapping results
+    # Count mapped variants
     in_gene_count = sum(result_df['in_gene'])
     erg_count = sum(result_df['gene_type'] == 'ERG')
     
     print(f"Mapped {in_gene_count} out of {len(result_df)} variants to genes")
     print(f"Found {erg_count} variants in ergosterol pathway genes")
     
+    # Log the results
     logging.info(f"Mapped {in_gene_count} out of {len(result_df)} variants to genes")
     logging.info(f"Found {erg_count} variants in ergosterol pathway genes")
     

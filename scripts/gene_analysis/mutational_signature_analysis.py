@@ -126,6 +126,9 @@ def load_gene_mapping():
         print(f"Warning: Genes of interest file {GENES_OF_INTEREST_FILE} not found")
     
     return GENE_DATA, SCAFFOLD_GENES, GENES_OF_INTEREST
+
+# Define adaptation colors
+ADAPTATION_COLORS = {
     'Temperature': '#1f77b4',
     'Low Oxygen': '#ff7f0e',
 }

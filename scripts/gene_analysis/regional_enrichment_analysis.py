@@ -1180,6 +1180,65 @@ def create_gene_specific_summary(gene_results, data, output_dir):
         f.write("7. For detailed gene-level analysis, refer to the visualization files and CSV reports\n")
         f.write("   in the output directory.\n")
 
+# Function to load mutation data
+def load_data():
+    """
+    Load mutation data from pre-processed files or directly from VCF files.
+    
+    Returns:
+        pandas.DataFrame: A DataFrame containing mutation data
+    """
+    all_data = []
+    
+    # Try to load from mutation_spectrum_analysis files first
+    for treatment in TREATMENTS:
+        file_patterns = [
+            f"mutation_spectrum_analysis/{treatment}_mutations.txt",
+            f"analysis/mutation_spectrum_analysis/{treatment}_mutations.txt"
+        ]
+        
+        file_found = False
+        for file_path in file_patterns:
+            if os.path.exists(file_path):
+                try:
+                    print(f"Found file for {treatment} at {file_path}")
+                    
+                    # Try to determine the file structure
+                    with open(file_path, 'r') as f:
+                        first_line = f.readline().strip()
+                        columns = first_line.split('\t')
+                        if len(columns) == 5:
+                            print(f"File structure: 5 columns in first line")
+                            # Typical format: CHROM, POS, REF, ALT, Treatment
+                            data = pd.read_csv(file_path, sep='\t', header=None,
+                                               names=['CHROM', 'POS', 'REF', 'ALT', 'Treatment'])
+                        else:
+                            print(f"File structure: {len(columns)} columns in first line")
+                            # Try to adapt to whatever format is there
+                            data = pd.read_csv(file_path, sep='\t')
+                    
+                    print(f"Loaded {len(data)} mutations for {treatment}")
+                    
+                    # Ensure we use the correct treatment name regardless of file name
+                    data['Treatment'] = treatment
+                    all_data.append(data)
+                    file_found = True
+                    break
+                except Exception as e:
+                    print(f"Error reading {file_path}: {e}")
+                    continue
+        
+        if not file_found:
+            print(f"No mutation data found for {treatment}")
+    
+    if all_data:
+        combined_data = pd.concat(all_data, ignore_index=True)
+        print(f"Loaded {len(combined_data)} mutations across {len(all_data)} treatments")
+        return combined_data
+    else:
+        print("No mutation data found.")
+        return None
+
 def main():
     # Load data
     print("Loading mutation data...")

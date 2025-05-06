@@ -466,9 +466,94 @@ A key focus of the gene-specific analysis is detecting and analyzing purifying s
 5. **Create meaningful visualizations**: Make gene-specific visualizations informative and focused
 6. **Generate comprehensive reports**: Each script should produce a detailed gene-specific summary
 
+## Known Issues and Debugging
+
+### Variant-to-Gene Mapping Issues
+
+During testing, we encountered several issues with the gene-specific analysis:
+
+1. **Variant Mapping Failure**: No variants were mapped to genes in any of the scripts
+   - All scripts reported "Mapped 0 out of X variants to genes"
+   - This suggests a mismatch between variant coordinates and gene coordinates
+
+2. **Data Format Inconsistencies**:
+   - Variant position parsing errors - some scripts expected numeric values but found string values
+   - In `statistical_pattern_analysis.py`: `ValueError: invalid literal for int() with base 10: 'A'`
+   - Mutation data files appear to have unexpected format, such as treating ALT values as treatment names
+
+3. **Script-Specific Errors**:
+   - `mutational_signature_analysis.py`: Syntax error with unmatched curly brace
+   - `regional_enrichment_analysis.py`: `load_data()` function not defined
+   - `scaffold_distribution_analysis.py`: Issues with gene enrichment plotting, missing column in DataFrame
+   - `statistical_pattern_analysis.py`: Position parsing errors in variant data
+
+4. **Chromosome ID Mismatch Identified**:
+   - Detailed investigation revealed a critical issue: the variants and genes are on different chromosomes
+   - Gene mapping data (`reference/gene_mapping.tsv`) only contains genes on 5 specific chromosomes: CM007970.1, CM007971.1, CM007975.1, CM007976.1, CM007977.1
+   - Variant data contains variants on 18 different chromosomes, including: CM007964.1, CM007965.1, CM007966.1, etc.
+   - The genes of interest (ergosterol pathway genes) are only mapped to these 5 chromosomes, explaining why no variants are being mapped to genes
+
+### Resolution Plan
+
+1. Add robust chromosome ID handling to all scripts
+   - Fixed `load_gene_mapping()` function to properly handle chromosome IDs
+   - Modified `map_variants_to_genes()` function to use chromosome_id rather than scaffold
+   - Added debugging code to identify mismatches between chromosome IDs
+
+2. Address data availability issue:
+   - We need to check if there's a more complete gene mapping file that contains genes on all chromosomes
+   - Alternatively, we may need to modify the analysis to focus specifically on the chromosomes where gene mapping is available
+
+3. Fix specific script errors identified during testing
+   - Fixed syntax errors in mutational_signature_analysis.py
+   - Implemented missing load_data() function in regional_enrichment_analysis.py
+   - Added debugging code to print out chromosome IDs from gene data and variant data
+   - Fixed position parsing issues by adding more robust error handling
+
+### Technical Solutions Implemented
+
+1. **Better Chromosome Mapping**: Modified `load_gene_mapping()` to:
+   - Properly handle chromosome_id from gene_mapping.tsv
+   - Map both scaffold_id and chromosome_id to genes
+   - Add robust error handling
+   - Add detailed debug output showing chromosome IDs and mapping statistics
+
+2. **Enhanced Error Handling in Variant Mapping**: Updated `extract_variants_from_vcf()` to:
+   - Extract and print unique chromosome IDs in variant data
+   - Add detailed debug output showing matches and misses for chromosome IDs
+   - Track the number of chromosome matches vs. misses to identify patterns
+   - Add better error handling for position parsing
+
+3. **Improved Debugging**: Added extensive debug output to help diagnose issues:
+   - Print all gene chromosome IDs and counts
+   - Print variant chromosome IDs and counts 
+   - Report exact match/miss counts for chromosome lookup
+   - Added diagnostic output to the log file
+
 ## Next Steps
 
-1. Test all scripts together on a sample dataset
-2. Create comprehensive documentation for all functions and scripts
-3. Create a final report summarizing all gene-specific analysis findings
-4. Generate integrated visualizations showing gene-level patterns across all analyses
+1. **Complete Gene Mapping Dataset**:
+   - Obtain complete gene mapping data for all 18 chromosomes from the annotated genbank files
+   - Alternatively, suggest focusing analysis specifically on the 5 chromosomes that have gene data
+   - Create a comprehensive mapping file that includes all chromosomes in the reference genome
+
+2. **Apply Fixes to All Scripts**:
+   - Apply the chromosome ID mapping fixes to all remaining scripts in the gene_analysis directory
+   - Update the map_variants_to_genes function in all scripts to handle chromosome IDs correctly
+   - Add robust error handling for position parsing in all scripts
+
+3. **Test on Partial Dataset**:
+   - Test analysis on a subset of variants filtered to only include the 5 chromosomes with gene data
+   - Create a special filtering step at the beginning of each script to focus only on mappable chromosomes
+   - Generate meaningful gene-specific results for the subset of data that can be analyzed
+
+4. **Finalize Documentation**:
+   - Create comprehensive documentation for all functions and scripts
+   - Document the chromosome ID issue and its implications
+   - Provide guidance for future users on how to handle the limited gene mapping data
+
+5. **Generate Final Report**:
+   - Create a final report summarizing all gene-specific analysis findings
+   - Clearly note the limitations due to incomplete gene mapping data
+   - Generate integrated visualizations showing gene-level patterns across all analyses
+   - Focus on the ergosterol pathway genes that were successfully analyzed
