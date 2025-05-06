@@ -1,0 +1,2584 @@
+{
+  "ERG11_upstream": {
+    "erg_gene": "ERG11",
+    "scaffold": "w303_scaffold_8",
+    "region_start": 117302,
+    "region_end": 167302,
+    "erg_start": 115709,
+    "erg_end": 117302,
+    "erg_strand": "-",
+    "variant_count": 15,
+    "gene_count": 28,
+    "statistics": {
+      "region_size": 50000,
+      "region_variants": 15,
+      "expected_variants": 0.44166666666666665,
+      "enrichment": 33.9622641509434,
+      "p_value": 8.996501346828807e-19,
+      "significant": true
+    },
+    "sequence_features": {
+      "length": 50000,
+      "gc_content": 0.35262,
+      "homopolymers": {
+        "count": 28,
+        "longest": 8,
+        "examples": [
+          "AAAAAA",
+          "TTTTTT",
+          "TTTTTT",
+          "AAAAAA",
+          "AAAAAA"
+        ]
+      },
+      "dinucleotide_repeats": {
+        "count": 7,
+        "longest": 8,
+        "examples": [
+          "TCTCTCTC",
+          "TTTTTTTT",
+          "ATATATAT",
+          "AGAGAGAG",
+          "TGTGTGTG"
+        ]
+      },
+      "ars_consensus": {
+        "count": 0,
+        "positions": []
+      },
+      "motif_counts": {
+        "TATA_box": 55,
+        "GC_box": 2,
+        "CAAT_box": 71,
+        "CpG_island": 1438
+      },
+      "cpg_density": 28.76
+    },
+    "functional_relationships": {
+      "similar_function_genes": 0,
+      "similar_function_genes_examples": [],
+      "potential_regulators": 0,
+      "potential_regulators_examples": [],
+      "pathway_related_genes": 0,
+      "pathway_related_genes_examples": [],
+      "unknown_function_genes": 0,
+      "unknown_function_genes_examples": []
+    },
+    "genes": [
+      {
+        "id": "W3030H00650",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 115709,
+        "end": 117302,
+        "strand": "-",
+        "distance_to_erg": 0,
+        "position_to_erg": "overlapping",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1593,
+          "gene_variants": 0,
+          "expected_variants": 0.0140715,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00660",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 118507,
+        "end": 119209,
+        "strand": "-",
+        "distance_to_erg": 1205,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 702,
+          "gene_variants": 0,
+          "expected_variants": 0.006201,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00670",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 119720,
+        "end": 121292,
+        "strand": "-",
+        "distance_to_erg": 2418,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1572,
+          "gene_variants": 0,
+          "expected_variants": 0.013886,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00680",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 122132,
+        "end": 123104,
+        "strand": "+",
+        "distance_to_erg": 4830,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 972,
+          "gene_variants": 0,
+          "expected_variants": 0.008586,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00690",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 123391,
+        "end": 124732,
+        "strand": "+",
+        "distance_to_erg": 6089,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1341,
+          "gene_variants": 0,
+          "expected_variants": 0.0118455,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00700",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 125092,
+        "end": 126060,
+        "strand": "+",
+        "distance_to_erg": 7790,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 968,
+          "gene_variants": 0,
+          "expected_variants": 0.008550666666666666,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00710",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 126341,
+        "end": 127058,
+        "strand": "-",
+        "distance_to_erg": 9039,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 717,
+          "gene_variants": 0,
+          "expected_variants": 0.006333500000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00720",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 127655,
+        "end": 128531,
+        "strand": "+",
+        "distance_to_erg": 10353,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 876,
+          "gene_variants": 0,
+          "expected_variants": 0.007738,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030Htrna20S",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 128633,
+        "end": 128715,
+        "strand": "-",
+        "distance_to_erg": 11331,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 82,
+          "gene_variants": 0,
+          "expected_variants": 0.0007243333333333333,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030Htrna9Q",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 130298,
+        "end": 130370,
+        "strand": "+",
+        "distance_to_erg": 12996,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 72,
+          "gene_variants": 0,
+          "expected_variants": 0.0006360000000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00730",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 130531,
+        "end": 132511,
+        "strand": "+",
+        "distance_to_erg": 13229,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1980,
+          "gene_variants": 0,
+          "expected_variants": 0.01749,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00740",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 132857,
+        "end": 134006,
+        "strand": "-",
+        "distance_to_erg": 15555,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1149,
+          "gene_variants": 0,
+          "expected_variants": 0.010149499999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00750",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 134670,
+        "end": 135828,
+        "strand": "+",
+        "distance_to_erg": 17368,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1158,
+          "gene_variants": 0,
+          "expected_variants": 0.010229,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00760",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 135987,
+        "end": 137379,
+        "strand": "-",
+        "distance_to_erg": 18685,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1392,
+          "gene_variants": 0,
+          "expected_variants": 0.012296,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00770",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 137870,
+        "end": 139535,
+        "strand": "-",
+        "distance_to_erg": 20568,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1665,
+          "gene_variants": 0,
+          "expected_variants": 0.014707500000000002,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00780",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 139973,
+        "end": 142052,
+        "strand": "+",
+        "distance_to_erg": 22671,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2079,
+          "gene_variants": 0,
+          "expected_variants": 0.018364500000000002,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030Htrna17A",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 142231,
+        "end": 142304,
+        "strand": "-",
+        "distance_to_erg": 24929,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 73,
+          "gene_variants": 0,
+          "expected_variants": 0.0006448333333333333,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00790",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 143860,
+        "end": 144283,
+        "strand": "-",
+        "distance_to_erg": 26558,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 423,
+          "gene_variants": 0,
+          "expected_variants": 0.0037365000000000002,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00800",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 145661,
+        "end": 146336,
+        "strand": "-",
+        "distance_to_erg": 28359,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 675,
+          "gene_variants": 0,
+          "expected_variants": 0.0059625,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00810",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 147652,
+        "end": 153439,
+        "strand": "+",
+        "distance_to_erg": 30350,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 5787,
+          "gene_variants": 0,
+          "expected_variants": 0.0511185,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00820",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 153730,
+        "end": 155179,
+        "strand": "-",
+        "distance_to_erg": 36428,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1449,
+          "gene_variants": 0,
+          "expected_variants": 0.0127995,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00830",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 155424,
+        "end": 156498,
+        "strand": "+",
+        "distance_to_erg": 38122,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1074,
+          "gene_variants": 0,
+          "expected_variants": 0.009486999999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00840",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 156830,
+        "end": 157472,
+        "strand": "+",
+        "distance_to_erg": 39528,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 642,
+          "gene_variants": 0,
+          "expected_variants": 0.005671,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00850",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 157718,
+        "end": 160700,
+        "strand": "-",
+        "distance_to_erg": 40416,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2982,
+          "gene_variants": 0,
+          "expected_variants": 0.026341000000000003,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00860",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 160966,
+        "end": 163423,
+        "strand": "-",
+        "distance_to_erg": 43664,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2457,
+          "gene_variants": 0,
+          "expected_variants": 0.0217035,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00870",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 163665,
+        "end": 164550,
+        "strand": "-",
+        "distance_to_erg": 46363,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 885,
+          "gene_variants": 0,
+          "expected_variants": 0.0078175,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00880",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 164878,
+        "end": 166333,
+        "strand": "-",
+        "distance_to_erg": 47576,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1455,
+          "gene_variants": 0,
+          "expected_variants": 0.012852500000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H00890",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 166787,
+        "end": 168959,
+        "strand": "-",
+        "distance_to_erg": 49485,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2172,
+          "gene_variants": 0,
+          "expected_variants": 0.019186,
+          "enrichment": 0.0
+        }
+      }
+    ]
+  },
+  "ERG7_downstream": {
+    "erg_gene": "ERG7",
+    "scaffold": "w303_scaffold_8",
+    "region_start": 249323,
+    "region_end": 299323,
+    "erg_start": 247127,
+    "erg_end": 249323,
+    "erg_strand": "+",
+    "variant_count": 15,
+    "gene_count": 25,
+    "statistics": {
+      "region_size": 50000,
+      "region_variants": 15,
+      "expected_variants": 0.44166666666666665,
+      "enrichment": 33.9622641509434,
+      "p_value": 8.996501346828807e-19,
+      "significant": true
+    },
+    "sequence_features": {
+      "length": 50000,
+      "gc_content": 0.343,
+      "homopolymers": {
+        "count": 46,
+        "longest": 8,
+        "examples": [
+          "AAAAAA",
+          "TTTTTT",
+          "GGGGGG",
+          "AAAAAA",
+          "TTTTTT"
+        ]
+      },
+      "dinucleotide_repeats": {
+        "count": 5,
+        "longest": 10,
+        "examples": [
+          "CACACACA",
+          "GGGGGGGG",
+          "TCTCTCTC",
+          "TGTGTGTG",
+          "AGAGAGAGAG"
+        ]
+      },
+      "ars_consensus": {
+        "count": 0,
+        "positions": []
+      },
+      "motif_counts": {
+        "TATA_box": 38,
+        "GC_box": 1,
+        "CAAT_box": 72,
+        "CpG_island": 1400
+      },
+      "cpg_density": 28.0
+    },
+    "functional_relationships": {
+      "similar_function_genes": 0,
+      "similar_function_genes_examples": [],
+      "potential_regulators": 0,
+      "potential_regulators_examples": [],
+      "pathway_related_genes": 0,
+      "pathway_related_genes_examples": [],
+      "unknown_function_genes": 1,
+      "unknown_function_genes_examples": [
+        {
+          "id": "W3030H01660",
+          "locus_tag": "unknown",
+          "product": "unknown",
+          "variant_count": 15
+        }
+      ]
+    },
+    "genes": [
+      {
+        "id": "W3030H01430",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 247127,
+        "end": 249323,
+        "strand": "+",
+        "distance_to_erg": 0,
+        "position_to_erg": "overlapping",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2196,
+          "gene_variants": 0,
+          "expected_variants": 0.019398,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01440",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 249693,
+        "end": 249870,
+        "strand": "+",
+        "distance_to_erg": 370,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 177,
+          "gene_variants": 0,
+          "expected_variants": 0.0015635,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01450",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 250611,
+        "end": 253602,
+        "strand": "+",
+        "distance_to_erg": 1288,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2991,
+          "gene_variants": 0,
+          "expected_variants": 0.026420500000000003,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01460",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 254222,
+        "end": 256367,
+        "strand": "+",
+        "distance_to_erg": 4899,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2145,
+          "gene_variants": 0,
+          "expected_variants": 0.018947500000000003,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01470",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 256468,
+        "end": 257671,
+        "strand": "-",
+        "distance_to_erg": 7145,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1203,
+          "gene_variants": 0,
+          "expected_variants": 0.0106265,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01480",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 259130,
+        "end": 260255,
+        "strand": "+",
+        "distance_to_erg": 9807,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1125,
+          "gene_variants": 0,
+          "expected_variants": 0.0099375,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01490",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 260403,
+        "end": 263679,
+        "strand": "-",
+        "distance_to_erg": 11080,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 3276,
+          "gene_variants": 0,
+          "expected_variants": 0.028938000000000002,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01500",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 264389,
+        "end": 266048,
+        "strand": "+",
+        "distance_to_erg": 15066,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1659,
+          "gene_variants": 0,
+          "expected_variants": 0.014654499999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01510",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 266273,
+        "end": 269621,
+        "strand": "-",
+        "distance_to_erg": 16950,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 3348,
+          "gene_variants": 0,
+          "expected_variants": 0.029574,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01520",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 270221,
+        "end": 270583,
+        "strand": "-",
+        "distance_to_erg": 20898,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 362,
+          "gene_variants": 0,
+          "expected_variants": 0.003197666666666667,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01530",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 270830,
+        "end": 274868,
+        "strand": "-",
+        "distance_to_erg": 21507,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 4038,
+          "gene_variants": 0,
+          "expected_variants": 0.035669,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01540",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 275567,
+        "end": 276122,
+        "strand": "+",
+        "distance_to_erg": 26244,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 555,
+          "gene_variants": 0,
+          "expected_variants": 0.0049025,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01550",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 276488,
+        "end": 279578,
+        "strand": "-",
+        "distance_to_erg": 27165,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 3090,
+          "gene_variants": 0,
+          "expected_variants": 0.027295000000000003,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01560",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 280656,
+        "end": 281646,
+        "strand": "+",
+        "distance_to_erg": 31333,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 990,
+          "gene_variants": 0,
+          "expected_variants": 0.008745,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01570",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 282203,
+        "end": 284270,
+        "strand": "+",
+        "distance_to_erg": 32880,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2067,
+          "gene_variants": 0,
+          "expected_variants": 0.0182585,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01580",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 284792,
+        "end": 285797,
+        "strand": "+",
+        "distance_to_erg": 35469,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1005,
+          "gene_variants": 0,
+          "expected_variants": 0.0088775,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01590",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 286181,
+        "end": 287753,
+        "strand": "+",
+        "distance_to_erg": 36858,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1572,
+          "gene_variants": 0,
+          "expected_variants": 0.013886,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01600",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 288848,
+        "end": 289184,
+        "strand": "+",
+        "distance_to_erg": 39525,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 336,
+          "gene_variants": 0,
+          "expected_variants": 0.002968,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01610",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 289523,
+        "end": 290411,
+        "strand": "+",
+        "distance_to_erg": 40200,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 888,
+          "gene_variants": 0,
+          "expected_variants": 0.007844,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01620",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 290709,
+        "end": 291327,
+        "strand": "-",
+        "distance_to_erg": 41386,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 618,
+          "gene_variants": 0,
+          "expected_variants": 0.0054589999999999994,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01630",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 291805,
+        "end": 292654,
+        "strand": "-",
+        "distance_to_erg": 42482,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 849,
+          "gene_variants": 0,
+          "expected_variants": 0.0074995,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01640",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 292867,
+        "end": 294799,
+        "strand": "-",
+        "distance_to_erg": 43544,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1932,
+          "gene_variants": 0,
+          "expected_variants": 0.017066,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01650",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 295109,
+        "end": 296840,
+        "strand": "-",
+        "distance_to_erg": 45786,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1731,
+          "gene_variants": 0,
+          "expected_variants": 0.0152905,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030H01660",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 297170,
+        "end": 297752,
+        "strand": "+",
+        "distance_to_erg": 47847,
+        "position_to_erg": "downstream",
+        "variant_count": 15,
+        "region_variant_count": 15,
+        "statistics": {
+          "gene_size": 582,
+          "gene_variants": 15,
+          "expected_variants": 0.005141,
+          "enrichment": 2917.720287881735
+        }
+      },
+      {
+        "id": "W3030H01670",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 298940,
+        "end": 300653,
+        "strand": "-",
+        "distance_to_erg": 49617,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1713,
+          "gene_variants": 0,
+          "expected_variants": 0.0151315,
+          "enrichment": 0.0
+        }
+      }
+    ]
+  },
+  "ERG25_neighborhood": {
+    "erg_gene": "ERG25",
+    "scaffold": "w303_scaffold_7",
+    "region_start": 507691,
+    "region_end": 658621,
+    "erg_start": 607691,
+    "erg_end": 608621,
+    "erg_strand": "+",
+    "variant_count": 30,
+    "gene_count": 78,
+    "statistics": {
+      "region_size": 150930,
+      "region_variants": 30,
+      "expected_variants": 1.333215,
+      "enrichment": 22.501997052238387,
+      "p_value": 8.790698797707721e-32,
+      "significant": true
+    },
+    "sequence_features": {
+      "length": 150930,
+      "gc_content": 0.3298548996223415,
+      "homopolymers": {
+        "count": 95,
+        "longest": 7,
+        "examples": [
+          "TTTTTT",
+          "AAAAAA",
+          "TTTTTT",
+          "TTTTTTT",
+          "TTTTTT"
+        ]
+      },
+      "dinucleotide_repeats": {
+        "count": 17,
+        "longest": 8,
+        "examples": [
+          "AGAGAGAG",
+          "ATATATAT",
+          "CTCTCTCT",
+          "TGTGTGTG",
+          "TCTCTCTC"
+        ]
+      },
+      "ars_consensus": {
+        "count": 0,
+        "positions": []
+      },
+      "motif_counts": {
+        "TATA_box": 126,
+        "GC_box": 7,
+        "CAAT_box": 214,
+        "CpG_island": 4408
+      },
+      "cpg_density": 29.20559199628967
+    },
+    "functional_relationships": {
+      "similar_function_genes": 0,
+      "similar_function_genes_examples": [],
+      "potential_regulators": 0,
+      "potential_regulators_examples": [],
+      "pathway_related_genes": 0,
+      "pathway_related_genes_examples": [],
+      "unknown_function_genes": 2,
+      "unknown_function_genes_examples": [
+        {
+          "id": "W3030G02910",
+          "locus_tag": "unknown",
+          "product": "unknown",
+          "variant_count": 15
+        },
+        {
+          "id": "W3030G03230",
+          "locus_tag": "unknown",
+          "product": "unknown",
+          "variant_count": 15
+        }
+      ]
+    },
+    "genes": [
+      {
+        "id": "W3030G02530",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 506040,
+        "end": 507996,
+        "strand": "-",
+        "distance_to_erg": 99695,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1956,
+          "gene_variants": 0,
+          "expected_variants": 0.017278,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02540",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 508538,
+        "end": 509726,
+        "strand": "+",
+        "distance_to_erg": 97965,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1188,
+          "gene_variants": 0,
+          "expected_variants": 0.010494,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02550",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 510152,
+        "end": 511334,
+        "strand": "+",
+        "distance_to_erg": 96357,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1182,
+          "gene_variants": 0,
+          "expected_variants": 0.010440999999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02560",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 511547,
+        "end": 513410,
+        "strand": "+",
+        "distance_to_erg": 94281,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1863,
+          "gene_variants": 0,
+          "expected_variants": 0.0164565,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02570",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 513936,
+        "end": 517857,
+        "strand": "+",
+        "distance_to_erg": 89834,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 3921,
+          "gene_variants": 0,
+          "expected_variants": 0.0346355,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02580",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 518083,
+        "end": 519070,
+        "strand": "-",
+        "distance_to_erg": 88621,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 987,
+          "gene_variants": 0,
+          "expected_variants": 0.008718499999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02590",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 519254,
+        "end": 519827,
+        "strand": "+",
+        "distance_to_erg": 87864,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 573,
+          "gene_variants": 0,
+          "expected_variants": 0.0050615,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02600",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 520780,
+        "end": 521674,
+        "strand": "+",
+        "distance_to_erg": 86017,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 894,
+          "gene_variants": 0,
+          "expected_variants": 0.007897,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02610",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 522222,
+        "end": 523638,
+        "strand": "+",
+        "distance_to_erg": 84053,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1416,
+          "gene_variants": 0,
+          "expected_variants": 0.012508,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02620",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 523966,
+        "end": 524323,
+        "strand": "-",
+        "distance_to_erg": 83368,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 357,
+          "gene_variants": 0,
+          "expected_variants": 0.0031535,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02630",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 524625,
+        "end": 525498,
+        "strand": "+",
+        "distance_to_erg": 82193,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 873,
+          "gene_variants": 0,
+          "expected_variants": 0.0077115000000000005,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02640",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 526257,
+        "end": 528000,
+        "strand": "+",
+        "distance_to_erg": 79691,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1743,
+          "gene_variants": 0,
+          "expected_variants": 0.0153965,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030Gtrna13D",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 528690,
+        "end": 528762,
+        "strand": "+",
+        "distance_to_erg": 78929,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 72,
+          "gene_variants": 0,
+          "expected_variants": 0.0006360000000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02650",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 528963,
+        "end": 529677,
+        "strand": "-",
+        "distance_to_erg": 78014,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 714,
+          "gene_variants": 0,
+          "expected_variants": 0.006307,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02660",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 530065,
+        "end": 530902,
+        "strand": "+",
+        "distance_to_erg": 76789,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 837,
+          "gene_variants": 0,
+          "expected_variants": 0.0073935,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02670",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 531213,
+        "end": 531540,
+        "strand": "-",
+        "distance_to_erg": 76151,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 327,
+          "gene_variants": 0,
+          "expected_variants": 0.0028885,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02680",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 533138,
+        "end": 534461,
+        "strand": "+",
+        "distance_to_erg": 73230,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1323,
+          "gene_variants": 0,
+          "expected_variants": 0.011686499999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030Gtrna14E",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 538931,
+        "end": 539003,
+        "strand": "+",
+        "distance_to_erg": 68688,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 72,
+          "gene_variants": 0,
+          "expected_variants": 0.0006360000000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02690",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 539284,
+        "end": 540373,
+        "strand": "+",
+        "distance_to_erg": 67318,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1089,
+          "gene_variants": 0,
+          "expected_variants": 0.0096195,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02700",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 540652,
+        "end": 541287,
+        "strand": "+",
+        "distance_to_erg": 66404,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 635,
+          "gene_variants": 0,
+          "expected_variants": 0.005609166666666667,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030Gtrna14D",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 541658,
+        "end": 541730,
+        "strand": "-",
+        "distance_to_erg": 65961,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 72,
+          "gene_variants": 0,
+          "expected_variants": 0.0006360000000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02710",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 542762,
+        "end": 543239,
+        "strand": "-",
+        "distance_to_erg": 64452,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 477,
+          "gene_variants": 0,
+          "expected_variants": 0.004213499999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02720",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 543522,
+        "end": 544551,
+        "strand": "+",
+        "distance_to_erg": 63140,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1029,
+          "gene_variants": 0,
+          "expected_variants": 0.0090895,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02730",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 545345,
+        "end": 551033,
+        "strand": "+",
+        "distance_to_erg": 56658,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 5688,
+          "gene_variants": 0,
+          "expected_variants": 0.050244,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02740",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 551329,
+        "end": 552049,
+        "strand": "-",
+        "distance_to_erg": 55642,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 720,
+          "gene_variants": 0,
+          "expected_variants": 0.00636,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02750",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 552893,
+        "end": 553800,
+        "strand": "+",
+        "distance_to_erg": 53891,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 907,
+          "gene_variants": 0,
+          "expected_variants": 0.008011833333333333,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02760",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 554199,
+        "end": 554550,
+        "strand": "-",
+        "distance_to_erg": 53141,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 351,
+          "gene_variants": 0,
+          "expected_variants": 0.0031005,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02770",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 555276,
+        "end": 555996,
+        "strand": "-",
+        "distance_to_erg": 51695,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 720,
+          "gene_variants": 0,
+          "expected_variants": 0.00636,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02780",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 556858,
+        "end": 557122,
+        "strand": "-",
+        "distance_to_erg": 50569,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 264,
+          "gene_variants": 0,
+          "expected_variants": 0.002332,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02790",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 557809,
+        "end": 558478,
+        "strand": "+",
+        "distance_to_erg": 49213,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 669,
+          "gene_variants": 0,
+          "expected_variants": 0.0059095,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030Gtrna19S",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 558789,
+        "end": 558871,
+        "strand": "-",
+        "distance_to_erg": 48820,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 82,
+          "gene_variants": 0,
+          "expected_variants": 0.0007243333333333333,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02800",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 563272,
+        "end": 564595,
+        "strand": "-",
+        "distance_to_erg": 43096,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1323,
+          "gene_variants": 0,
+          "expected_variants": 0.011686499999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02810",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 566222,
+        "end": 568526,
+        "strand": "-",
+        "distance_to_erg": 39165,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2304,
+          "gene_variants": 0,
+          "expected_variants": 0.020352000000000002,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02820",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 572525,
+        "end": 573632,
+        "strand": "+",
+        "distance_to_erg": 34059,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1107,
+          "gene_variants": 0,
+          "expected_variants": 0.0097785,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02830",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 574614,
+        "end": 576258,
+        "strand": "+",
+        "distance_to_erg": 31433,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1644,
+          "gene_variants": 0,
+          "expected_variants": 0.014522,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02840",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 576603,
+        "end": 577419,
+        "strand": "+",
+        "distance_to_erg": 30272,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 816,
+          "gene_variants": 0,
+          "expected_variants": 0.007208,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02850",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 577562,
+        "end": 578564,
+        "strand": "-",
+        "distance_to_erg": 29127,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1002,
+          "gene_variants": 0,
+          "expected_variants": 0.008851,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02860",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 580118,
+        "end": 581021,
+        "strand": "-",
+        "distance_to_erg": 26670,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 903,
+          "gene_variants": 0,
+          "expected_variants": 0.0079765,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02870",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 582023,
+        "end": 583181,
+        "strand": "+",
+        "distance_to_erg": 24510,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1158,
+          "gene_variants": 0,
+          "expected_variants": 0.010229,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02880",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 583520,
+        "end": 586598,
+        "strand": "-",
+        "distance_to_erg": 21093,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 3078,
+          "gene_variants": 0,
+          "expected_variants": 0.027189,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02890",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 586954,
+        "end": 588040,
+        "strand": "+",
+        "distance_to_erg": 19651,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1086,
+          "gene_variants": 0,
+          "expected_variants": 0.009593,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02900",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 588442,
+        "end": 589006,
+        "strand": "+",
+        "distance_to_erg": 18685,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 564,
+          "gene_variants": 0,
+          "expected_variants": 0.0049819999999999994,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02910",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 590724,
+        "end": 591834,
+        "strand": "+",
+        "distance_to_erg": 15857,
+        "position_to_erg": "upstream",
+        "variant_count": 15,
+        "region_variant_count": 15,
+        "statistics": {
+          "gene_size": 1110,
+          "gene_variants": 15,
+          "expected_variants": 0.009805,
+          "enrichment": 1529.8317185109638
+        }
+      },
+      {
+        "id": "W3030G02920",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 592114,
+        "end": 592966,
+        "strand": "-",
+        "distance_to_erg": 14725,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 852,
+          "gene_variants": 0,
+          "expected_variants": 0.007526000000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02930",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 593821,
+        "end": 595750,
+        "strand": "+",
+        "distance_to_erg": 11941,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1929,
+          "gene_variants": 0,
+          "expected_variants": 0.0170395,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02940",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 596545,
+        "end": 598270,
+        "strand": "+",
+        "distance_to_erg": 9421,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1725,
+          "gene_variants": 0,
+          "expected_variants": 0.0152375,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02950",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 598789,
+        "end": 601576,
+        "strand": "+",
+        "distance_to_erg": 6115,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2787,
+          "gene_variants": 0,
+          "expected_variants": 0.0246185,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02960",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 601901,
+        "end": 602639,
+        "strand": "-",
+        "distance_to_erg": 5052,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 738,
+          "gene_variants": 0,
+          "expected_variants": 0.0065190000000000005,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02970",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 603264,
+        "end": 604272,
+        "strand": "+",
+        "distance_to_erg": 3419,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1008,
+          "gene_variants": 0,
+          "expected_variants": 0.008903999999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02980",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 604691,
+        "end": 606230,
+        "strand": "+",
+        "distance_to_erg": 1461,
+        "position_to_erg": "upstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1539,
+          "gene_variants": 0,
+          "expected_variants": 0.0135945,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G02990",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 607691,
+        "end": 608621,
+        "strand": "+",
+        "distance_to_erg": 0,
+        "position_to_erg": "overlapping",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 930,
+          "gene_variants": 0,
+          "expected_variants": 0.008215,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03000",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 609014,
+        "end": 613091,
+        "strand": "-",
+        "distance_to_erg": 393,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 4077,
+          "gene_variants": 0,
+          "expected_variants": 0.0360135,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03010",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 613454,
+        "end": 614405,
+        "strand": "-",
+        "distance_to_erg": 4833,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 951,
+          "gene_variants": 0,
+          "expected_variants": 0.0084005,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03020",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 614641,
+        "end": 614950,
+        "strand": "-",
+        "distance_to_erg": 6020,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 309,
+          "gene_variants": 0,
+          "expected_variants": 0.0027294999999999997,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03030",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 615202,
+        "end": 616984,
+        "strand": "-",
+        "distance_to_erg": 6581,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1782,
+          "gene_variants": 0,
+          "expected_variants": 0.015741,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03040",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 618046,
+        "end": 618925,
+        "strand": "-",
+        "distance_to_erg": 9425,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 879,
+          "gene_variants": 0,
+          "expected_variants": 0.007764500000000001,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03050",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 619497,
+        "end": 621912,
+        "strand": "-",
+        "distance_to_erg": 10876,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2415,
+          "gene_variants": 0,
+          "expected_variants": 0.0213325,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03060",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 622449,
+        "end": 624210,
+        "strand": "-",
+        "distance_to_erg": 13828,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1761,
+          "gene_variants": 0,
+          "expected_variants": 0.015555499999999998,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03070",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 624987,
+        "end": 628455,
+        "strand": "+",
+        "distance_to_erg": 16366,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 3468,
+          "gene_variants": 0,
+          "expected_variants": 0.030633999999999998,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03080",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 628662,
+        "end": 631245,
+        "strand": "-",
+        "distance_to_erg": 20041,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2583,
+          "gene_variants": 0,
+          "expected_variants": 0.0228165,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03090",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 631485,
+        "end": 632649,
+        "strand": "+",
+        "distance_to_erg": 22864,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1164,
+          "gene_variants": 0,
+          "expected_variants": 0.010282,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03100",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 632893,
+        "end": 633334,
+        "strand": "+",
+        "distance_to_erg": 24272,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 441,
+          "gene_variants": 0,
+          "expected_variants": 0.0038954999999999997,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03110",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 633328,
+        "end": 634057,
+        "strand": "-",
+        "distance_to_erg": 24707,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 729,
+          "gene_variants": 0,
+          "expected_variants": 0.0064395,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03120",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 634285,
+        "end": 634759,
+        "strand": "-",
+        "distance_to_erg": 25664,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 474,
+          "gene_variants": 0,
+          "expected_variants": 0.004187,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03130",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 634925,
+        "end": 636695,
+        "strand": "-",
+        "distance_to_erg": 26304,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1770,
+          "gene_variants": 0,
+          "expected_variants": 0.015635,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03140",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 636954,
+        "end": 637554,
+        "strand": "-",
+        "distance_to_erg": 28333,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 600,
+          "gene_variants": 0,
+          "expected_variants": 0.0053,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03150",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 637947,
+        "end": 639060,
+        "strand": "+",
+        "distance_to_erg": 29326,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1113,
+          "gene_variants": 0,
+          "expected_variants": 0.0098315,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03160",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 639237,
+        "end": 640236,
+        "strand": "+",
+        "distance_to_erg": 30616,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 999,
+          "gene_variants": 0,
+          "expected_variants": 0.0088245,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03170",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 640375,
+        "end": 641008,
+        "strand": "-",
+        "distance_to_erg": 31754,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 633,
+          "gene_variants": 0,
+          "expected_variants": 0.0055915,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03180",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 641271,
+        "end": 641823,
+        "strand": "+",
+        "distance_to_erg": 32650,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 552,
+          "gene_variants": 0,
+          "expected_variants": 0.004876,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03190",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 642085,
+        "end": 644041,
+        "strand": "-",
+        "distance_to_erg": 33464,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1956,
+          "gene_variants": 0,
+          "expected_variants": 0.017278,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03200",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 644348,
+        "end": 645368,
+        "strand": "-",
+        "distance_to_erg": 35727,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1020,
+          "gene_variants": 0,
+          "expected_variants": 0.00901,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03210",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 645608,
+        "end": 646133,
+        "strand": "-",
+        "distance_to_erg": 36987,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 525,
+          "gene_variants": 0,
+          "expected_variants": 0.0046375,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03220",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 646824,
+        "end": 647844,
+        "strand": "-",
+        "distance_to_erg": 38203,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1020,
+          "gene_variants": 0,
+          "expected_variants": 0.00901,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03230",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 648520,
+        "end": 650212,
+        "strand": "-",
+        "distance_to_erg": 39899,
+        "position_to_erg": "downstream",
+        "variant_count": 15,
+        "region_variant_count": 15,
+        "statistics": {
+          "gene_size": 1692,
+          "gene_variants": 15,
+          "expected_variants": 0.014946000000000001,
+          "enrichment": 1003.6130068245684
+        }
+      },
+      {
+        "id": "W3030G03240",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 651829,
+        "end": 652021,
+        "strand": "+",
+        "distance_to_erg": 43208,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 192,
+          "gene_variants": 0,
+          "expected_variants": 0.001696,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03250",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 652170,
+        "end": 653892,
+        "strand": "+",
+        "distance_to_erg": 43549,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 1722,
+          "gene_variants": 0,
+          "expected_variants": 0.015210999999999999,
+          "enrichment": 0.0
+        }
+      },
+      {
+        "id": "W3030G03260",
+        "locus_tag": "unknown",
+        "product": "unknown",
+        "start": 654528,
+        "end": 657339,
+        "strand": "+",
+        "distance_to_erg": 45907,
+        "position_to_erg": "downstream",
+        "variant_count": 0,
+        "region_variant_count": 0,
+        "statistics": {
+          "gene_size": 2811,
+          "gene_variants": 0,
+          "expected_variants": 0.024830500000000002,
+          "enrichment": 0.0
+        }
+      }
+    ]
+  }
+}

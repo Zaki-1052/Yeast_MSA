@@ -1,0 +1,143 @@
+{
+  "erg_gene_summaries": [
+    {
+      "erg_gene": "ERG11",
+      "affected_gene_count": 2,
+      "high_impact_gene_count": 2,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030H00610",
+        "W3030H00410"
+      ],
+      "min_distance": 8149
+    },
+    {
+      "erg_gene": "ERG25",
+      "affected_gene_count": 2,
+      "high_impact_gene_count": 0,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030G02910",
+        "W3030G03230"
+      ],
+      "min_distance": 15949
+    },
+    {
+      "erg_gene": "ERG3",
+      "affected_gene_count": 2,
+      "high_impact_gene_count": 0,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030L01080",
+        "W3030L01480"
+      ],
+      "min_distance": 26116
+    },
+    {
+      "erg_gene": "ERG5",
+      "affected_gene_count": 2,
+      "high_impact_gene_count": 0,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030P01730",
+        "W3030P01740"
+      ],
+      "min_distance": 40870
+    },
+    {
+      "erg_gene": "ERG4",
+      "affected_gene_count": 1,
+      "high_impact_gene_count": 0,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030G02200"
+      ],
+      "min_distance": 26130
+    },
+    {
+      "erg_gene": "ERG7",
+      "affected_gene_count": 1,
+      "high_impact_gene_count": 1,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030H01660"
+      ],
+      "min_distance": 47676
+    },
+    {
+      "erg_gene": "ERG24",
+      "affected_gene_count": 1,
+      "high_impact_gene_count": 0,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030Q00680"
+      ],
+      "min_distance": 7196
+    },
+    {
+      "erg_gene": "ERG1",
+      "affected_gene_count": 1,
+      "high_impact_gene_count": 0,
+      "sterol_related_count": 0,
+      "top_affected_genes": [
+        "W3030G04250"
+      ],
+      "min_distance": 39592
+    }
+  ],
+  "function_categories": {
+    "Unknown/Hypothetical": 12
+  },
+  "treatment_summaries": [
+    {
+      "treatment": "CAS",
+      "variant_count": 28,
+      "affected_gene_count": 8,
+      "high_impact_count": 8,
+      "unique_affected_genes": 1,
+      "unique_gene_ids": [
+        "W3030P01740"
+      ]
+    },
+    {
+      "treatment": "WT-37",
+      "variant_count": 27,
+      "affected_gene_count": 10,
+      "high_impact_count": 8,
+      "unique_affected_genes": 2,
+      "unique_gene_ids": [
+        "W3030P01730",
+        "W3030L01480"
+      ]
+    },
+    {
+      "treatment": "STC",
+      "variant_count": 26,
+      "affected_gene_count": 8,
+      "high_impact_count": 9,
+      "unique_affected_genes": 1,
+      "unique_gene_ids": [
+        "W3030G04250"
+      ]
+    },
+    {
+      "treatment": "WTA",
+      "variant_count": 19,
+      "affected_gene_count": 7,
+      "high_impact_count": 7,
+      "unique_affected_genes": 0,
+      "unique_gene_ids": []
+    },
+    {
+      "treatment": "WT",
+      "variant_count": 6,
+      "affected_gene_count": 6,
+      "high_impact_count": 2,
+      "unique_affected_genes": 0,
+      "unique_gene_ids": []
+    }
+  ],
+  "total_affected_genes": 12,
+  "sterol_related_genes": 0,
+  "high_impact_genes": 3
+}

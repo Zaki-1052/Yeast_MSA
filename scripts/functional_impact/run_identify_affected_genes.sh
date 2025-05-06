@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# run_identify_affected_genes.sh - FIXED VERSION
+# run_identify_affected_genes.sh - FIXED VERSION 2
 # Script to identify and characterize genes affected by HIGH/MODERATE impact variants
 
 # Set default values
