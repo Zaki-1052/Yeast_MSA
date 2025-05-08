@@ -1,0 +1,10 @@
+sample,treatment,generation,adaptation_type,gene_modified,substrate,product,enzyme,substrate_conc,product_conc,ratio,log2_ratio,note
+CAS_5_37C,CAS,5,Temperature,True,Lanosterol,Cycloartenol,ERG7,3.0,7.0,2.3333333333333335,1.222392421336448,
+CAS_5_37C,CAS,5,Temperature,True,Lanosterol,Ergosterol,ERG7,3.0,13.0,4.333333333333333,2.1154772174199357,
+CAS_5_37C,CAS,5,Temperature,True,Ergosterol,Stigmasta-5_22-dien-3-ol_acetate,,13.0,28.0,2.1538461538461537,1.1069152039165118,
+CAS_55_37C,CAS,55,Temperature,True,Fecosterol,Ergosterol,ERG2,10.0,6.5,0.65,-0.6214883767462701,
+CAS_55_37C,CAS,55,Temperature,True,Lanosterol,Ergosterol,ERG7,2.0,6.5,3.25,1.7004397181410922,
+STC_5,STC,5,Low Oxygen,True,Ergosterol,Tetrahymanol,ERG7,2.8,0.5,0.17857142857142858,-2.4854268271702415,Low Oxygen adaptation marker
+STC_55,STC,55,Low Oxygen,True,Ergosterol,Tetrahymanol,ERG7,1.7,0.8,0.4705882352941177,-1.0874628412503393,Low Oxygen adaptation marker
+WT_55_37C,WT,55,Temperature,False,Zymosterol,Fecosterol,ERG6,7.0,2.0,0.2857142857142857,-1.8073549220576042,
+WT_55_37C,WT,55,Temperature,False,Fecosterol,Ergosterol,ERG2,2.0,12.5,6.25,2.643856189774725,

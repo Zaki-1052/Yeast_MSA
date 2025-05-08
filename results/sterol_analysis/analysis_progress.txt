@@ -1,0 +1,41 @@
+# Sterol Analysis Progress Update
+
+## Completed Analysis Steps
+
+1. **Preprocessing (complete)**
+   - Standardized sterol data with treatment, generation, and adaptation metadata
+   - Calculated relative abundances
+   - Generated basic visualizations of sterol distributions
+   - Identified initial patterns in ergosterol levels and sterol diversity
+
+2. **Comparative Analysis (complete)**
+   - Performed statistical testing of key differences
+   - Quantified fold changes between conditions
+   - Analyzed sterol diversity and unique sterols by treatment
+   - Created comprehensive visualizations comparing treatments
+   - Generated summary of findings
+
+## Next Steps and Adjustments
+
+Based on our findings from the comparative analysis, we should adjust the pathway analysis approach to focus on:
+
+1. **Enhanced Pathway Mapping**
+   - Given the specific sterols we've identified (especially Tetrahymanol, Stigmasta-5_22-dien-3-ol_acetate), 
+     we need to ensure our pathway mapping correctly positions these in relation to the ergosterol pathway
+   - Tetrahymanol appears to be a unique marker for low oxygen adaptation in STC
+
+2. **Treatment-Specific Flux Analysis**
+   - Focus on comparing relative pathway flux between temperature and low oxygen adaptation
+   - Assess how the presence of sterols at different points in the pathway suggests regulatory changes
+
+3. **Gene-Modification Effects on Pathway**
+   - Analyze how gene modifications (CAS, STC) influence specific steps in the pathway
+   - Investigate whether modifications create alternative branches or favor certain intermediates
+
+4. **Integration Focus Points**
+   - Ensure the integration with genomic data specifically addresses the relationships between:
+     - Conservation of pathway genes and the variety of sterol profiles
+     - Satellite gene variants and unique sterols
+     - Adaptation-specific genomic patterns and sterol composition differences
+
+These adjustments will help ensure that the pathway analysis and subsequent integration build directly on the insights gained from our comparative analysis.

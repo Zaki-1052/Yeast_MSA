@@ -10,6 +10,7 @@
    - [Gene Analysis](#gene-analysis)
    - [Functional Impact Analysis](#functional-impact-analysis)
    - [Network Analysis](#network-analysis)
+   - [Sterol Profile Analysis](#sterol-profile-analysis)
 6. [Key Findings](#key-findings)
 7. [Additional Analyses](#additional-analyses)
 8. [Usage](#usage)
@@ -28,6 +29,8 @@ The primary goals of this project include:
 6. Analyzing functional impacts of variants in the ergosterol pathway genes
 7. Investigating network relationships between core pathway genes and affected neighboring genes
 8. Characterizing purifying selection and adaptive mechanisms at the gene level
+9. Correlating genomic findings with biochemical adaptations in sterol profiles
+10. Understanding the hierarchical conservation architecture in essential pathways
 
 ## Experimental Design
 
@@ -105,6 +108,12 @@ Yeast_MSA/
 │   │   └── erg_subnetworks/                # Ergosterol gene subnetworks
 │   ├── scaffold_variants/               # Scaffold-specific variant analysis
 │   ├── stats/                           # Alignment statistics
+│   ├── sterol_analysis/                 # Sterol profile analysis
+│   │   ├── basic_stats/                    # Basic sterol statistics
+│   │   ├── comparative/                    # Treatment comparisons
+│   │   ├── correlation/                    # Genomic-sterol correlations
+│   │   ├── pathway/                        # Pathway analysis results
+│   │   └── visualizations/                 # Sterol profile visualizations
 │   └── treatment_analysis/              # Treatment comparison results
 ├── scripts/                         # Analysis and pipeline scripts
 │   ├── analysis/                        # Core analysis scripts
@@ -115,6 +124,12 @@ Yeast_MSA/
 │   ├── gene_analysis/                   # Gene-specific analysis
 │   ├── general_gene_analysis/           # General gene analysis
 │   ├── pipeline/                        # Pipeline execution scripts
+│   ├── sterols/                         # Sterol analysis scripts
+│   │   ├── preprocess_sterols.py           # Sterol data preprocessing
+│   │   ├── sterol_analysis.py              # Core sterol analysis
+│   │   ├── sterol_pathway.py               # Pathway analysis 
+│   │   ├── sterol_integration.py           # Integration with genomic data
+│   │   └── run_sterol_analysis.sh          # Complete sterol analysis pipeline
 │   ├── utils/                           # Utility scripts
 │   ├── variants/                        # Variant extraction scripts
 │   └── vcf/                             # VCF processing scripts
@@ -391,6 +406,71 @@ The network analysis module is a new addition that maps relationships between ge
   - Network statistics (centrality, connectivity)
   - Network analysis report
 
+### Sterol Profile Analysis
+
+The sterol profile analysis module connects genomic findings with biochemical data on yeast membrane composition:
+
+#### 1. Sterol Preprocessing and Basic Statistics
+
+- **Script**: `preprocess_sterols.py`
+- **Run Script**: `run_sterol_analysis.sh`
+- **Purpose**: Processes and characterizes sterol profile data
+- **Features**:
+  - Processes raw sterol concentration measurements
+  - Adds metadata (treatment, adaptation type, gene modification status)
+  - Calculates relative abundances and basic statistics
+  - Identifies sterol composition by treatment
+- **Outputs**:
+  - Standardized sterol data
+  - Sterol distributions by treatment and adaptation
+  - Concentration statistics and visualization
+  - Sterol diversity metrics
+
+#### 2. Comparative Sterol Analysis
+
+- **Script**: `sterol_analysis.py`
+- **Purpose**: Compares sterol profiles across conditions
+- **Features**:
+  - Statistical testing for treatment differences
+  - Fold change calculations
+  - Adaptation-specific sterols identification
+  - Gene modification effects analysis
+- **Outputs**:
+  - Statistical test results and p-values
+  - Fold change heatmaps and visualizations
+  - Treatment-specific sterol profiles
+  - Unique sterol identification by condition
+
+#### 3. Sterol Pathway Analysis
+
+- **Script**: `sterol_pathway.py`
+- **Purpose**: Connects sterol profiles to biochemical pathway steps
+- **Features**:
+  - Maps sterol intermediates to pathway enzymes
+  - Calculates substrate/product ratios
+  - Identifies altered pathway branches
+  - Analyzes pathway flux patterns
+- **Outputs**:
+  - Pathway mapping visualizations
+  - Adaptation-specific pathway diagrams
+  - Flux analysis by treatment
+  - Enzyme activity inference
+
+#### 4. Genomic-Sterol Integration
+
+- **Script**: `sterol_integration.py`
+- **Purpose**: Integrates sterol profiles with genomic conservation patterns
+- **Features**:
+  - Correlates sterol changes with variant patterns
+  - Connects satellite genes to sterol production
+  - Tests hierarchical conservation models
+  - Builds integrated adaptation models
+- **Outputs**:
+  - Correlation analyses
+  - Satellite gene-sterol connection maps
+  - Integrated visualizations
+  - Comprehensive adaptation model
+
 ## Combined Analysis Results
 
 The project generates a comprehensive summary of findings in the `combined_analysis_results.txt` file, which integrates results from all analysis modules. This file provides:
@@ -499,6 +579,16 @@ The analyses have yielded several important findings:
 - Treatment-specific network patterns identified
 - HIGH impact variants consistently found at specific distances from pathway genes
 
+### 9. Sterol Profile Analysis
+
+- Temperature adaptation shows significantly higher ergosterol levels (10.25 mean concentration) compared to low oxygen adaptation (2.73 mean concentration, p=0.0109)
+- Gene-modified strains have 1.5× more diverse sterol profiles than non-modified strains
+- Treatment-specific sterol signatures: Temperature adaptation has 7 unique sterols; low oxygen adaptation has unique Tetrahymanol marker
+- Sterol compositions validate the hierarchical conservation pattern found in genomic analysis
+- "Satellite genes" at consistent distances (7-50kb) from ergosterol pathway genes correlate with specific sterol production
+- Evidence of adaptation through altered sterol profiles despite perfect conservation of pathway genes
+- Integration reveals a four-layered conservation architecture from absolute conservation (core) to adaptive flexibility (satellite zone)
+
 ## Additional Analyses
 
 ### Functional Impact Analysis
@@ -530,6 +620,32 @@ SNP effect analysis has been performed using snpEff:
    - MODERATE impact variants at ~3%
    - HIGH impact variants are rare (<1%)
 
+### Sterol Profile Analysis
+
+The sterol profile analysis provides biochemical evidence connecting genomic patterns to phenotypic outcomes:
+
+1. **Sterol Diversity and Composition**:
+   - 9 unique sterols identified across samples
+   - Significant differences in sterol profiles between adaptation types
+   - Gene-modified strains show unique sterols not found in non-modified strains
+
+2. **Adaptation-Specific Profiles**:
+   - Temperature adaptation: High ergosterol (10.25 mean), diverse sterol profile (7 unique sterols)
+   - Low oxygen adaptation: Low ergosterol (2.73 mean), simplified profile (2 unique sterols)
+   - Unique markers: Tetrahymanol (low oxygen), Stigmasta-5_22-dien-3-ol_acetate (temperature)
+
+3. **Integrated Findings**:
+   - Satellite gene-sterol connections identified (e.g., W3030H01660 → Tetrahymanol)
+   - Hierarchical conservation architecture confirmed biochemically
+   - Evidence for regulatory adaptation mechanisms rather than enzyme modifications
+   - Strong support for purifying selection model in essential pathways
+
+4. **Adaptation Mechanisms**:
+   - Temperature adaptation maintains high ergosterol with diverse intermediates
+   - Low oxygen adaptation reduces ergosterol, producing alternative sterols
+   - Gene modifications amplify metabolic flexibility via increased sterol diversity
+   - Conservation zone-sterol production patterns show four-layered architecture
+
 ### Ergosterol Pathway Analysis
 
 Specific analysis of the ergosterol pathway provides insights into this essential cellular process:
@@ -538,11 +654,26 @@ Specific analysis of the ergosterol pathway provides insights into this essentia
    - Strong evidence of purifying selection in pathway genes
    - No direct HIGH impact mutations in core pathway genes
    - Adaptation occurs through changes in regulatory regions and neighboring genes
+   - Biochemical confirmation of pathway function despite stressors
 
 2. **Extended Network Effects**:
    - Identifies genes functionally connected to the ergosterol pathway
    - Maps how these connected genes change in response to different stressors
    - Shows how gene modifications (STC, CAS) influence the extended network
+   - Satellite genes at consistent distances (7-50kb) regulate specific sterol production
+
+3. **Hierarchical Conservation Architecture**:
+   - Core Zone (0bp): Ergosterol genes themselves with absolute conservation
+   - Buffer Zone (0-7kb): Strong conservation with no variants
+   - Satellite Zone (7-50kb): Specific genes with adaptation-related variants
+   - Distant Zone (>50kb): Less constrained regions
+   - Architecture confirmed through both genomic and sterol analysis
+
+4. **Biochemical Pathway Flux**:
+   - Temperature adaptation: High flux through main ergosterol pathway
+   - Low oxygen adaptation: Reduced flux through main pathway, alternative branches active
+   - Gene modifications: Enhanced pathway branching and metabolic flexibility
+   - Adaptation-specific intermediates accumulate at different pathway steps
 
 ## Usage
 
@@ -616,6 +747,14 @@ To perform network analysis:
 bash scripts/functional_impact/run_extended_network_analysis.sh
 ```
 
+### Running Sterol Analysis
+
+To perform sterol profile analysis:
+
+```bash
+bash scripts/sterols/run_sterol_analysis.sh
+```
+
 ### Individual Analysis Modules
 
 To run individual analysis modules:
@@ -638,6 +777,215 @@ The full data flow in the project follows this sequence:
 6. Filtered VCF files → Merging → Combined VCF for analysis
 7. VCF files → Annotation → Annotated VCF files
 8. VCF files → Various analysis modules → Results and visualizations
+9. Sterol data → Preprocessing → Standardized sterol profiles
+10. Standardized sterol profiles → Comparative analysis → Treatment-specific profiles
+11. Sterol profiles → Pathway analysis → Flux patterns and adaptation mechanisms
+12. Genomic data + Sterol profiles → Integration → Comprehensive adaptation model
+
+## Reports and Visualizations
+
+The project generates a rich variety of reports and visualizations that integrate findings across multiple analysis modules. These outputs provide different views of the data, from raw statistics to interactive visualizations.
+
+### Analysis Reports
+
+Text-based summary reports provide detailed analysis of findings:
+
+1. **Core Analysis Summaries**:
+   - `combined_analysis_results.txt`: Master summary of all findings across modules
+   - `analysis/mutation_spectrum_results/statistical_test_results.txt`: Statistical analysis of mutation patterns
+   - `analysis/mutational_signatures_results/mutational_signatures_summary.txt`: Signature analysis findings
+   - `analysis/population_structure_results/population_structure_summary.txt`: Population analysis results
+   - `analysis/regional_enrichment_results/regional_enrichment_summary.txt`: Enrichment findings
+   - `analysis/statistical_pattern_results/statistical_analysis_summary.txt`: Statistical analysis report
+
+2. **Pipeline Processing Reports**:
+   - `results/vcf/analysis_report.txt`: Summary of variant statistics across treatments
+   - `results/scaffold_variants/scaffold_variant_summary.txt`: Analysis of variants by scaffold
+   - `results/gene_variants/gene_summary.tsv`: Summary of gene-specific variant patterns
+   - `results/treatment_analysis/analysis_summary.txt`: Treatment comparison summary
+   - `vcf/annotated/annotation_summary.txt`: Summary of variant annotations
+
+3. **Sterol Analysis Reports**:
+   - `results/sterol_analysis/basic_stats/sterol_statistics.txt`: Basic sterol composition statistics
+   - `results/sterol_analysis/comparative/comparative_analysis_summary.txt`: Treatment comparisons
+   - `results/sterol_analysis/correlation/statistical_correlation_results.txt`: Genomic-sterol correlations
+   - `results/sterol_analysis/pathway/pathway_analysis_summary.txt`: Sterol pathway flux analysis
+
+### Interactive HTML Reports
+
+Interactive HTML dashboards provide rich visualizations and explorable data:
+
+1. **Ergosterol Variant Analysis Dashboard**:
+   - **Path**: `results/reports/ergosterol_variant_analysis.html`
+   - **Generator**: `scripts/utils/generate_ergosterol_variant_report.py`
+   - **Contents**: 
+     - Interactive variant distribution visualizations
+     - Distance-based analysis from pathway genes
+     - Treatment-specific variant patterns
+     - Purifying selection evidence
+     - Biological significance interpretation
+   - **Features**:
+     - Interactive image gallery with zoom capability
+     - Tabbed visualization sections
+     - Dark/light mode toggle
+     - Mobile-responsive design
+
+2. **Functional Impact Analysis Dashboard**:
+   - **Path**: `results/reports/functional_impact.html`
+   - **Generator**: `scripts/utils/generate_functional_impact_report.py`
+   - **Contents**:
+     - Protein domain impact visualizations
+     - Conservation patterns analysis
+     - Satellite gene architecture diagrams
+     - Adaptation mechanisms models
+     - Hierarchical conservation zone visualizations
+
+3. **Sterol Profile Analysis Dashboard**:
+   - **Path**: `results/reports/sterols.html`
+   - **Generator**: `scripts/sterols/generate_html_report.py`
+   - **Contents**:
+     - Interactive sterol profile visualizations
+     - Treatment comparison heatmaps
+     - Pathway visualizations with flux indicators
+     - Genomic-sterol integration diagrams
+     - Adaptation model visualizations
+
+4. **Variant Analysis Dashboard**:
+   - **Path**: `results/reports/variant_analysis.html`
+   - **Generator**: `scripts/variants/generate_variant_report.py`
+   - **Contents**:
+     - Sample comparison visualizations
+     - Interactive filtering of variants
+     - Annotation statistics and distribution
+     - Genome browser-like variant visualization
+     - Treatment-specific variant patterns
+
+### Markdown Reports
+
+Detailed narrative analysis with embedded visualizations:
+
+1. **Network Analysis Report**:
+   - **Path**: `results/network_analysis/network_analysis_report.md`
+   - **Contents**:
+     - Extended ergosterol network analysis
+     - Subnetwork interactions
+     - Treatment-specific network patterns
+     - Pathway distance models
+     - Network statistics and interpretations
+
+2. **Integrated Findings Report**:
+   - **Path**: `results/sterol_analysis/correlation/integrated_findings_report.md`
+   - **Contents**:
+     - Integration of sterol and genomic findings
+     - Hierarchical conservation model explanation
+     - Satellite gene-sterol connections
+     - Four-zone conservation architecture
+     - Comprehensive adaptation model
+
+3. **High Impact Variants Report**:
+   - **Path**: `results/functional_impact/high_impact/high_impact_variants_report.md`
+   - **Contents**:
+     - Analysis of high impact variants
+     - Functional domain mappings
+     - Evolutionary conservation patterns
+     - Treatment-specific functional changes
+     - Pathway impact assessment
+
+### Gene Mapping and Reference Data
+
+Reference data files providing comprehensive annotations:
+
+1. **Gene Mapping Full**:
+   - **Path**: `reference/gene_mapping_full.tsv`
+   - **Generator**: `scripts/general_gene_analysis/generate_gene_mapping_full.py`
+   - **Contents**:
+     - W303 gene ID to standard gene name mapping
+     - Ergosterol pathway annotations
+     - Gene function categories
+     - Chromosome and position information
+     - Conservation zone annotations
+
+2. **Genes of Interest Mapping**:
+   - **Path**: `reference/genes_of_interest_mapping.tsv`
+   - **Contents**:
+     - Ergosterol pathway genes
+     - Functional categorization
+     - Pathway position annotations
+     - Distance relationships
+     - Regulatory connections
+
+3. **Chromosome Mapping**:
+   - **Path**: `reference/chromosome_mapping.tsv`
+   - **Contents**:
+     - W303 scaffold IDs to standard chromosome names
+     - Size and coordinate information
+     - GC content and feature density
+     - Annotation status
+     - Reference cross-mapping
+
+### Visualization Galleries
+
+Organized collections of visualizations by analysis type:
+
+1. **Mutation Spectrum Analysis**:
+   - **Directory**: `analysis/mutation_spectrum_results/`
+   - **Key Visualizations**:
+     - `mutation_spectrum_summary.csv`: Numeric data on mutation types
+     - `comparative_mutation_spectrum.png`: Cross-treatment comparison
+     - `ti_tv_ratios_by_adaptation.png`: Transition/transversion by adaptation
+     - Treatment-specific spectra (`CAS_mutation_spectrum.png`, etc.)
+
+2. **Genomic Context Analysis**:
+   - **Directory**: `analysis/genomic_context_results/`
+   - **Key Visualizations**:
+     - `gc_content_by_adaptation.png`: GC content patterns
+     - `homopolymer_by_gene_status.png`: Homopolymer analysis
+     - `mutation_type_by_treatment_heatmap.png`: Context heatmap
+     - Sequence logos for specific contexts (e.g., `logo_Temperature_C_to_A.png`)
+
+3. **Population Structure Analysis**:
+   - **Directory**: `analysis/population_structure_results/`
+   - **Key Visualizations**:
+     - `pca_by_adaptation.png`: Principal component analysis
+     - `mds_by_treatment.png`: Multi-dimensional scaling
+     - `dendrogram_by_adaptation.png`: Hierarchical clustering
+     - `shared_variants_heatmap.png`: Variant sharing patterns
+
+4. **Regional Enrichment Analysis**:
+   - **Directory**: `analysis/regional_enrichment_results/`
+   - **Key Visualizations**:
+     - `enrichment_heatmap.png`: Regional enrichment patterns
+     - `clustered_enrichment_heatmap.png`: Clustered enrichment analysis
+     - Treatment-specific enrichment results (CSV files)
+     - Adaptation-specific enrichment summaries
+
+5. **Scaffold Distribution Analysis**:
+   - **Directory**: `analysis/scaffold_distribution_results/`
+   - **Key Visualizations**:
+     - `comparative_density_heatmap_top30.png`: Density comparison
+     - `treatment_correlation_heatmap.png`: Treatment correlations
+     - Treatment-specific bubble charts and variant density plots
+     - `adaptation_specific_hotspots.txt`: Hotspot locations
+
+6. **Gene Analysis Visualizations**:
+   - **Directory**: `analysis/genes_of_interest/treatment_control_analysis/`
+   - **Key Visualizations**:
+     - `erg_gene_distribution.png`: Ergosterol gene variant distribution
+     - `gene_status_distribution.png`: Gene status distribution
+     - Treatment-specific purifying selection plots
+     - `fold_change_by_gene_status.png`: Gene expression fold changes
+
+7. **Sterol Profile Visualizations**:
+   - **Directory**: `results/sterol_analysis/visualizations/`
+   - **Key Visualizations**:
+     - `sterol_composition_by_treatment.png`: Treatment comparison
+     - `pathway_flux_visualization.png`: Pathway analysis
+     - `satellite_gene_sterol_correlation.png`: Gene-sterol correlations
+     - `four_zone_conservation_model.png`: Conservation architecture
+
+These reports and visualizations collectively provide a comprehensive view of the project's findings, from basic statistics to complex models of adaptation mechanisms. The interactive HTML dashboards offer user-friendly exploration of the data, while the text and markdown reports provide detailed interpretations and biological significance.
+
+All visualization outputs follow consistent color schemes and formatting to facilitate cross-analysis comparisons. The HTML reports are generated using reusable visualization templates that integrate Bootstrap for responsive design and D3.js for interactive elements.
 
 ## References
 
@@ -648,7 +996,11 @@ The full data flow in the project follows this sequence:
 - Network analysis approaches for genomic data
 - Functional impact prediction models
 - Ergosterol pathway biochemistry and regulation
+- Sterol biochemistry and yeast membrane adaptation
+- Hierarchical conservation models in essential pathways
+- Regulatory mechanisms in pathway adaptation
+- Environmental stress response in unicellular organisms
 
 ---
 
-*Note: This documentation provides a comprehensive overview of the Yeast MSA project, including its purpose, methodology, results, and future directions. For detailed results from each analysis module, please refer to the corresponding files in the analysis/ directory.*
+*Note: This documentation provides a comprehensive overview of the Yeast MSA project, including its purpose, methodology, results, and future directions. For detailed results from each analysis module, please refer to the corresponding files in the analysis/ directory and results/sterol_analysis/ for sterol profile findings.*

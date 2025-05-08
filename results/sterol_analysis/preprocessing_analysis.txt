@@ -1,0 +1,66 @@
+# Sterol Preprocessing Analysis
+
+## Data Summary
+The sterol dataset contains 20 sterol measurements across 8 samples:
+- 4 different treatments/conditions (CAS, STC, WT-37C, WT-MA)
+- 2 generations per treatment (5 and 55)
+- 9 unique sterols detected
+- Both temperature and low oxygen adaptation represented
+
+## Key Observations from Preprocessing
+
+### 1. Sterol Diversity by Treatment
+- **CAS (gene-modified, temperature-adapted)**: Highest sterol diversity (7 sterols)
+  - Contains unique sterols: Stigmasta-5_22-dien-3-ol_acetate, Ergosta-7-en-3-ol, Cycloartenol, Ergost-7-en-3beta-ol
+- **STC (gene-modified, low oxygen-adapted)**: Lowest diversity (2 sterols)
+  - Contains a unique sterol: Tetrahymanol (not found in other treatments)
+- **WT (non-modified)**: Moderate diversity varies by condition and generation
+
+### 2. Ergosterol Trends
+- **Temperature adaptation**: Generally higher ergosterol levels
+  - WT_55_37C has highest ergosterol (12.5 ± 1.5)
+  - CAS shows a decrease from generation 5 to 55 (13.0 → 6.5)
+- **Low oxygen adaptation**: Generally lower ergosterol levels
+  - All low oxygen samples have <5 concentration values
+  - WT shows a decrease from generation 5 to 55 (4.4 → 2.0)
+
+### 3. Generation Effects (5 vs 55)
+- **Different treatments show opposite generational trends**:
+  - WT-37C: Ergosterol increases from gen 5 to 55 (9.0 → 12.5)
+  - CAS-37C: Ergosterol decreases from gen 5 to 55 (13.0 → 6.5)
+  - WT-MA: Ergosterol decreases from gen 5 to 55 (4.4 → 2.0)
+  - STC: Ergosterol decreases from gen 5 to 55 (2.8 → 1.7)
+
+### 4. Adaptation Type Differences
+- **Temperature adaptation**:
+  - Higher ergosterol levels
+  - Presence of Zymosterol and Fecosterol
+- **Low oxygen adaptation**:
+  - Lower ergosterol levels
+  - Presence of Tetrahymanol in STC strain
+  
+### 5. Gene Modification Effects
+- **Modified (CAS, STC)**:
+  - More diverse sterol profiles
+  - Unique sterols not found in wild-type samples
+- **Non-modified (WT)**:
+  - Simpler sterol profiles
+  - More consistent across conditions
+
+## Implications for Next Analysis Steps
+
+Based on these preliminary findings, the comparative analysis should focus on:
+
+1. **Statistical testing of the key differences**:
+   - Temperature vs. low oxygen adaptation effects on ergosterol levels
+   - Gene modification effects on sterol diversity
+   - Generation effects within each treatment
+
+2. **Pathway analysis considerations**:
+   - The presence of diverse intermediates in CAS suggests altered flux through the ergosterol pathway
+   - Tetrahymanol in STC suggests a potential pathway divergence under low oxygen conditions
+   - Changes in Zymosterol and Fecosterol levels between generations in WT-37C may indicate regulatory shifts
+
+3. **Integration with genomic data**:
+   - The unique sterols in gene-modified strains may relate to the satellite gene variants identified in genomic analysis
+   - The different generational trends may provide evidence for how adaptation occurs despite conserved ergosterol genes

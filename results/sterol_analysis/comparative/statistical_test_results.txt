@@ -1,0 +1,61 @@
+# Statistical Tests for Sterol Analysis
+
+## Ergosterol by Adaptation Type
+Test: Independent t-test
+Statistic: 4.5629
+P-value: 0.0109
+Temperature Mean: 10.25
+Low Oxygen Mean: 2.73
+Significant: Yes
+
+## Ergosterol by Gene Modification
+Test: Independent t-test
+Statistic: -0.2815
+P-value: 0.7879
+Modified Mean: 6.00
+Non-modified Mean: 6.97
+Significant: No
+
+## Ergosterol by Treatment
+Test: One-way ANOVA
+Statistic: 1.6570
+P-value: 0.2805
+Significant: No
+## Generation Comparison Tests
+Not enough data for these tests.
+
+## Sterol Diversity Analysis
+
+### Diversity by Treatment
+**CAS**: 7 sterols
+- Sterols: Ergosterol, Stigmasta-5_22-dien-3-ol_acetate, Ergosta-7-en-3-ol, Lanosterol, Cycloartenol, Fecosterol, Ergost-7-en-3beta-ol
+
+**STC**: 2 sterols
+- Sterols: Ergosterol, Tetrahymanol
+
+**WT**: 3 sterols
+- Sterols: Ergosterol, Zymosterol, Fecosterol
+
+### Diversity by Gene Modification
+- Modified strains: 4.50 sterols (mean)
+- Non-modified strains: 3.00 sterols (mean)
+- Difference: 1.50 more sterols in modified strains
+- Fold difference: 1.50x
+
+### Diversity by Adaptation Type
+- Temperature adaptation: 5.00 sterols (mean)
+- Low oxygen adaptation: 2.50 sterols (mean)
+- Difference: 2.50
+- Fold difference: 2.00x
+
+## Unique Sterol Analysis
+
+### CAS
+Unique sterols: Stigmasta-5_22-dien-3-ol_acetate, Ergosta-7-en-3-ol, Lanosterol, Ergost-7-en-3beta-ol, Cycloartenol
+
+### STC
+Unique sterols: Tetrahymanol
+
+### WT
+Unique sterols: Zymosterol
+
