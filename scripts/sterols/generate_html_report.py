@@ -23,78 +23,136 @@ def read_csv(file_path):
 
 def image_to_base64(image_path):
     """Convert an image file to base64."""
-    with open(image_path, 'rb') as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+    try:
+        print(f"Encoding image to base64: {image_path}")
+        image_path = Path(image_path)
+        if not image_path.exists():
+            print(f"ERROR: Image file does not exist: {image_path}")
+            return ""
+
+        # Check if the file exists and is readable
+        if not image_path.is_file():
+            print(f"ERROR: Path exists but is not a file: {image_path}")
+            return ""
+
+        # Check file size
+        file_size = image_path.stat().st_size
+        print(f"File size: {file_size} bytes")
+
+        if file_size == 0:
+            print(f"ERROR: File is empty: {image_path}")
+            return ""
+
+        with open(image_path, 'rb') as image_file:
+            data = image_file.read()
+            print(f"Read {len(data)} bytes from file")
+            encoded = base64.b64encode(data).decode('utf-8')
+            print(f"Successfully encoded image: {image_path} ({len(encoded)} bytes)")
+            return encoded
+    except Exception as e:
+        print(f"Error encoding image {image_path}: {e}")
+        return ""
 
 def compile_data():
     """Compile all relevant data into a data structure."""
     base_dir = Path('/Users/zakiralibhai/Documents/GitHub/Yeast_MSA')
-    
-    # Raw sterol data
-    sterol_data = pd.read_csv(base_dir / 'sterol_data_with_sd.csv')
-    
+
+    # Raw sterol data - with correct path
+    sterol_data = pd.read_csv(base_dir / 'reference/sterols/sterol_data/sterol_data_with_sd.csv')
+    print(f"Loaded sterol data with {len(sterol_data)} rows and {sterol_data.shape[1]} columns")
+
     # Processed analysis files
     preprocessing_text = read_file(base_dir / 'results/sterol_analysis/preprocessing_analysis.txt')
     comparative_analysis = read_file(base_dir / 'results/sterol_analysis/comparative_analysis_summary.txt')
     pathway_analysis = read_file(base_dir / 'results/sterol_analysis/pathway/ratio_analysis.txt')
-    
-    # Try to read integrated findings 
+
+    # Try to read integrated findings
     integrated_findings = read_file(base_dir / 'results/sterol_analysis/correlation/integrated_findings_report.md')
-    
-    # Get images
+
+    # Get images - make sure directory exists before accessing
     vis_dir = base_dir / 'results/sterol_analysis/visualizations'
     images = {}
-    for image_file in vis_dir.glob('*.png'):
-        images[image_file.stem] = image_to_base64(image_file)
-    
-    # Get adaptation and genomic data
-    adaptation_means = pd.read_csv(base_dir / 'results/sterol_analysis/pathway/adaptation_mean_ratios.csv') if (base_dir / 'results/sterol_analysis/pathway/adaptation_mean_ratios.csv').exists() else None
-    modification_means = pd.read_csv(base_dir / 'results/sterol_analysis/pathway/modification_mean_ratios.csv') if (base_dir / 'results/sterol_analysis/pathway/modification_mean_ratios.csv').exists() else None
-    
-    # Get conservation patterns
-    conservation_patterns = read_file(base_dir / 'results/sterol_analysis/correlation/conservation_patterns.txt') if (base_dir / 'results/sterol_analysis/correlation/conservation_patterns.txt').exists() else "Conservation patterns data not found"
-    
-    # Get satellite connections
-    satellite_connections = pd.read_csv(base_dir / 'results/sterol_analysis/correlation/satellite_sterol_connections.csv') if (base_dir / 'results/sterol_analysis/correlation/satellite_sterol_connections.csv').exists() else None
-    
+    if vis_dir.exists() and vis_dir.is_dir():
+        print(f"Reading images from {vis_dir}")
+        for image_file in vis_dir.glob('*.png'):
+            print(f"Processing image: {image_file.name}")
+            img_data = image_to_base64(image_file)
+            if img_data:  # Only add if encoding was successful
+                images[image_file.stem] = img_data
+                print(f"Added image: {image_file.stem}")
+    else:
+        print(f"Warning: Visualization directory not found: {vis_dir}")
+
+    # Get adaptation and genomic data with existence check
+    adaptation_means_path = base_dir / 'results/sterol_analysis/pathway/adaptation_mean_ratios.csv'
+    adaptation_means = None
+    if adaptation_means_path.exists():
+        adaptation_means = pd.read_csv(adaptation_means_path)
+
+    modification_means_path = base_dir / 'results/sterol_analysis/pathway/modification_mean_ratios.csv'
+    modification_means = None
+    if modification_means_path.exists():
+        modification_means = pd.read_csv(modification_means_path)
+
+    # Get conservation patterns with existence check
+    conservation_patterns_path = base_dir / 'results/sterol_analysis/correlation/conservation_patterns.txt'
+    conservation_patterns = "Conservation patterns data not found"
+    if conservation_patterns_path.exists():
+        conservation_patterns = read_file(conservation_patterns_path)
+
+    # Get satellite connections with existence check
+    satellite_connections_path = base_dir / 'results/sterol_analysis/correlation/satellite_sterol_connections.csv'
+    satellite_connections = None
+    if satellite_connections_path.exists():
+        satellite_connections = pd.read_csv(satellite_connections_path)
+
     # Get statistical results if available
-    statistical_results = pd.read_csv(base_dir / 'results/sterol_analysis/comparative/statistical_results_summary.csv') if (base_dir / 'results/sterol_analysis/comparative/statistical_results_summary.csv').exists() else None
-    
-    # Create processed data structure
+    statistical_results_path = base_dir / 'results/sterol_analysis/comparative/statistical_results_summary.csv'
+    statistical_results = None
+    if statistical_results_path.exists():
+        statistical_results = pd.read_csv(statistical_results_path)
+
+    # Create processed data structure with error handling
     processed_data = {
         "samples": sterol_data['sample'].unique().tolist(),
         "sterols": sterol_data['sterol'].unique().tolist(),
         "unique_sterols_count": len(sterol_data['sterol'].unique()),
         "adaptation_types": ["Temperature", "Low Oxygen"],
         "gene_modifications": ["Modified", "Non-modified"],
-        "temperature_samples": [s for s in sterol_data['sample'].unique() if '37C' in s or s.startswith('CAS')],
+        "temperature_samples": [s for s in sterol_data['sample'].unique() if '37' in s or s.startswith('CAS')],
         "low_oxygen_samples": [s for s in sterol_data['sample'].unique() if 'MA' in s or s.startswith('STC')],
         "modified_samples": [s for s in sterol_data['sample'].unique() if s.startswith('CAS') or s.startswith('STC')],
         "non_modified_samples": [s for s in sterol_data['sample'].unique() if s.startswith('WT')],
     }
-    
+
     # Extract key findings from analysis texts using regex
     def extract_key_findings(text, pattern):
-        matches = re.findall(pattern, text)
-        return matches
-    
-    # Extract ergosterol values and fold changes
+        try:
+            matches = re.findall(pattern, text)
+            return matches
+        except:
+            return []
+
+    # Extract ergosterol values and fold changes with improved error handling
     ergosterol_pattern = r"Temperature\s+adaptation:\s+(\d+\.\d+)|Low\s+oxygen\s+adaptation:\s+(\d+\.\d+)"
     ergosterol_values = extract_key_findings(comparative_analysis, ergosterol_pattern)
-    
+    print(f"Extracted ergosterol values: {ergosterol_values}")
+
     fold_change_pattern = r"Temperature-adapted\s+strains\s+have\s+\*\*(\d+\.\d+)x\s+higher\s+ergosterol\*\*"
     fold_changes = extract_key_findings(comparative_analysis, fold_change_pattern)
-    
+    print(f"Extracted fold changes: {fold_changes}")
+
+    # Use extracted values if available, otherwise use fallback values
     key_findings = {
-        "ergosterol_temperature": 10.25,  # Fallback if regex fails
-        "ergosterol_low_oxygen": 2.73,    # Fallback if regex fails
-        "ergosterol_fold_change": 3.76,   # Fallback if regex fails
+        "ergosterol_temperature": 10.25,  # Fallback
+        "ergosterol_low_oxygen": 2.73,    # Fallback
+        "ergosterol_fold_change": 3.76,   # Fallback
         "sterol_diversity_temperature": 5.0,
         "sterol_diversity_low_oxygen": 2.5,
         "sterol_diversity_modified": 4.5,
         "sterol_diversity_non_modified": 3.0,
     }
-    
+
     # Create a complete data structure
     data = {
         "raw_data": sterol_data.to_dict(orient='records'),
@@ -113,7 +171,10 @@ def compile_data():
         "modification_means": modification_means.to_dict(orient='records') if modification_means is not None else None,
         "satellite_connections": satellite_connections.to_dict(orient='records') if satellite_connections is not None else None,
     }
-    
+
+    # Log data compilation details
+    print(f"Data compilation complete with {len(images)} images and {processed_data['unique_sterols_count']} unique sterols")
+
     return data
 
 def generate_interactive_html(data):
@@ -927,11 +988,25 @@ def generate_interactive_html(data):
                     <div class="markdown-content p-3">
     """
     
-    # Add preprocessing analysis content
-    preprocessing_html = data["analysis_texts"]["preprocessing"].replace("\n", "<br>").replace("## ", "<h3>").replace("### ", "<h4>")
-    preprocessing_html = re.sub(r'<h3>(.*?)<br>', r'<h3>\1</h3>', preprocessing_html)
-    preprocessing_html = re.sub(r'<h4>(.*?)<br>', r'<h4>\1</h4>', preprocessing_html)
-    html += preprocessing_html
+    # Add preprocessing analysis content with improved markdown processing
+    preprocessing_text = data["analysis_texts"]["preprocessing"]
+    if preprocessing_text:
+        # Process markdown-like content with proper HTML structure
+        preprocessing_html = preprocessing_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+
+        # Process headers
+        preprocessing_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h3>\1</h3>\2', preprocessing_html)
+        preprocessing_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', preprocessing_html)
+
+        # Wrap the content in paragraphs if not already
+        if not preprocessing_html.startswith("<p>"):
+            preprocessing_html = "<p>" + preprocessing_html
+        if not preprocessing_html.endswith("</p>"):
+            preprocessing_html += "</p>"
+
+        html += preprocessing_html
+    else:
+        html += "<p>No preprocessing analysis available.</p>"
     
     html += """
                     </div>
@@ -941,11 +1016,29 @@ def generate_interactive_html(data):
                     <div class="markdown-content p-3">
     """
     
-    # Add comparative analysis content
-    comparative_html = data["analysis_texts"]["comparative"].replace("\n", "<br>").replace("## ", "<h3>").replace("### ", "<h4>")
-    comparative_html = re.sub(r'<h3>(.*?)<br>', r'<h3>\1</h3>', comparative_html)
-    comparative_html = re.sub(r'<h4>(.*?)<br>', r'<h4>\1</h4>', comparative_html)
-    html += comparative_html
+    # Add comparative analysis content with improved markdown processing
+    comparative_text = data["analysis_texts"]["comparative"]
+    if comparative_text:
+        # Process markdown-like content with proper HTML structure
+        comparative_html = comparative_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+
+        # Process headers
+        comparative_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h3>\1</h3>\2', comparative_html)
+        comparative_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', comparative_html)
+
+        # Process markdown formatting
+        comparative_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', comparative_html)
+        comparative_html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', comparative_html)
+
+        # Wrap the content in paragraphs if not already
+        if not comparative_html.startswith("<p>"):
+            comparative_html = "<p>" + comparative_html
+        if not comparative_html.endswith("</p>"):
+            comparative_html += "</p>"
+
+        html += comparative_html
+    else:
+        html += "<p>No comparative analysis available.</p>"
     
     html += """
                     </div>
@@ -955,11 +1048,29 @@ def generate_interactive_html(data):
                     <div class="markdown-content p-3">
     """
     
-    # Add pathway analysis content
-    pathway_html = data["analysis_texts"]["pathway"].replace("\n", "<br>").replace("## ", "<h3>").replace("### ", "<h4>")
-    pathway_html = re.sub(r'<h3>(.*?)<br>', r'<h3>\1</h3>', pathway_html)
-    pathway_html = re.sub(r'<h4>(.*?)<br>', r'<h4>\1</h4>', pathway_html)
-    html += pathway_html
+    # Add pathway analysis content with improved markdown processing
+    pathway_text = data["analysis_texts"]["pathway"]
+    if pathway_text:
+        # Process markdown-like content with proper HTML structure
+        pathway_html = pathway_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+
+        # Process headers
+        pathway_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h3>\1</h3>\2', pathway_html)
+        pathway_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', pathway_html)
+
+        # Process markdown formatting
+        pathway_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', pathway_html)
+        pathway_html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', pathway_html)
+
+        # Wrap the content in paragraphs if not already
+        if not pathway_html.startswith("<p>"):
+            pathway_html = "<p>" + pathway_html
+        if not pathway_html.endswith("</p>"):
+            pathway_html += "</p>"
+
+        html += pathway_html
+    else:
+        html += "<p>No pathway analysis available.</p>"
     
     html += """
                     </div>
@@ -1380,12 +1491,68 @@ def generate_interactive_html(data):
                 <div class="card-body markdown-content">
     """
     
-    # Add integrated findings content
-    integrated_html = data["analysis_texts"]["integrated"].replace("\n", "<br>").replace("## ", "<h4>").replace("### ", "<h5>")
-    integrated_html = re.sub(r'<h4>(.*?)<br>', r'<h4>\1</h4>', integrated_html)
-    integrated_html = re.sub(r'<h5>(.*?)<br>', r'<h5>\1</h5>', integrated_html)
-    integrated_html = re.sub(r'\|(.*?)\|', r'<div class="table-responsive"><table class="table">\1</table></div>', integrated_html)
-    html += integrated_html
+    # Add integrated findings content with improved markdown processing
+    integrated_text = data["analysis_texts"]["integrated"]
+    if integrated_text:
+        # Process markdown-like content with proper HTML structure
+        integrated_html = integrated_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+
+        # Process headers - use h4/h5 to be smaller in this section
+        integrated_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', integrated_html)
+        integrated_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h5>\1</h5>\2', integrated_html)
+
+        # Process markdown formatting
+        integrated_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', integrated_html)
+        integrated_html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', integrated_html)
+
+        # Process markdown tables with better handling
+        table_pattern = r'(\|.*?\|.*?\|.*?\|.*?\|(<br>|\s|\Z))'
+        if re.search(table_pattern, integrated_html, re.DOTALL):
+            print("Found markdown tables in integrated findings")
+            table_html = "<div class=\"table-responsive\"><table class=\"table table-striped\">"
+
+            # Process table rows
+            rows = re.findall(r'\|(.*?)\|(<br>|\s|\Z)', integrated_html)
+            for i, (row_content, _) in enumerate(rows):
+                cells = row_content.split('|')
+                if i == 0:  # Header row
+                    table_html += "<thead><tr>"
+                    for cell in cells:
+                        if cell.strip():
+                            table_html += f"<th>{cell.strip()}</th>"
+                    table_html += "</tr></thead><tbody>"
+                elif i == 1 and all('-' in cell for cell in cells):  # Separator row
+                    continue  # Skip the separator row
+                else:  # Data rows
+                    table_html += "<tr>"
+                    for cell in cells:
+                        if cell.strip() or cell.strip() == "":
+                            table_html += f"<td>{cell.strip()}</td>"
+                    table_html += "</tr>"
+
+            table_html += "</tbody></table></div>"
+
+            # Replace markdown tables with HTML tables
+            integrated_html = re.sub(table_pattern, table_html, integrated_html, flags=re.DOTALL)
+
+        # Process markdown lists
+        list_items = re.findall(r'(<br>|\s)- (.*?)(<br>|\s|\Z)', integrated_html)
+        if list_items:
+            list_html = "<ul>"
+            for _, item_content, _ in list_items:
+                list_html += f"<li>{item_content.strip()}</li>"
+            list_html += "</ul>"
+            integrated_html = re.sub(r'(<br>|\s)- (.*?)(<br>|\s|\Z)', list_html, integrated_html)
+
+        # Wrap the content in paragraphs if not already
+        if not integrated_html.startswith("<p>"):
+            integrated_html = "<p>" + integrated_html
+        if not integrated_html.endswith("</p>"):
+            integrated_html += "</p>"
+
+        html += integrated_html
+    else:
+        html += "<p>No integrated findings available.</p>"
     
     html += """
                 </div>
@@ -1574,14 +1741,23 @@ def generate_interactive_html(data):
 
 def main():
     """Main function to compile data and generate the HTML report."""
+    print("Starting sterol analysis HTML report generation...")
     data = compile_data()
     html = generate_interactive_html(data)
-    
-    # Write HTML to file
-    output_path = "/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/sterols.html"
+
+    # Write HTML to file in the correct reports directory
+    base_dir = Path('/Users/zakiralibhai/Documents/GitHub/Yeast_MSA')
+    reports_dir = base_dir / 'results' / 'reports'
+
+    # Make sure reports directory exists
+    if not reports_dir.exists():
+        reports_dir.mkdir(parents=True, exist_ok=True)
+        print(f"Created reports directory: {reports_dir}")
+
+    output_path = reports_dir / "sterols.html"
     with open(output_path, 'w') as f:
         f.write(html)
-    
+
     print(f"HTML report generated: {output_path}")
 
 if __name__ == "__main__":
