@@ -28,6 +28,15 @@ Welcome to the comprehensive documentation for the Yeast Multiple Sequence Align
 8. [**Technical Reference**](07_technical_reference.md)  
    Technical details on tools, methods, and parameters
 
+9. [**Biochemistry**](08_biochemistry.md)  
+   Sterol biosynthesis and membrane adaptation biological context
+
+10. [**Future Directions**](09_future_directions.md)  
+    Potential avenues for extending the research
+
+11. [**Analysis Plan**](10_analysis_plan.md)  
+    Structured 10-step plan for immediate next computational steps
+
 ## Project Summary
 
 This project investigates how yeast (S. cerevisiae, W303 strain) adapts to different environmental stresses through genetic mutations. The research employs comparative genomic analysis to study variations between yeast strains subjected to different treatments - temperature stress, low oxygen conditions, and gene modifications.
@@ -55,6 +64,9 @@ The core focus is on understanding how mutations in the ergosterol pathway (a cr
 - To explore results, check the Key Findings and Biological Interpretations
 - For help interpreting visualizations, refer to the Visualization Guide
 - For technical details, consult the Technical Reference
+- For biological context, read the Biochemistry section
+- For future research ideas, explore the Future Directions
+- For immediate next steps, review the Analysis Plan
 
 ## Additional Resources
 
@@ -80,4 +92,4 @@ The project includes several interactive HTML dashboards that provide rich visua
 2. **Network Analysis Report**: `results/network_analysis/network_analysis_report.md`
 3. **Integrated Findings Report**: `results/sterol_analysis/correlation/integrated_findings_report.md`
 
-This documentation will help you navigate and understand the Yeast MSA project, from its experimental design to its biological implications.
+This documentation will help you navigate and understand the Yeast MSA project, from its experimental design to its biological implications and future research directions.

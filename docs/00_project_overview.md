@@ -63,3 +63,8 @@ This documentation is organized to provide a comprehensive understanding of the 
 6. **Biological Interpretations**: Explanation of biological significance
 7. **Visualization Guide**: Overview of available visualizations and reports
 8. **Technical Reference**: Technical details on tools and methods
+9. **Biochemistry**: Sterol biosynthesis and membrane adaptation context
+10. **Future Directions**: Potential avenues for extending the research
+11. **Analysis Plan**: Structured 10-step plan for immediate next steps
+
+The last three documents (Biochemistry, Future Directions, and Analysis Plan) provide additional context and guidance for understanding the biological significance of our findings and planning future research directions.
