@@ -22,11 +22,20 @@ echo "Project directory: $PROJECT_DIR"
 echo "Output directory: $OUTPUT_DIR"
 echo "========================================================"
 
-# Note: We skip step 1 since we're directly using gene mapping data
+# Step 1: Map OSH genes in the reference genomeecho
 echo
-echo "Step 1: Using gene mapping data directly from gene_mapping_full.tsv"
-echo "========================================================" 
-
+     27  echo "Step 1: Mapping OSH family genes in the reference genome..."
+     28  echo "========================================================"
+     29  python3 "$SCRIPT_DIR/analyze_osh_genes.py" \
+     30    --ref-genome "$PROJECT_DIR/reference/w303_chromosomal.fasta" \
+     31    --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
+     32    --output-dir "$OUTPUT_DIR"
+     
+     30  if [ $? -ne 0 ]; then
+     31    echo "Error in OSH gene mapping analysis. Exiting."
+     32    exit 1
+     33  fi
+     34  
 # Step 2: Analyze variants in and around OSH genes
 echo
 echo "Step 2: Analyzing variants in and around OSH genes..."
@@ -49,6 +58,13 @@ echo "========================================================"
 python3 "$SCRIPT_DIR/osh_erg_distance.py" \
   --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
   --output-dir "$OUTPUT_DIR"
+
+  python3 "$SCRIPT_DIR/osh_erg_distance.py" \
+     50    --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
+     51    --genome-file "$PROJECT_DIR/reference/w303_chromosomal.fasta" \
+     52    --variant-dir "$PROJECT_DIR/results/gene_variants_expanded" \
+     51    --output-dir "$OUTPUT_DIR"
+     52 
 
 if [ $? -ne 0 ]; then
   echo "Error in OSH-ERG distance analysis. Exiting."
