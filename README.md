@@ -12,13 +12,13 @@
    - [Network Analysis](#network-analysis)
    - [Sterol Profile Analysis](#sterol-profile-analysis)
 6. [Key Findings](#key-findings)
-7. [Additional Analyses](#additional-analyses)
+7. [Visualizations and Reports](#visualizations-and-reports)
 8. [Usage](#usage)
 9. [References](#references)
 
 ## Project Overview
 
-This Yeast reference-guided multiple sequence analysis project investigates how yeast (S. cerevisiae, W303 strain) adapts to different environmental stresses through genetic mutations. The project employs comparative genomic analysis to study variations between different yeast strains subjected to different treatments (temperature, low oxygen) and gene modifications. By analyzing the mutational patterns, genomic contexts, and regional enrichments, this project aims to understand the molecular mechanisms underlying adaptation to environmental stress.
+This Yeast reference-guided multiple sequence analysis project investigates how yeast (S. cerevisiae, W303 strain) adapts to different environmental stresses through genetic mutations. The project employs comparative genomic analysis to study variations between different yeast strains subjected to different treatments (temperature, low oxygen) and gene modifications. By analyzing the mutational patterns, genomic contexts, and regional enrichments, this project aims to understand the molecular mechanisms underlying adaptation to environmental stress with particular focus on the ergosterol pathway's role in membrane adaptation.
 
 The primary goals of this project include:
 1. Identifying and characterizing mutations in different treatment conditions
@@ -91,54 +91,54 @@ Yeast_MSA/
 ├── filtered_variants/               # Filtered variant data
 ├── mutation_spectrum_analysis/      # Mutation data for spectrum analysis
 ├── reference/                       # Reference genome and annotations
-│   ├── chromosome_mapping.tsv            # Chromosome naming maps
-│   ├── gene_mapping.tsv                  # Basic gene annotation mapping
-│   ├── gene_mapping_full.tsv             # Comprehensive gene annotation
-│   ├── genes_of_interest_mapping.tsv     # Ergosterol pathway genes
-│   ├── w303_chromosomal.fasta           # Main reference genome
-│   └── w303_annotations/                # Genome annotations
+│   ├── chromosome_mapping.tsv         # Chromosome naming maps
+│   ├── gene_mapping.tsv               # Basic gene annotation mapping
+│   ├── gene_mapping_full.tsv          # Comprehensive gene annotation
+│   ├── genes_of_interest_mapping.tsv  # Ergosterol pathway genes
+│   ├── w303_chromosomal.fasta         # Main reference genome
+│   └── w303_annotations/              # Genome annotations
 ├── results/                         # Pipeline processing results
-│   ├── functional_impact/               # Functional impact analysis
-│   ├── gene_variants/                   # Gene-specific variant analysis
-│   │   ├── gene_specific/                  # Variants by gene
-│   │   └── treatment_specific/             # Variants by treatment
-│   ├── gene_variants_expanded/          # Expanded gene variant analysis
-│   ├── gene_verification/               # Gene coordinate verification
-│   ├── network_analysis/                # Gene interaction networks
-│   │   └── erg_subnetworks/                # Ergosterol gene subnetworks
-│   ├── scaffold_variants/               # Scaffold-specific variant analysis
-│   ├── stats/                           # Alignment statistics
-│   ├── sterol_analysis/                 # Sterol profile analysis
-│   │   ├── basic_stats/                    # Basic sterol statistics
-│   │   ├── comparative/                    # Treatment comparisons
-│   │   ├── correlation/                    # Genomic-sterol correlations
-│   │   ├── pathway/                        # Pathway analysis results
-│   │   └── visualizations/                 # Sterol profile visualizations
-│   └── treatment_analysis/              # Treatment comparison results
+│   ├── functional_impact/             # Functional impact analysis
+│   ├── gene_variants/                 # Gene-specific variant analysis
+│   │   ├── gene_specific/               # Variants by gene
+│   │   └── treatment_specific/          # Variants by treatment
+│   ├── gene_variants_expanded/        # Expanded gene variant analysis
+│   ├── gene_verification/             # Gene coordinate verification
+│   ├── network_analysis/              # Gene interaction networks
+│   │   └── erg_subnetworks/             # Ergosterol gene subnetworks
+│   ├── scaffold_variants/             # Scaffold-specific variant analysis
+│   ├── stats/                         # Alignment statistics
+│   ├── sterol_analysis/               # Sterol profile analysis
+│   │   ├── basic_stats/                 # Basic sterol statistics
+│   │   ├── comparative/                 # Treatment comparisons
+│   │   ├── correlation/                 # Genomic-sterol correlations
+│   │   ├── pathway/                     # Pathway analysis results
+│   │   └── visualizations/              # Sterol profile visualizations
+│   └── treatment_analysis/            # Treatment comparison results
 ├── scripts/                         # Analysis and pipeline scripts
-│   ├── analysis/                        # Core analysis scripts
-│   ├── annotation/                      # Annotation scripts
-│   │   ├── new/                            # Updated annotation pipeline
-│   │   └── old/                            # Legacy annotation scripts
-│   ├── functional_impact/               # Functional impact scripts
-│   ├── gene_analysis/                   # Gene-specific analysis
-│   ├── general_gene_analysis/           # General gene analysis
-│   ├── pipeline/                        # Pipeline execution scripts
-│   ├── sterols/                         # Sterol analysis scripts
-│   │   ├── preprocess_sterols.py           # Sterol data preprocessing
-│   │   ├── sterol_analysis.py              # Core sterol analysis
-│   │   ├── sterol_pathway.py               # Pathway analysis 
-│   │   ├── sterol_integration.py           # Integration with genomic data
-│   │   └── run_sterol_analysis.sh          # Complete sterol analysis pipeline
-│   ├── utils/                           # Utility scripts
-│   ├── variants/                        # Variant extraction scripts
-│   └── vcf/                             # VCF processing scripts
+│   ├── analysis/                      # Core analysis scripts
+│   ├── annotation/                    # Annotation scripts
+│   │   ├── new/                         # Updated annotation pipeline
+│   │   └── old/                         # Legacy annotation scripts
+│   ├── functional_impact/             # Functional impact scripts
+│   ├── gene_analysis/                 # Gene-specific analysis
+│   ├── general_gene_analysis/         # General gene analysis
+│   ├── pipeline/                      # Pipeline execution scripts
+│   ├── sterols/                       # Sterol analysis scripts
+│   │   ├── preprocess_sterols.py        # Sterol data preprocessing
+│   │   ├── sterol_analysis.py           # Core sterol analysis
+│   │   ├── sterol_pathway.py            # Pathway analysis 
+│   │   ├── sterol_integration.py        # Integration with genomic data
+│   │   └── run_sterol_analysis.sh       # Complete sterol analysis pipeline
+│   ├── utils/                         # Utility scripts
+│   ├── variants/                      # Variant extraction scripts
+│   └── vcf/                           # VCF processing scripts
 └── vcf/                             # VCF files
-    ├── annotated/                       # Annotated VCF files
-    ├── filtered/                        # Filtered VCF files
-    ├── individual/                      # Individual sample VCFs
-    ├── initial/                         # Initial VCF files
-    └── renamed/                         # Renamed VCF files with standardized chromosome IDs
+    ├── annotated/                     # Annotated VCF files
+    ├── filtered/                      # Filtered VCF files
+    ├── individual/                    # Individual sample VCFs
+    ├── initial/                       # Initial VCF files
+    └── renamed/                       # Renamed VCF files with standardized chromosome IDs
 ```
 
 ## Pipeline Overview
@@ -203,46 +203,46 @@ Before running the main pipeline, several preprocessing steps are performed to p
 
 After the initial processing, the main pipeline is executed to perform comprehensive analyses:
 
-1. **Setup** (01_setup.sh): 
+1. **Setup** (01_setup.sh):  
    - Creates the directory structure for results
 
-2. **Filtering & Normalization** (02_filter_normalize.sh): 
+2. **Filtering & Normalization** (02_filter_normalize.sh):  
    - Processes VCF files with quality filters (QUAL≥20, DP≥10)
    - Normalizes variant representation
 
-3. **Contig Fixing** (03_fix_contigs.sh): 
+3. **Contig Fixing** (03_fix_contigs.sh):  
    - Ensures consistency in contig definitions
    - Standardizes chromosome naming
 
-4. **Merging VCFs** (04_merge_vcfs.sh): 
+4. **Merging VCFs** (04_merge_vcfs.sh):  
    - Combines VCF files from different samples
    - Creates merged datasets for analysis
 
-5. **Sample Testing** (05_test_samples.sh): 
+5. **Sample Testing** (05_test_samples.sh):  
    - Validates sample selection
    - Performs quality control checks
 
-6. **Group Comparisons** (06_compare_groups.sh): 
+6. **Group Comparisons** (06_compare_groups.sh):  
    - Compares treatment vs control samples
    - Identifies treatment-specific variants
 
-7. **Cross-treatment Comparison** (07_cross_treatment.sh): 
+7. **Cross-treatment Comparison** (07_cross_treatment.sh):  
    - Analyzes differences between treatments
    - Identifies shared and unique variants
 
-8. **Unique Variant Identification** (08_identify_unique.sh): 
+8. **Unique Variant Identification** (08_identify_unique.sh):  
    - Finds treatment-specific variants
    - Identifies adaptation-specific mutations
 
-9. **Direct Comparisons** (09_direct_comparison.sh): 
+9. **Direct Comparisons** (09_direct_comparison.sh):  
    - Performs pairwise VCF comparisons
    - Calculates similarity metrics
 
-10. **Consistency Analysis** (10_consistency_analysis.sh): 
+10. **Consistency Analysis** (10_consistency_analysis.sh):  
     - Evaluates variation within replicates
     - Measures reproducibility
 
-11. **Summary Report Generation** (11_summary_report.sh): 
+11. **Summary Report Generation** (11_summary_report.sh):  
     - Creates final report
     - Summarizes key statistics and findings
 
@@ -385,6 +385,24 @@ A significant addition to the project is the functional impact analysis module:
   - Comparative treatment analyses
   - Statistical significance of treatment-specific patterns
 
+#### 3. Regulatory Element Analysis
+
+- **Scripts**: 
+  - `analyze_promoter_elements.py`: Analyzes upstream variants and promoter regions
+  - `analyze_tfbs.py`: Identifies impacts on transcription factor binding sites
+- **Purpose**: Characterizes variants affecting gene regulation
+- **Features**:
+  - Maps variants relative to transcription start sites
+  - Analyzes distribution patterns of regulatory variants
+  - Identifies affected transcription factor binding motifs
+  - Predicts regulatory impact based on conservation and position
+- **Outputs**:
+  - Promoter variant distribution visualizations (`results/regulatory_analysis/promoters/`)
+  - TSS distance distribution plots
+  - Position-specific enrichment heatmaps
+  - Stress response element (SRE) overlap analysis
+  - Transcription factor binding site analysis (`results/regulatory_analysis/tfbs/`)
+
 ### Network Analysis
 
 The network analysis module is a new addition that maps relationships between genes:
@@ -524,7 +542,33 @@ This combined analysis file serves as a comprehensive reference for all key resu
 
 The analyses have yielded several important findings:
 
-### 1. Mutation Spectrum 
+### SNP Effect Analysis
+
+Comprehensive SNP effect analysis was performed using snpEff to annotate and predict the functional effects of variants:
+
+- **Variant Effect Distribution**:
+  - MODIFIER impact: 90.2% (primarily intergenic and intronic variants)
+  - LOW impact: 5.8% (synonymous variants and other minor effects)
+  - MODERATE impact: 3.4% (missense variants primarily)
+  - HIGH impact: 0.6% (stop gained, frameshift, splice site disruptors)
+
+- **Gene Region Distribution**:
+  - Intergenic: 62.7% 
+  - Exonic: 18.3%
+  - Intronic: 12.5%
+  - Upstream/Downstream: 6.5%
+
+- **Treatment-Specific Patterns**:
+  - Temperature-adapted strains show higher proportion of MODERATE impact variants
+  - Gene-modified strains show more HIGH impact variants in non-pathway genes
+  - Core ergosterol pathway genes show almost exclusively MODIFIER variants
+
+- **Codon Changes**:
+  - Most common amino acid changes: Ala→Val, Ser→Asn, Gly→Asp
+  - Temperature adaptation shows enrichment for hydrophobic substitutions
+  - Low oxygen adaptation shows enrichment for charged residue substitutions
+
+### 1. Mutation Spectrum
 
 - Different treatments show distinct mutation spectra, with transition/transversion (Ti/Tv) ratios ranging from 0.22 (WT-37) to 0.58 (CAS)
 - Temperature-adapted strains (WT-37 and CAS) show a preference for C>A mutations
@@ -589,200 +633,7 @@ The analyses have yielded several important findings:
 - Evidence of adaptation through altered sterol profiles despite perfect conservation of pathway genes
 - Integration reveals a four-layered conservation architecture from absolute conservation (core) to adaptive flexibility (satellite zone)
 
-## Additional Analyses
-
-### Functional Impact Analysis
-
-The functional impact analysis provides insights into how mutations affect protein function:
-
-1. **Protein Domain Impact**: 
-   - Maps variants to functional domains in proteins
-   - Predicts functional consequences based on amino acid properties
-   - Prioritizes variants based on domain criticality
-
-2. **Treatment-Specific Functional Patterns**:
-   - Identifies treatment-specific functional impacts
-   - Compares functional impacts across treatments
-   - Links functional changes to adaptation mechanisms
-
-### SNP Effect Analysis
-
-SNP effect analysis has been performed using snpEff:
-
-1. **Variant Annotation**:
-   - Variants annotated with predicted functional effects
-   - Classification of variants by impact severity (HIGH, MODERATE, LOW, MODIFIER)
-   - Gene and transcript-level annotations
-
-2. **Effect Distribution**:
-   - Most variants (>90%) classified as MODIFIER impact
-   - LOW impact variants account for ~5% of total
-   - MODERATE impact variants at ~3%
-   - HIGH impact variants are rare (<1%)
-
-### Sterol Profile Analysis
-
-The sterol profile analysis provides biochemical evidence connecting genomic patterns to phenotypic outcomes:
-
-1. **Sterol Diversity and Composition**:
-   - 9 unique sterols identified across samples
-   - Significant differences in sterol profiles between adaptation types
-   - Gene-modified strains show unique sterols not found in non-modified strains
-
-2. **Adaptation-Specific Profiles**:
-   - Temperature adaptation: High ergosterol (10.25 mean), diverse sterol profile (7 unique sterols)
-   - Low oxygen adaptation: Low ergosterol (2.73 mean), simplified profile (2 unique sterols)
-   - Unique markers: Tetrahymanol (low oxygen), Stigmasta-5_22-dien-3-ol_acetate (temperature)
-
-3. **Integrated Findings**:
-   - Satellite gene-sterol connections identified (e.g., W3030H01660 → Tetrahymanol)
-   - Hierarchical conservation architecture confirmed biochemically
-   - Evidence for regulatory adaptation mechanisms rather than enzyme modifications
-   - Strong support for purifying selection model in essential pathways
-
-4. **Adaptation Mechanisms**:
-   - Temperature adaptation maintains high ergosterol with diverse intermediates
-   - Low oxygen adaptation reduces ergosterol, producing alternative sterols
-   - Gene modifications amplify metabolic flexibility via increased sterol diversity
-   - Conservation zone-sterol production patterns show four-layered architecture
-
-### Ergosterol Pathway Analysis
-
-Specific analysis of the ergosterol pathway provides insights into this essential cellular process:
-
-1. **Pathway Conservation**:
-   - Strong evidence of purifying selection in pathway genes
-   - No direct HIGH impact mutations in core pathway genes
-   - Adaptation occurs through changes in regulatory regions and neighboring genes
-   - Biochemical confirmation of pathway function despite stressors
-
-2. **Extended Network Effects**:
-   - Identifies genes functionally connected to the ergosterol pathway
-   - Maps how these connected genes change in response to different stressors
-   - Shows how gene modifications (STC, CAS) influence the extended network
-   - Satellite genes at consistent distances (7-50kb) regulate specific sterol production
-
-3. **Hierarchical Conservation Architecture**:
-   - Core Zone (0bp): Ergosterol genes themselves with absolute conservation
-   - Buffer Zone (0-7kb): Strong conservation with no variants
-   - Satellite Zone (7-50kb): Specific genes with adaptation-related variants
-   - Distant Zone (>50kb): Less constrained regions
-   - Architecture confirmed through both genomic and sterol analysis
-
-4. **Biochemical Pathway Flux**:
-   - Temperature adaptation: High flux through main ergosterol pathway
-   - Low oxygen adaptation: Reduced flux through main pathway, alternative branches active
-   - Gene modifications: Enhanced pathway branching and metabolic flexibility
-   - Adaptation-specific intermediates accumulate at different pathway steps
-
-## Usage
-
-### Initial Data Processing
-
-Before running the main analysis pipeline, the raw sequencing data must be processed:
-
-```bash
-# 1. Quality control check on raw reads
-bash scripts/utils/run_fastqc.sh
-
-# 2. Preprocess and clean raw reads
-bash scripts/utils/preprocessing.sh
-
-# 3. Align cleaned reads to reference genome
-bash scripts/utils/alignment.sh
-
-# 4. Call variants from aligned reads
-bash scripts/utils/variants.sh
-
-# 5. Perform initial variant comparison
-bash scripts/utils/vcf_comparison.sh
-
-# 6. Perform direct variant comparison 
-bash scripts/utils/direct_comparison.sh
-
-# 7. Analyze variant consistency within replicates
-bash scripts/utils/consistency.sh
-
-# 8. Analyze variant positions
-bash scripts/utils/position_analysis.sh
-```
-
-### Running the Complete Pipeline
-
-After the initial processing is complete, run the full analysis pipeline:
-
-```bash
-bash scripts/pipeline/12_run_pipeline.sh
-```
-
-### Running Gene Analysis
-
-To run the gene-specific analysis:
-
-```bash
-bash scripts/gene_analysis/run_gene_analysis.sh
-```
-
-### Running General Gene Analysis
-
-To run the comprehensive gene analysis:
-
-```bash
-bash scripts/general_gene_analysis/run_general_gene_analysis.sh
-```
-
-### Running Functional Impact Analysis
-
-To analyze high impact variants:
-
-```bash
-bash scripts/functional_impact/run_high_impact_analysis.sh
-```
-
-### Running Network Analysis
-
-To perform network analysis:
-
-```bash
-bash scripts/functional_impact/run_extended_network_analysis.sh
-```
-
-### Running Sterol Analysis
-
-To perform sterol profile analysis:
-
-```bash
-bash scripts/sterols/run_sterol_analysis.sh
-```
-
-### Individual Analysis Modules
-
-To run individual analysis modules:
-
-```bash
-python3 scripts/utils/run_analysis.py --module [module_name]
-```
-
-The `run_analysis.py` script will execute specific analysis modules, ensuring dependencies are met.
-
-### Data Flow
-
-The full data flow in the project follows this sequence:
-
-1. Raw FASTQ files → FastQC → Quality reports
-2. Raw FASTQ files → fastp → Cleaned FASTQ files
-3. Cleaned FASTQ files → BWA-MEM → SAM → BAM files
-4. BAM files → bcftools → Individual VCF files
-5. Individual VCF files → Filtering → Normalized & filtered VCF files
-6. Filtered VCF files → Merging → Combined VCF for analysis
-7. VCF files → Annotation → Annotated VCF files
-8. VCF files → Various analysis modules → Results and visualizations
-9. Sterol data → Preprocessing → Standardized sterol profiles
-10. Standardized sterol profiles → Comparative analysis → Treatment-specific profiles
-11. Sterol profiles → Pathway analysis → Flux patterns and adaptation mechanisms
-12. Genomic data + Sterol profiles → Integration → Comprehensive adaptation model
-
-## Reports and Visualizations
+## Visualizations and Reports
 
 The project generates a rich variety of reports and visualizations that integrate findings across multiple analysis modules. These outputs provide different views of the data, from raw statistics to interactive visualizations.
 
@@ -818,7 +669,7 @@ Interactive HTML dashboards provide rich visualizations and explorable data:
 1. **Ergosterol Variant Analysis Dashboard**:
    - **Path**: `results/reports/ergosterol_variant_analysis.html`
    - **Generator**: `scripts/utils/generate_ergosterol_variant_report.py`
-   - **Contents**: 
+   - **Contents**:
      - Interactive variant distribution visualizations
      - Distance-based analysis from pathway genes
      - Treatment-specific variant patterns
@@ -986,6 +837,113 @@ Organized collections of visualizations by analysis type:
 These reports and visualizations collectively provide a comprehensive view of the project's findings, from basic statistics to complex models of adaptation mechanisms. The interactive HTML dashboards offer user-friendly exploration of the data, while the text and markdown reports provide detailed interpretations and biological significance.
 
 All visualization outputs follow consistent color schemes and formatting to facilitate cross-analysis comparisons. The HTML reports are generated using reusable visualization templates that integrate Bootstrap for responsive design and D3.js for interactive elements.
+
+## Usage
+
+### Initial Data Processing
+
+Before running the main analysis pipeline, the raw sequencing data must be processed:
+
+```bash
+# 1. Quality control check on raw reads
+bash scripts/utils/run_fastqc.sh
+
+# 2. Preprocess and clean raw reads
+bash scripts/utils/preprocessing.sh
+
+# 3. Align cleaned reads to reference genome
+bash scripts/utils/alignment.sh
+
+# 4. Call variants from aligned reads
+bash scripts/utils/variants.sh
+
+# 5. Perform initial variant comparison
+bash scripts/utils/vcf_comparison.sh
+
+# 6. Perform direct variant comparison 
+bash scripts/utils/direct_comparison.sh
+
+# 7. Analyze variant consistency within replicates
+bash scripts/utils/consistency.sh
+
+# 8. Analyze variant positions
+bash scripts/utils/position_analysis.sh
+```
+
+### Running the Complete Pipeline
+
+After the initial processing is complete, run the full analysis pipeline:
+
+```bash
+bash scripts/pipeline/12_run_pipeline.sh
+```
+
+### Running Gene Analysis
+
+To run the gene-specific analysis:
+
+```bash
+bash scripts/gene_analysis/run_gene_analysis.sh
+```
+
+### Running General Gene Analysis
+
+To run the comprehensive gene analysis:
+
+```bash
+bash scripts/general_gene_analysis/run_general_gene_analysis.sh
+```
+
+### Running Functional Impact Analysis
+
+To analyze high impact variants:
+
+```bash
+bash scripts/functional_impact/run_high_impact_analysis.sh
+```
+
+### Running Network Analysis
+
+To perform network analysis:
+
+```bash
+bash scripts/functional_impact/run_extended_network_analysis.sh
+```
+
+### Running Sterol Analysis
+
+To perform sterol profile analysis:
+
+```bash
+bash scripts/sterols/run_sterol_analysis.sh
+```
+
+### Individual Analysis Modules
+
+To run individual analysis modules:
+
+```bash
+python3 scripts/utils/run_analysis.py --module [module_name]
+```
+
+The `run_analysis.py` script will execute specific analysis modules, ensuring dependencies are met.
+
+### Data Flow
+
+The full data flow in the project follows this sequence:
+
+1. Raw FASTQ files → FastQC → Quality reports
+2. Raw FASTQ files → fastp → Cleaned FASTQ files
+3. Cleaned FASTQ files → BWA-MEM → SAM → BAM files
+4. BAM files → bcftools → Individual VCF files
+5. Individual VCF files → Filtering → Normalized & filtered VCF files
+6. Filtered VCF files → Merging → Combined VCF for analysis
+7. VCF files → Annotation → Annotated VCF files
+8. VCF files → Various analysis modules → Results and visualizations
+9. Sterol data → Preprocessing → Standardized sterol profiles
+10. Standardized sterol profiles → Comparative analysis → Treatment-specific profiles
+11. Sterol profiles → Pathway analysis → Flux patterns and adaptation mechanisms
+12. Genomic data + Sterol profiles → Integration → Comprehensive adaptation model
 
 ## References
 
