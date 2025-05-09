@@ -1684,61 +1684,112 @@ def generate_interactive_html(data):
     # Add integrated findings content with improved markdown processing
     integrated_text = data["analysis_texts"]["integrated"]
     if integrated_text:
-        # Process markdown-like content with proper HTML structure
-        integrated_html = integrated_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+        # Use the same improved markdown processor we used for other sections
+        integrated_html = ""
 
-        # Process headers - use h4/h5 to be smaller in this section
-        integrated_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', integrated_html)
-        integrated_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h5>\1</h5>\2', integrated_html)
+        # First, handle the title (h1/h2)
+        title_match = re.search(r'^# (.*?)$', integrated_text, re.MULTILINE)
+        if title_match:
+            title = title_match.group(1)
+            integrated_html += f"<h3>{title}</h3>"
+            # Remove the title from the text to avoid processing it again
+            integrated_text = re.sub(r'^# .*?$', '', integrated_text, count=1, flags=re.MULTILINE)
 
-        # Process markdown formatting
-        integrated_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', integrated_html)
-        integrated_html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', integrated_html)
+        # Split the text by sections (h2 headers)
+        sections = re.split(r'^## (.*?)$', integrated_text, flags=re.MULTILINE)
 
-        # Process markdown tables with better handling
-        table_pattern = r'(\|.*?\|.*?\|.*?\|.*?\|(<br>|\s|\Z))'
-        if re.search(table_pattern, integrated_html, re.DOTALL):
-            print("Found markdown tables in integrated findings")
-            table_html = "<div class=\"table-responsive\"><table class=\"table table-striped\">"
+        # The first item in sections might be empty or contain text before the first h2
+        if sections[0].strip():
+            # Process any text before the first heading
+            intro_text = sections[0].strip()
+            paragraphs = re.split(r'\n\n+', intro_text)
+            for paragraph in paragraphs:
+                if paragraph.strip():
+                    # Process bold and italic in paragraphs
+                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                    integrated_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
 
-            # Process table rows
-            rows = re.findall(r'\|(.*?)\|(<br>|\s|\Z)', integrated_html)
-            for i, (row_content, _) in enumerate(rows):
-                cells = row_content.split('|')
-                if i == 0:  # Header row
-                    table_html += "<thead><tr>"
-                    for cell in cells:
-                        if cell.strip():
-                            table_html += f"<th>{cell.strip()}</th>"
-                    table_html += "</tr></thead><tbody>"
-                elif i == 1 and all('-' in cell for cell in cells):  # Separator row
-                    continue  # Skip the separator row
-                else:  # Data rows
-                    table_html += "<tr>"
-                    for cell in cells:
-                        if cell.strip() or cell.strip() == "":
-                            table_html += f"<td>{cell.strip()}</td>"
-                    table_html += "</tr>"
+        # Process each section (the section title is at i, content at i+1)
+        for i in range(1, len(sections), 2):
+            if i+1 < len(sections):
+                section_title = sections[i]
+                section_content = sections[i+1].strip()
 
-            table_html += "</tbody></table></div>"
+                # Add section header
+                integrated_html += f"<h4>{section_title}</h4>"
 
-            # Replace markdown tables with HTML tables
-            integrated_html = re.sub(table_pattern, table_html, integrated_html, flags=re.DOTALL)
+                # Process subsections (h3 headers)
+                subsections = re.split(r'^### (.*?)$', section_content, flags=re.MULTILINE)
 
-        # Process markdown lists
-        list_items = re.findall(r'(<br>|\s)- (.*?)(<br>|\s|\Z)', integrated_html)
-        if list_items:
-            list_html = "<ul>"
-            for _, item_content, _ in list_items:
-                list_html += f"<li>{item_content.strip()}</li>"
-            list_html += "</ul>"
-            integrated_html = re.sub(r'(<br>|\s)- (.*?)(<br>|\s|\Z)', list_html, integrated_html)
+                # Process content before first subsection
+                if subsections[0].strip():
+                    intro_subsection = subsections[0].strip()
+                    paragraphs = re.split(r'\n\n+', intro_subsection)
+                    for paragraph in paragraphs:
+                        if paragraph.strip():
+                            # Process bold and italic in paragraphs
+                            paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                            paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                            integrated_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
 
-        # Wrap the content in paragraphs if not already
-        if not integrated_html.startswith("<p>"):
-            integrated_html = "<p>" + integrated_html
-        if not integrated_html.endswith("</p>"):
-            integrated_html += "</p>"
+                # Process each subsection
+                for j in range(1, len(subsections), 2):
+                    if j+1 < len(subsections):
+                        subsection_title = subsections[j]
+                        subsection_content = subsections[j+1].strip()
+
+                        # Add subsection header
+                        integrated_html += f"<h5>{subsection_title}</h5>"
+
+                        # Process content as paragraphs and lists
+                        paragraphs = re.split(r'\n\n+', subsection_content)
+                        for paragraph in paragraphs:
+                            paragraph = paragraph.strip()
+                            if paragraph:
+                                # Check if this is a list
+                                if re.match(r'^- ', paragraph, re.MULTILINE):
+                                    list_items = re.findall(r'^- (.*?)$', paragraph, re.MULTILINE)
+                                    if list_items:
+                                        integrated_html += "<ul>"
+                                        for item in list_items:
+                                            # Process bold and italic in list items
+                                            item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+                                            item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
+                                            integrated_html += f"<li>{item}</li>"
+                                        integrated_html += "</ul>"
+                                # Check if this is a table
+                                elif paragraph.startswith('|') and paragraph.endswith('|'):
+                                    rows = paragraph.strip().split('\n')
+                                    if len(rows) >= 2:
+                                        integrated_html += "<div class=\"table-responsive\"><table class=\"table table-striped\">"
+
+                                        # Process header row
+                                        header = rows[0]
+                                        header_cells = [cell.strip() for cell in header.split('|') if cell.strip()]
+                                        integrated_html += "<thead><tr>"
+                                        for cell in header_cells:
+                                            integrated_html += f"<th>{cell}</th>"
+                                        integrated_html += "</tr></thead><tbody>"
+
+                                        # Skip separator row
+                                        start_index = 2 if len(rows) > 2 and all('-' in cell for cell in rows[1].split('|') if cell.strip()) else 1
+
+                                        # Process data rows
+                                        for row in rows[start_index:]:
+                                            if row.strip():
+                                                cells = [cell.strip() for cell in row.split('|') if cell or cell == '']
+                                                integrated_html += "<tr>"
+                                                for cell in cells:
+                                                    integrated_html += f"<td>{cell}</td>"
+                                                integrated_html += "</tr>"
+
+                                        integrated_html += "</tbody></table></div>"
+                                else:
+                                    # Process bold and italic in regular paragraphs
+                                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                                    integrated_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
 
         html += integrated_html
     else:
