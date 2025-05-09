@@ -991,18 +991,82 @@ def generate_interactive_html(data):
     # Add preprocessing analysis content with improved markdown processing
     preprocessing_text = data["analysis_texts"]["preprocessing"]
     if preprocessing_text:
-        # Process markdown-like content with proper HTML structure
-        preprocessing_html = preprocessing_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+        # Start with empty HTML - we'll build it properly
+        preprocessing_html = ""
 
-        # Process headers
-        preprocessing_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h3>\1</h3>\2', preprocessing_html)
-        preprocessing_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', preprocessing_html)
+        # First, handle the title (h1/h2)
+        title_match = re.search(r'^# (.*?)$', preprocessing_text, re.MULTILINE)
+        if title_match:
+            title = title_match.group(1)
+            preprocessing_html += f"<h3>{title}</h3>"
+            # Remove the title from the text to avoid processing it again
+            preprocessing_text = re.sub(r'^# .*?$', '', preprocessing_text, count=1, flags=re.MULTILINE)
 
-        # Wrap the content in paragraphs if not already
-        if not preprocessing_html.startswith("<p>"):
-            preprocessing_html = "<p>" + preprocessing_html
-        if not preprocessing_html.endswith("</p>"):
-            preprocessing_html += "</p>"
+        # Split the text by sections (h2 headers)
+        sections = re.split(r'^## (.*?)$', preprocessing_text, flags=re.MULTILINE)
+
+        # The first item in sections might be empty or contain text before the first h2
+        if sections[0].strip():
+            # Process any text before the first heading
+            intro_text = sections[0].strip()
+            paragraphs = re.split(r'\n\n+', intro_text)
+            for paragraph in paragraphs:
+                if paragraph.strip():
+                    preprocessing_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+
+        # Process each section (the section title is at i, content at i+1)
+        for i in range(1, len(sections), 2):
+            if i+1 < len(sections):
+                section_title = sections[i]
+                section_content = sections[i+1].strip()
+
+                # Add section header
+                preprocessing_html += f"<h4>{section_title}</h4>"
+
+                # Process subsections (h3 headers)
+                subsections = re.split(r'^### (.*?)$', section_content, flags=re.MULTILINE)
+
+                # Process content before first subsection
+                if subsections[0].strip():
+                    intro_subsection = subsections[0].strip()
+                    paragraphs = re.split(r'\n\n+', intro_subsection)
+                    for paragraph in paragraphs:
+                        if paragraph.strip():
+                            # Process bold and italic in paragraphs
+                            paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                            paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                            preprocessing_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+
+                # Process each subsection
+                for j in range(1, len(subsections), 2):
+                    if j+1 < len(subsections):
+                        subsection_title = subsections[j]
+                        subsection_content = subsections[j+1].strip()
+
+                        # Add subsection header
+                        preprocessing_html += f"<h5>{subsection_title}</h5>"
+
+                        # Process content as paragraphs and lists
+                        paragraphs = re.split(r'\n\n+', subsection_content)
+                        for paragraph in paragraphs:
+                            paragraph = paragraph.strip()
+                            if paragraph:
+                                # Check if this is a list
+                                if re.match(r'^- ', paragraph, re.MULTILINE):
+                                    list_items = re.findall(r'^- (.*?)$', paragraph, re.MULTILINE)
+                                    if list_items:
+                                        preprocessing_html += "<ul>"
+                                        for item in list_items:
+                                            # Process bold and italic in list items
+                                            item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+                                            item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
+                                            preprocessing_html += f"<li>{item}</li>"
+                                        preprocessing_html += "</ul>"
+                                else:
+                                    # Process bold and italic in regular paragraphs
+                                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                                    preprocessing_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
 
         html += preprocessing_html
     else:
@@ -1019,22 +1083,85 @@ def generate_interactive_html(data):
     # Add comparative analysis content with improved markdown processing
     comparative_text = data["analysis_texts"]["comparative"]
     if comparative_text:
-        # Process markdown-like content with proper HTML structure
-        comparative_html = comparative_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+        # Use the same improved markdown processor
+        comparative_html = ""
 
-        # Process headers
-        comparative_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h3>\1</h3>\2', comparative_html)
-        comparative_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', comparative_html)
+        # First, handle the title (h1/h2)
+        title_match = re.search(r'^# (.*?)$', comparative_text, re.MULTILINE)
+        if title_match:
+            title = title_match.group(1)
+            comparative_html += f"<h3>{title}</h3>"
+            # Remove the title from the text to avoid processing it again
+            comparative_text = re.sub(r'^# .*?$', '', comparative_text, count=1, flags=re.MULTILINE)
 
-        # Process markdown formatting
-        comparative_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', comparative_html)
-        comparative_html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', comparative_html)
+        # Split the text by sections (h2 headers)
+        sections = re.split(r'^## (.*?)$', comparative_text, flags=re.MULTILINE)
 
-        # Wrap the content in paragraphs if not already
-        if not comparative_html.startswith("<p>"):
-            comparative_html = "<p>" + comparative_html
-        if not comparative_html.endswith("</p>"):
-            comparative_html += "</p>"
+        # The first item in sections might be empty or contain text before the first h2
+        if sections[0].strip():
+            # Process any text before the first heading
+            intro_text = sections[0].strip()
+            paragraphs = re.split(r'\n\n+', intro_text)
+            for paragraph in paragraphs:
+                if paragraph.strip():
+                    # Process bold and italic in paragraphs
+                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                    comparative_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+
+        # Process each section (the section title is at i, content at i+1)
+        for i in range(1, len(sections), 2):
+            if i+1 < len(sections):
+                section_title = sections[i]
+                section_content = sections[i+1].strip()
+
+                # Add section header
+                comparative_html += f"<h4>{section_title}</h4>"
+
+                # Process subsections (h3 headers)
+                subsections = re.split(r'^### (.*?)$', section_content, flags=re.MULTILINE)
+
+                # Process content before first subsection
+                if subsections[0].strip():
+                    intro_subsection = subsections[0].strip()
+                    paragraphs = re.split(r'\n\n+', intro_subsection)
+                    for paragraph in paragraphs:
+                        if paragraph.strip():
+                            # Process bold and italic in paragraphs
+                            paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                            paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                            comparative_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+
+                # Process each subsection
+                for j in range(1, len(subsections), 2):
+                    if j+1 < len(subsections):
+                        subsection_title = subsections[j]
+                        subsection_content = subsections[j+1].strip()
+
+                        # Add subsection header
+                        comparative_html += f"<h5>{subsection_title}</h5>"
+
+                        # Process content as paragraphs and lists
+                        paragraphs = re.split(r'\n\n+', subsection_content)
+                        for paragraph in paragraphs:
+                            paragraph = paragraph.strip()
+                            if paragraph:
+                                # Check if this is a list
+                                if re.match(r'^- ', paragraph, re.MULTILINE):
+                                    list_items = re.findall(r'^- (.*?)$', paragraph, re.MULTILINE)
+                                    if list_items:
+                                        comparative_html += "<ul>"
+                                        for item in list_items:
+                                            # Process bold and italic in list items
+                                            item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+                                            item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
+                                            comparative_html += f"<li>{item}</li>"
+                                        comparative_html += "</ul>"
+                                else:
+                                    # Process bold and italic in regular paragraphs
+                                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                                    comparative_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
 
         html += comparative_html
     else:
@@ -1051,22 +1178,85 @@ def generate_interactive_html(data):
     # Add pathway analysis content with improved markdown processing
     pathway_text = data["analysis_texts"]["pathway"]
     if pathway_text:
-        # Process markdown-like content with proper HTML structure
-        pathway_html = pathway_text.replace("\n\n", "</p><p>").replace("\n", "<br>")
+        # Use the same improved markdown processor
+        pathway_html = ""
 
-        # Process headers
-        pathway_html = re.sub(r'## (.*?)(<br>|</p>)', r'<h3>\1</h3>\2', pathway_html)
-        pathway_html = re.sub(r'### (.*?)(<br>|</p>)', r'<h4>\1</h4>\2', pathway_html)
+        # First, handle the title (h1/h2)
+        title_match = re.search(r'^# (.*?)$', pathway_text, re.MULTILINE)
+        if title_match:
+            title = title_match.group(1)
+            pathway_html += f"<h3>{title}</h3>"
+            # Remove the title from the text to avoid processing it again
+            pathway_text = re.sub(r'^# .*?$', '', pathway_text, count=1, flags=re.MULTILINE)
 
-        # Process markdown formatting
-        pathway_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', pathway_html)
-        pathway_html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', pathway_html)
+        # Split the text by sections (h2 headers)
+        sections = re.split(r'^## (.*?)$', pathway_text, flags=re.MULTILINE)
 
-        # Wrap the content in paragraphs if not already
-        if not pathway_html.startswith("<p>"):
-            pathway_html = "<p>" + pathway_html
-        if not pathway_html.endswith("</p>"):
-            pathway_html += "</p>"
+        # The first item in sections might be empty or contain text before the first h2
+        if sections[0].strip():
+            # Process any text before the first heading
+            intro_text = sections[0].strip()
+            paragraphs = re.split(r'\n\n+', intro_text)
+            for paragraph in paragraphs:
+                if paragraph.strip():
+                    # Process bold and italic in paragraphs
+                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                    pathway_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+
+        # Process each section (the section title is at i, content at i+1)
+        for i in range(1, len(sections), 2):
+            if i+1 < len(sections):
+                section_title = sections[i]
+                section_content = sections[i+1].strip()
+
+                # Add section header
+                pathway_html += f"<h4>{section_title}</h4>"
+
+                # Process subsections (h3 headers)
+                subsections = re.split(r'^### (.*?)$', section_content, flags=re.MULTILINE)
+
+                # Process content before first subsection
+                if subsections[0].strip():
+                    intro_subsection = subsections[0].strip()
+                    paragraphs = re.split(r'\n\n+', intro_subsection)
+                    for paragraph in paragraphs:
+                        if paragraph.strip():
+                            # Process bold and italic in paragraphs
+                            paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                            paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                            pathway_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+
+                # Process each subsection
+                for j in range(1, len(subsections), 2):
+                    if j+1 < len(subsections):
+                        subsection_title = subsections[j]
+                        subsection_content = subsections[j+1].strip()
+
+                        # Add subsection header
+                        pathway_html += f"<h5>{subsection_title}</h5>"
+
+                        # Process content as paragraphs and lists
+                        paragraphs = re.split(r'\n\n+', subsection_content)
+                        for paragraph in paragraphs:
+                            paragraph = paragraph.strip()
+                            if paragraph:
+                                # Check if this is a list
+                                if re.match(r'^- ', paragraph, re.MULTILINE):
+                                    list_items = re.findall(r'^- (.*?)$', paragraph, re.MULTILINE)
+                                    if list_items:
+                                        pathway_html += "<ul>"
+                                        for item in list_items:
+                                            # Process bold and italic in list items
+                                            item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+                                            item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
+                                            pathway_html += f"<li>{item}</li>"
+                                        pathway_html += "</ul>"
+                                else:
+                                    # Process bold and italic in regular paragraphs
+                                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                                    pathway_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
 
         html += pathway_html
     else:
