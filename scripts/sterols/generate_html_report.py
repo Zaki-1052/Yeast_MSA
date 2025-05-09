@@ -1684,6 +1684,20 @@ def generate_interactive_html(data):
     # Add integrated findings content with improved markdown processing
     integrated_text = data["analysis_texts"]["integrated"]
     if integrated_text:
+        # Fix the hierarchical model paragraph that has inline numbered items
+        # This is a targeted fix for the specific formatting issue
+        hierarchical_model_fix = re.search(r'Our genomic analysis identified a hierarchical conservation pattern.*?flexibility in less critical regions\.', integrated_text, re.DOTALL)
+        if hierarchical_model_fix:
+            matched_text = hierarchical_model_fix.group(0)
+            # Create proper numbered list from inline numbered items
+            items = re.findall(r'(\d+\.\s+\*\*[\w\s-]+\*\*:.*?)(?=\s+\d+\.|$)', matched_text)
+            if items:
+                replacement = "Our genomic analysis identified a hierarchical conservation pattern in the ergosterol pathway:\n\n"
+                for item in items:
+                    replacement += f"{item}\n\n"
+                replacement += "This architecture suggests an evolutionary strategy that preserves essential functions while allowing genetic flexibility in less critical regions."
+                integrated_text = integrated_text.replace(matched_text, replacement)
+
         # Use the same improved markdown processor we used for other sections
         integrated_html = ""
 
@@ -1691,7 +1705,8 @@ def generate_interactive_html(data):
         title_match = re.search(r'^# (.*?)$', integrated_text, re.MULTILINE)
         if title_match:
             title = title_match.group(1)
-            integrated_html += f"<h3>{title}</h3>"
+            # Make title more prominent with proper styling
+            integrated_html += f"\n        <h3 class=\"text-primary mb-4\">{title}</h3>"
             # Remove the title from the text to avoid processing it again
             integrated_text = re.sub(r'^# .*?$', '', integrated_text, count=1, flags=re.MULTILINE)
 
@@ -1708,7 +1723,7 @@ def generate_interactive_html(data):
                     # Process bold and italic in paragraphs
                     paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
                     paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
-                    integrated_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+                    integrated_html += f"\n        <p>{paragraph.replace('\n', ' ')}</p>"
 
         # Process each section (the section title is at i, content at i+1)
         for i in range(1, len(sections), 2):
@@ -1717,7 +1732,7 @@ def generate_interactive_html(data):
                 section_content = sections[i+1].strip()
 
                 # Add section header
-                integrated_html += f"<h4>{section_title}</h4>"
+                integrated_html += f"\n        <h4>{section_title}</h4>"
 
                 # Process subsections (h3 headers)
                 subsections = re.split(r'^### (.*?)$', section_content, flags=re.MULTILINE)
@@ -1729,9 +1744,27 @@ def generate_interactive_html(data):
                     for paragraph in paragraphs:
                         if paragraph.strip():
                             # Process bold and italic in paragraphs
-                            paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
-                            paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
-                            integrated_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+                            # Check for numbered lists (lines starting with numbers)
+                            if re.match(r'^\d+\.', paragraph):
+                                # Convert numbered list to proper HTML
+                                list_items = re.findall(r'^\d+\.\s*(.*?)$', paragraph, re.MULTILINE)
+                                if list_items:
+                                    integrated_html += "\n            <ol>"
+                                    for item in list_items:
+                                        # Process bold and italic in list items
+                                        item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+                                        item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
+                                        integrated_html += f"\n                <li>{item}</li>"
+                                    integrated_html += "\n            </ol>"
+                                else:
+                                    # Process text normally if not a list
+                                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                                    integrated_html += f"\n            <p>{paragraph.replace('\n', ' ')}</p>"
+                            else:
+                                paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                                paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                                integrated_html += f"\n            <p>{paragraph.replace('\n', ' ')}</p>"
 
                 # Process each subsection
                 for j in range(1, len(subsections), 2):
@@ -1740,37 +1773,48 @@ def generate_interactive_html(data):
                         subsection_content = subsections[j+1].strip()
 
                         # Add subsection header
-                        integrated_html += f"<h5>{subsection_title}</h5>"
+                        integrated_html += f"\n            <h5>{subsection_title}</h5>"
 
                         # Process content as paragraphs and lists
                         paragraphs = re.split(r'\n\n+', subsection_content)
                         for paragraph in paragraphs:
                             paragraph = paragraph.strip()
                             if paragraph:
-                                # Check if this is a list
+                                # Check if this is an unordered list
                                 if re.match(r'^- ', paragraph, re.MULTILINE):
                                     list_items = re.findall(r'^- (.*?)$', paragraph, re.MULTILINE)
                                     if list_items:
-                                        integrated_html += "<ul>"
+                                        integrated_html += "\n                <ul>"
                                         for item in list_items:
                                             # Process bold and italic in list items
                                             item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
                                             item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
-                                            integrated_html += f"<li>{item}</li>"
-                                        integrated_html += "</ul>"
+                                            integrated_html += f"\n                    <li>{item}</li>"
+                                        integrated_html += "\n                </ul>"
+                                # Check if this is a numbered list
+                                elif re.match(r'^\d+\.', paragraph, re.MULTILINE):
+                                    list_items = re.findall(r'^\d+\.\s*(.*?)$', paragraph, re.MULTILINE)
+                                    if list_items:
+                                        integrated_html += "\n                <ol>"
+                                        for item in list_items:
+                                            # Process bold and italic in list items
+                                            item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+                                            item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
+                                            integrated_html += f"\n                    <li>{item}</li>"
+                                        integrated_html += "\n                </ol>"
                                 # Check if this is a table
                                 elif paragraph.startswith('|') and paragraph.endswith('|'):
                                     rows = paragraph.strip().split('\n')
                                     if len(rows) >= 2:
-                                        integrated_html += "<div class=\"table-responsive\"><table class=\"table table-striped\">"
+                                        integrated_html += "\n                <div class=\"table-responsive\">\n                    <table class=\"table table-striped\">"
 
                                         # Process header row
                                         header = rows[0]
                                         header_cells = [cell.strip() for cell in header.split('|') if cell.strip()]
-                                        integrated_html += "<thead><tr>"
+                                        integrated_html += "\n                        <thead>\n                            <tr>"
                                         for cell in header_cells:
-                                            integrated_html += f"<th>{cell}</th>"
-                                        integrated_html += "</tr></thead><tbody>"
+                                            integrated_html += f"\n                                <th>{cell}</th>"
+                                        integrated_html += "\n                            </tr>\n                        </thead>\n                        <tbody>"
 
                                         # Skip separator row
                                         start_index = 2 if len(rows) > 2 and all('-' in cell for cell in rows[1].split('|') if cell.strip()) else 1
@@ -1779,19 +1823,37 @@ def generate_interactive_html(data):
                                         for row in rows[start_index:]:
                                             if row.strip():
                                                 cells = [cell.strip() for cell in row.split('|') if cell or cell == '']
-                                                integrated_html += "<tr>"
+                                                integrated_html += "\n                            <tr>"
                                                 for cell in cells:
-                                                    integrated_html += f"<td>{cell}</td>"
-                                                integrated_html += "</tr>"
+                                                    integrated_html += f"\n                                <td>{cell}</td>"
+                                                integrated_html += "\n                            </tr>"
 
-                                        integrated_html += "</tbody></table></div>"
+                                        integrated_html += "\n                        </tbody>\n                    </table>\n                </div>"
                                 else:
-                                    # Process bold and italic in regular paragraphs
-                                    paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
-                                    paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
-                                    integrated_html += f"<p>{paragraph.replace('\n', ' ')}</p>"
+                                    # Special check for paragraphs with inline numbered lists
+                                    if re.search(r'\d+\.\s+\*\*[\w\s-]+\*\*:', paragraph):
+                                        # Extract the numbered items
+                                        intro_text = re.sub(r'\d+\.\s+\*\*[\w\s-]+\*\*:.*', '', paragraph).strip()
+                                        if intro_text:
+                                            intro_text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', intro_text)
+                                            intro_text = re.sub(r'\*(.*?)\*', r'<em>\1</em>', intro_text)
+                                            integrated_html += f"\n                <p>{intro_text}</p>"
 
-        html += integrated_html
+                                        items = re.findall(r'(\d+\.\s+\*\*[\w\s-]+\*\*:.*?)(?=\s+\d+\.|$)', paragraph)
+                                        if items:
+                                            integrated_html += "\n                <ol class=\"mb-3\">"
+                                            for item in items:
+                                                item = re.sub(r'\d+\.\s+', '', item)  # Remove the number
+                                                item = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+                                                item = re.sub(r'\*(.*?)\*', r'<em>\1</em>', item)
+                                                integrated_html += f"\n                    <li>{item}</li>"
+                                            integrated_html += "\n                </ol>"
+                                    else:
+                                        paragraph = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', paragraph)
+                                        paragraph = re.sub(r'\*(.*?)\*', r'<em>\1</em>', paragraph)
+                                        integrated_html += f"\n                <p>{paragraph.replace('\n', ' ')}</p>"
+
+        html += integrated_html + "\n    "
     else:
         html += "<p>No integrated findings available.</p>"
     
