@@ -1,0 +1,35 @@
+OSH-ERG Gene Distance Analysis Summary
+=====================================
+OSH genes analyzed: 8
+ERG genes analyzed: 12
+Total OSH-ERG gene pairs analyzed: 12
+
+Zone Definitions:
+  Core: 0 bp (overlapping genes)
+  Buffer: 1-5,000 bp
+  Intermediate: 5,001-50,000 bp
+  Satellite: >50,000 bp
+
+OSH-ERG Gene Pairs by Zone:
+  Buffer: 2 pairs (16.7%)
+  Intermediate: 2 pairs (16.7%)
+  Satellite: 8 pairs (66.7%)
+
+Distance Statistics:
+  Minimum distance: 742 bp
+  Maximum distance: 390857 bp
+  Median distance: 144695.0 bp
+  Mean distance: 147173.2 bp
+
+Top 5 Closest OSH-ERG Gene Pairs:
+  1. YHR073W - YHR072W: 742 bp (downstream)
+  2. YHR073W - YHR072W: 1289 bp (downstream)
+  3. YHR001W - YHR007C: 12900 bp (upstream)
+  4. YHR001W - YHR007C: 13654 bp (upstream)
+  5. YHR073W - YHR007C: 133310 bp (downstream)
+
+OSH genes with no ERG genes on same scaffold:
+  YDL019C (scaffold w303_scaffold_1)
+  YDL019C (scaffold w303_scaffold_4)
+  YOR237W (scaffold w303_scaffold_19)
+  YOR237W (scaffold w303_scaffold_18)
