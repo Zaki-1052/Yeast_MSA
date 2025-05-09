@@ -1,13 +1,97 @@
-osh_gene	erg_gene	scaffold	distance	relative_position	zone	osh_start	osh_end	erg_start	erg_end
-YHR073W	YHR072W	w303_scaffold_8	742	downstream	Buffer	250612	253602	249694	249870
-YHR073W	YHR072W	w303_scaffold_8	1289	downstream	Buffer	250612	253602	247128	249323
-YHR001W	YHR007C	w303_scaffold_8	12900	upstream	Intermediate	102667	102810	115710	117302
-YHR001W	YHR007C	w303_scaffold_8	13654	upstream	Intermediate	100743	102056	115710	117302
-YHR073W	YHR007C	w303_scaffold_8	133310	downstream	Satellite	250612	253602	115710	117302
-YHR001W	YHR072W	w303_scaffold_8	144318	upstream	Satellite	102667	102810	247128	249323
-YHR001W	YHR072W	w303_scaffold_8	145072	upstream	Satellite	100743	102056	247128	249323
-YHR001W	YHR072W	w303_scaffold_8	146884	upstream	Satellite	102667	102810	249694	249870
-YHR001W	YHR072W	w303_scaffold_8	147638	upstream	Satellite	100743	102056	249694	249870
-YHR073W	YHR190W	w303_scaffold_8	239311	upstream	Satellite	250612	253602	492913	494247
-YHR001W	YHR190W	w303_scaffold_8	390103	upstream	Satellite	102667	102810	492913	494247
-YHR001W	YHR190W	w303_scaffold_8	390857	upstream	Satellite	100743	102056	492913	494247
+osh_gene	osh_id	erg_gene	erg_id	scaffold	distance	distance_kb	direction	zone
+W3030H00560		ERG24		w303_scaffold_8/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030H00560		ERG11		w303_scaffold_8	13654.0	13.65	upstream	Intermediate
+W3030H00560		ERG7		w303_scaffold_8	145072.0	145.07	upstream	Distant
+W3030H00560		ERG7		w303_scaffold_8	147638.0	147.64	upstream	Distant
+W3030H00560		ERG9		w303_scaffold_8	390857.0	390.86	upstream	Distant
+W3030H00560		ERG6		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H00560		ERG5		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H00560		ERG2		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H00560		ERG3		w303_scaffold_8/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030H00560		ERG4		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H00560		ERG25		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H00560		ERG1		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H00570		ERG24		w303_scaffold_8/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030H00570		ERG11		w303_scaffold_8	12900.0	12.9	upstream	Intermediate
+W3030H00570		ERG7		w303_scaffold_8	144318.0	144.32	upstream	Distant
+W3030H00570		ERG7		w303_scaffold_8	146884.0	146.88	upstream	Distant
+W3030H00570		ERG9		w303_scaffold_8	390103.0	390.1	upstream	Distant
+W3030H00570		ERG6		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H00570		ERG5		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H00570		ERG2		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H00570		ERG3		w303_scaffold_8/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030H00570		ERG4		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H00570		ERG25		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H00570		ERG1		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H01450		ERG24		w303_scaffold_8/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030H01450		ERG11		w303_scaffold_8	133310.0	133.31	downstream	Distant
+W3030H01450		ERG7		w303_scaffold_8	1289.0	1.29	downstream	Buffer
+W3030H01450		ERG7		w303_scaffold_8	742.0	0.74	downstream	Buffer
+W3030H01450		ERG9		w303_scaffold_8	239311.0	239.31	upstream	Distant
+W3030H01450		ERG6		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H01450		ERG5		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H01450		ERG2		w303_scaffold_8/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030H01450		ERG3		w303_scaffold_8/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030H01450		ERG4		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H01450		ERG25		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030H01450		ERG1		w303_scaffold_8/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030A00920		ERG24		w303_scaffold_1/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030A00920		ERG11		w303_scaffold_1/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030A00920		ERG7		w303_scaffold_1/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030A00920		ERG7		w303_scaffold_1/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030A00920		ERG9		w303_scaffold_1/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030A00920		ERG6		w303_scaffold_1/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030A00920		ERG5		w303_scaffold_1/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030A00920		ERG2		w303_scaffold_1/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030A00920		ERG3		w303_scaffold_1/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030A00920		ERG4		w303_scaffold_1/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030A00920		ERG25		w303_scaffold_1/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030A00920		ERG1		w303_scaffold_1/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030D02200		ERG24		w303_scaffold_4/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030D02200		ERG11		w303_scaffold_4/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030D02200		ERG7		w303_scaffold_4/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030D02200		ERG7		w303_scaffold_4/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030D02200		ERG9		w303_scaffold_4/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030D02200		ERG6		w303_scaffold_4/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030D02200		ERG5		w303_scaffold_4/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030D02200		ERG2		w303_scaffold_4/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030D02200		ERG3		w303_scaffold_4/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030D02200		ERG4		w303_scaffold_4/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030D02200		ERG25		w303_scaffold_4/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030D02200		ERG1		w303_scaffold_4/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030S02090		ERG24		w303_scaffold_19/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030S02090		ERG11		w303_scaffold_19/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030S02090		ERG7		w303_scaffold_19/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030S02090		ERG7		w303_scaffold_19/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030S02090		ERG9		w303_scaffold_19/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030S02090		ERG6		w303_scaffold_19/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030S02090		ERG5		w303_scaffold_19/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030S02090		ERG2		w303_scaffold_19/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030S02090		ERG3		w303_scaffold_19/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030S02090		ERG4		w303_scaffold_19/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030S02090		ERG25		w303_scaffold_19/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030S02090		ERG1		w303_scaffold_19/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030K02200		ERG24		w303_scaffold_11/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030K02200		ERG11		w303_scaffold_11/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030K02200		ERG7		w303_scaffold_11/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030K02200		ERG7		w303_scaffold_11/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030K02200		ERG9		w303_scaffold_11/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030K02200		ERG6		w303_scaffold_11/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030K02200		ERG5		w303_scaffold_11/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030K02200		ERG2		w303_scaffold_11/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030K02200		ERG3		w303_scaffold_11/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030K02200		ERG4		w303_scaffold_11/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030K02200		ERG25		w303_scaffold_11/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030K02200		ERG1		w303_scaffold_11/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030R03790		ERG24		w303_scaffold_18/w303_scaffold_17			different_scaffold	Different Scaffold
+W3030R03790		ERG11		w303_scaffold_18/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030R03790		ERG7		w303_scaffold_18/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030R03790		ERG7		w303_scaffold_18/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030R03790		ERG9		w303_scaffold_18/w303_scaffold_8			different_scaffold	Different Scaffold
+W3030R03790		ERG6		w303_scaffold_18/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030R03790		ERG5		w303_scaffold_18/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030R03790		ERG2		w303_scaffold_18/w303_scaffold_16			different_scaffold	Different Scaffold
+W3030R03790		ERG3		w303_scaffold_18/w303_scaffold_12			different_scaffold	Different Scaffold
+W3030R03790		ERG4		w303_scaffold_18/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030R03790		ERG25		w303_scaffold_18/w303_scaffold_7			different_scaffold	Different Scaffold
+W3030R03790		ERG1		w303_scaffold_18/w303_scaffold_7			different_scaffold	Different Scaffold

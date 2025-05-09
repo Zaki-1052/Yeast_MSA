@@ -23,6 +23,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.tools import ensure_dir
 
 # OSH gene names and standard names
+# Note: Some OSH genes might not be present in the W303 genome annotation
+# We identify them by systematic ID in the std_gene_name column
 OSH_GENES = {
     'OSH1': 'YAR042W',
     'OSH2': 'YDL019C',
@@ -85,26 +87,50 @@ def load_gene_mapping(gene_mapping_file):
 
 def extract_osh_genes(gene_df):
     """Extract OSH gene family information from gene mapping"""
-    # First try exact matches for systematic IDs
-    osh_df = gene_df[gene_df['systematic_id'].isin(OSH_GENES.values())]
+    print("Looking for OSH genes with the following IDs:", list(OSH_GENES.values()))
+
+    # First try exact matches for standard gene names in std_gene_name column
+    osh_df = gene_df[gene_df['std_gene_name'].isin(OSH_GENES.values())]
+    if not osh_df.empty:
+        print(f"Found {len(osh_df)} OSH genes by std_gene_name match")
+
+    # Also try sc_gene_id column
+    sc_matches = gene_df[gene_df['sc_gene_id'].isin(OSH_GENES.values())]
+    if not sc_matches.empty:
+        print(f"Found {len(sc_matches)} OSH genes by sc_gene_id match")
+        osh_df = pd.concat([osh_df, sc_matches])
 
     # If we don't find all genes, try matching on gene name
     if len(osh_df) < len(OSH_GENES):
         for osh_name, systematic_id in OSH_GENES.items():
-            # If we didn't find this gene by systematic ID, try by name
-            if systematic_id not in osh_df['systematic_id'].values:
-                name_matches = gene_df[gene_df['gene_name'] == osh_name]
-                if not name_matches.empty:
-                    osh_df = pd.concat([osh_df, name_matches])
+            # Try all possible ways to find the gene
+            if systematic_id not in osh_df['std_gene_name'].values and systematic_id not in osh_df['sc_gene_id'].values:
+                # Try direct match on various columns
+                for col in ['std_gene_name', 'sc_gene_id', 'w303_gene_id', 'product']:
+                    if col in gene_df.columns:
+                        try:
+                            # Look for either the name or the ID
+                            for search_term in [osh_name, systematic_id]:
+                                partial_matches = gene_df[gene_df[col].astype(str).str.contains(search_term, case=False, na=False)]
+                                if not partial_matches.empty:
+                                    print(f"Found {len(partial_matches)} matches for {osh_name} ({systematic_id}) in {col}")
+                                    osh_df = pd.concat([osh_df, partial_matches])
+                        except Exception as e:
+                            print(f"Error searching for {systematic_id} in {col}: {e}")
 
-    # If we still don't have all genes, try fuzzy matching on description
+    # If we still don't have all genes, try fuzzy search with OSH names
     if len(osh_df) < len(OSH_GENES):
-        for osh_name in OSH_GENES:
-            if osh_name not in osh_df['gene_name'].values and OSH_GENES[osh_name] not in osh_df['systematic_id'].values:
-                # Look for oxysterol-binding in description
-                desc_matches = gene_df[gene_df['description'].str.contains('oxysterol', case=False, na=False)]
-                if not desc_matches.empty:
-                    osh_df = pd.concat([osh_df, desc_matches])
+        # Try to find any gene with "OSH" in the name or product
+        for search_term in ["OSH", "oxysterol"]:
+            for col in ['std_gene_name', 'sc_gene_id', 'w303_gene_id', 'product']:
+                if col in gene_df.columns:
+                    try:
+                        osh_matches = gene_df[gene_df[col].astype(str).str.contains(search_term, case=False, na=False)]
+                        if not osh_matches.empty:
+                            print(f"Found {len(osh_matches)} matches with '{search_term}' in {col}")
+                            osh_df = pd.concat([osh_df, osh_matches])
+                    except Exception as e:
+                        print(f"Error searching for {search_term} in {col}: {e}")
 
     # Reset index and drop duplicates
     osh_df = osh_df.drop_duplicates().reset_index(drop=True)
@@ -113,16 +139,24 @@ def extract_osh_genes(gene_df):
 
 def extract_erg_genes(gene_df):
     """Extract ergosterol pathway gene information from gene mapping"""
-    erg_df = gene_df[gene_df['systematic_id'].isin(ERG_GENES.values())]
+    print("Looking for ERG genes with the following IDs:", list(ERG_GENES.values()))
 
-    # If we don't find all genes, try matching on gene name
-    if len(erg_df) < len(ERG_GENES):
-        for erg_name, systematic_id in ERG_GENES.items():
-            # If we didn't find this gene by systematic ID, try by name
-            if systematic_id not in erg_df['systematic_id'].values:
-                name_matches = gene_df[gene_df['gene_name'] == erg_name]
-                if not name_matches.empty:
-                    erg_df = pd.concat([erg_df, name_matches])
+    # First look for genes where erg_name column matches ERG gene names
+    erg_df = gene_df[gene_df['erg_name'].isin(ERG_GENES.keys())]
+    if not erg_df.empty:
+        print(f"Found {len(erg_df)} ERG genes by matching erg_name column")
+
+    # Also try looking for gene IDs in the std_gene_name column
+    std_matches = gene_df[gene_df['std_gene_name'].isin(ERG_GENES.values())]
+    if not std_matches.empty:
+        print(f"Found {len(std_matches)} ERG genes by matching std_gene_name column")
+        erg_df = pd.concat([erg_df, std_matches])
+
+    # Also try looking in sc_gene_id column
+    sc_matches = gene_df[gene_df['sc_gene_id'].isin(ERG_GENES.values())]
+    if not sc_matches.empty:
+        print(f"Found {len(sc_matches)} ERG genes by matching sc_gene_id column")
+        erg_df = pd.concat([erg_df, sc_matches])
 
     # Reset index and drop duplicates
     erg_df = erg_df.drop_duplicates().reset_index(drop=True)
@@ -154,23 +188,51 @@ def calculate_gene_distances(osh_df, erg_df):
     """Calculate distances between OSH and ERG genes"""
     # Create a list to store results
     distance_data = []
-
+    
     # Loop through OSH genes
     for _, osh_gene in osh_df.iterrows():
-        osh_scaffold = osh_gene.get('scaffold', osh_gene.get('chromosome', ''))
+        osh_scaffold = osh_gene.get('w303_scaffold', '')
         osh_start = osh_gene.get('start', 0)
         osh_end = osh_gene.get('end', 0)
-        osh_name = osh_gene.get('gene_name', osh_gene.get('systematic_id', 'Unknown'))
-        osh_id = osh_gene.get('systematic_id', '')
-
+        
+        # Get OSH gene name
+        if 'sc_gene_id' in osh_gene and pd.notna(osh_gene['sc_gene_id']):
+            # Try to find the gene name from our mapping
+            osh_id = osh_gene['sc_gene_id']
+            osh_name = None
+            for gene_name, gene_id in OSH_GENES.items():
+                if gene_id == osh_id:
+                    osh_name = gene_name
+                    break
+            if not osh_name:
+                osh_name = osh_id
+        else:
+            osh_name = osh_gene.get('w303_gene_id', 'Unknown')
+            osh_id = ''
+        
         # Loop through ERG genes
         for _, erg_gene in erg_df.iterrows():
-            erg_scaffold = erg_gene.get('scaffold', erg_gene.get('chromosome', ''))
+            erg_scaffold = erg_gene.get('w303_scaffold', '')
             erg_start = erg_gene.get('start', 0)
             erg_end = erg_gene.get('end', 0)
-            erg_name = erg_gene.get('gene_name', erg_gene.get('systematic_id', 'Unknown'))
-            erg_id = erg_gene.get('systematic_id', '')
-
+            
+            # Get ERG gene name
+            erg_name = erg_gene.get('erg_name', '')
+            if not erg_name or pd.isna(erg_name):
+                if 'sc_gene_id' in erg_gene and pd.notna(erg_gene['sc_gene_id']):
+                    erg_id = erg_gene['sc_gene_id']
+                    for gene_name, gene_id in ERG_GENES.items():
+                        if gene_id == erg_id:
+                            erg_name = gene_name
+                            break
+                    if not erg_name:
+                        erg_name = erg_id
+                else:
+                    erg_name = erg_gene.get('w303_gene_id', 'Unknown')
+                    erg_id = ''
+            else:
+                erg_id = erg_gene.get('sc_gene_id', '')
+            
             # Calculate distance only for genes on the same scaffold
             if osh_scaffold == erg_scaffold:
                 # Calculate the distance between genes
@@ -449,7 +511,7 @@ def analyze_variants_by_distance(variants_df, distance_df, output_dir):
         for key, relationships in relationship_map.items():
             if key[0] == scaffold:
                 for rel in relationships:
-                    # This is a simplified approach - in reality, you'd need to
+                    # This is a simplified approach - in reality, you'd need to 
                     # consider exact genomic coordinates and gene directions
                     variant_zones.append({
                         'variant_id': variant.get('variant_id', ''),
@@ -466,15 +528,15 @@ def analyze_variants_by_distance(variants_df, distance_df, output_dir):
     # Convert to DataFrame
     if variant_zones:
         variant_zones_df = pd.DataFrame(variant_zones)
-
+        
         # Save to file
         output_file = os.path.join(output_dir, "variants_by_osh_erg_distance.tsv")
         variant_zones_df.to_csv(output_file, sep='\t', index=False)
         print(f"Variant zone analysis saved to {output_file}")
-
+        
         # Create visualizations
         create_variant_zone_plots(variant_zones_df, output_dir)
-
+        
         return variant_zones_df
     else:
         print("No variants found in OSH-ERG relationship zones.")
@@ -484,19 +546,19 @@ def create_variant_zone_plots(variant_zones_df, output_dir):
     """Create plots showing variant distribution across OSH-ERG distance zones"""
     # Count variants by zone
     zone_counts = variant_zones_df.groupby('zone').size().reset_index(name='count')
-
+    
     # Ensure all zones are represented
     all_zones = pd.DataFrame({
         'zone': ['Core', 'Buffer', 'Intermediate', 'Satellite', 'Distant'],
         'order': [1, 2, 3, 4, 5]
     })
-
+    
     zone_counts = pd.merge(all_zones, zone_counts, on='zone', how='left').fillna(0)
     zone_counts = zone_counts.sort_values('order')
-
+    
     # Create a bar plot
     plt.figure(figsize=(12, 6))
-
+    
     # Define custom colors for zones
     zone_colors = {
         'Core': '#1f77b4',  # Blue
@@ -505,40 +567,40 @@ def create_variant_zone_plots(variant_zones_df, output_dir):
         'Satellite': '#d62728',  # Red
         'Distant': '#9467bd'  # Purple
     }
-
+    
     # Create the bar plot with custom colors
     bars = plt.bar(
-        zone_counts['zone'],
+        zone_counts['zone'], 
         zone_counts['count'],
         color=[zone_colors.get(zone, '#777777') for zone in zone_counts['zone']]
     )
-
+    
     # Add count labels above bars
     for bar in bars:
         height = bar.get_height()
         plt.text(
-            bar.get_x() + bar.get_width()/2.,
+            bar.get_x() + bar.get_width()/2., 
             height + 0.1,
             f'{int(height)}',
-            ha='center',
+            ha='center', 
             va='bottom'
         )
-
+    
     plt.title("Variant Distribution by OSH-ERG Distance Zone")
     plt.xlabel("Distance Zone")
     plt.ylabel("Number of Variants")
     plt.tight_layout()
-
+    
     # Save the figure
     output_file = os.path.join(output_dir, "variants_by_osh_erg_zone.png")
     plt.savefig(output_file, dpi=300)
     plt.close()
-
+    
     print(f"Variant zone distribution plot saved to {output_file}")
-
+    
     # Create a heatmap of variants by zone and treatment
     zone_treatment_counts = variant_zones_df.groupby(['zone', 'treatment']).size().reset_index(name='count')
-
+    
     # Create a pivot table
     pivot_df = zone_treatment_counts.pivot_table(
         index='zone',
@@ -546,36 +608,36 @@ def create_variant_zone_plots(variant_zones_df, output_dir):
         values='count',
         aggfunc='sum'
     ).fillna(0)
-
+    
     # Ensure proper zone order
     if not all(zone in pivot_df.index for zone in ['Core', 'Buffer', 'Intermediate', 'Satellite', 'Distant']):
         # Create a complete index with all zones
         new_index = pd.Index(['Core', 'Buffer', 'Intermediate', 'Satellite', 'Distant'])
         pivot_df = pivot_df.reindex(new_index, fill_value=0)
-
+    
     # Create the heatmap
     plt.figure(figsize=(12, 8))
     sns.heatmap(
-        pivot_df,
-        annot=True,
-        fmt="g",
+        pivot_df, 
+        annot=True, 
+        fmt="g", 
         cmap="YlGnBu",
         cbar_kws={'label': 'Variant Count'}
     )
-
+    
     plt.title("Variant Distribution by OSH-ERG Distance Zone and Treatment")
     plt.tight_layout()
-
+    
     # Save the figure
     output_file = os.path.join(output_dir, "zone_treatment_heatmap.png")
     plt.savefig(output_file, dpi=300)
     plt.close()
-
+    
     print(f"Zone-treatment heatmap saved to {output_file}")
-
+    
     # Create a heatmap of variants by zone and impact
     zone_impact_counts = variant_zones_df.groupby(['zone', 'impact']).size().reset_index(name='count')
-
+    
     # Create a pivot table
     pivot_df = zone_impact_counts.pivot_table(
         index='zone',
@@ -583,52 +645,52 @@ def create_variant_zone_plots(variant_zones_df, output_dir):
         values='count',
         aggfunc='sum'
     ).fillna(0)
-
+    
     # Ensure proper zone order
     if not all(zone in pivot_df.index for zone in ['Core', 'Buffer', 'Intermediate', 'Satellite', 'Distant']):
         # Create a complete index with all zones
         new_index = pd.Index(['Core', 'Buffer', 'Intermediate', 'Satellite', 'Distant'])
         pivot_df = pivot_df.reindex(new_index, fill_value=0)
-
+    
     # Create the heatmap
     plt.figure(figsize=(12, 8))
     sns.heatmap(
-        pivot_df,
-        annot=True,
-        fmt="g",
+        pivot_df, 
+        annot=True, 
+        fmt="g", 
         cmap="YlGnBu",
         cbar_kws={'label': 'Variant Count'}
     )
-
+    
     plt.title("Variant Distribution by OSH-ERG Distance Zone and Impact")
     plt.tight_layout()
-
+    
     # Save the figure
     output_file = os.path.join(output_dir, "zone_impact_heatmap.png")
     plt.savefig(output_file, dpi=300)
     plt.close()
-
+    
     print(f"Zone-impact heatmap saved to {output_file}")
 
 def create_distance_summary(distance_df, output_dir):
     """Create a summary of distances between OSH and ERG genes"""
     # Filter to only include genes on the same scaffold
     same_scaffold = distance_df[distance_df['distance'].notna()].copy()
-
+    
     if same_scaffold.empty:
         print("No OSH and ERG genes found on the same scaffolds.")
         return
-
+    
     # Calculate statistics for each OSH gene
     osh_stats = []
-
+    
     for osh_gene in same_scaffold['osh_gene'].unique():
         osh_data = same_scaffold[same_scaffold['osh_gene'] == osh_gene]
-
+        
         # Calculate closest ERG gene
         if not osh_data.empty:
             min_distance_row = osh_data.loc[osh_data['distance'].idxmin()]
-
+            
             osh_stats.append({
                 'OSH Gene': osh_gene,
                 'Number of ERG Relationships': len(osh_data),
@@ -641,17 +703,17 @@ def create_distance_summary(distance_df, output_dir):
                 'Satellite Zone Relationships': sum(osh_data['zone'] == 'Satellite'),
                 'Distant Zone Relationships': sum(osh_data['zone'] == 'Distant')
             })
-
+    
     # Convert to DataFrame
     if osh_stats:
         osh_stats_df = pd.DataFrame(osh_stats)
-
+        
         # Save to file
         output_file = os.path.join(output_dir, "osh_erg_distance_summary.tsv")
         osh_stats_df.to_csv(output_file, sep='\t', index=False)
-
+        
         print(f"Distance summary saved to {output_file}")
-
+        
         # Also save a text report
         report_lines = [
             "OSH-ERG Distance Analysis Summary",
@@ -670,7 +732,7 @@ def create_distance_summary(distance_df, output_dir):
             "",
             "OSH Gene Details:",
         ]
-
+        
         for _, row in osh_stats_df.iterrows():
             report_lines.append(f"  {row['OSH Gene']}:")
             report_lines.append(f"    Closest to {row['Closest ERG Gene']} ({row['Minimum Distance (kb)']:.1f} kb)")
@@ -678,67 +740,67 @@ def create_distance_summary(distance_df, output_dir):
             report_lines.append(f"    Relationships: {row['Number of ERG Relationships']} ERG genes")
             report_lines.append(f"    Zone breakdown: Core={row['Core Zone Relationships']}, Buffer={row['Buffer Zone Relationships']}, Intermediate={row['Intermediate Zone Relationships']}, Satellite={row['Satellite Zone Relationships']}, Distant={row['Distant Zone Relationships']}")
             report_lines.append("")
-
+        
         # Write the report
         report_file = os.path.join(output_dir, "osh_erg_distance_report.txt")
         with open(report_file, 'w') as f:
             f.write('\n'.join(report_lines))
-
+        
         print(f"Distance report saved to {report_file}")
 
 def main():
     # Parse command line arguments
     args = parse_args()
-
+    
     # Ensure output directory exists
     ensure_dir(args.output_dir)
-
+    
     # Load gene mapping data
     gene_df = load_gene_mapping(args.gene_mapping)
-
+    
     # Extract OSH gene information
     print("Extracting OSH gene family information...")
     osh_df = extract_osh_genes(gene_df)
     print(f"Found {len(osh_df)} OSH family genes out of {len(OSH_GENES)} expected")
-
+    
     # Extract ergosterol pathway gene information
     print("Extracting ergosterol pathway gene information...")
     erg_df = extract_erg_genes(gene_df)
     print(f"Found {len(erg_df)} ergosterol pathway genes out of {len(ERG_GENES)} expected")
-
+    
     # Calculate distances between OSH and ERG genes
     print("Calculating distances between OSH and ERG genes...")
     distance_df = calculate_gene_distances(osh_df, erg_df)
-
+    
     # Save distance data to file
     distance_file = os.path.join(args.output_dir, "osh_erg_distances.tsv")
     distance_df.to_csv(distance_file, sep='\t', index=False)
     print(f"Distance data saved to {distance_file}")
-
+    
     # Create a proximity heatmap
     print("Creating proximity heatmap...")
     create_proximity_heatmap(distance_df, args.output_dir)
-
+    
     # Create a zone distribution plot
     print("Creating zone distribution plot...")
     create_zone_distribution_plot(distance_df, args.output_dir)
-
+    
     # Create a gene network graph
     print("Creating gene network graph...")
     create_gene_network_graph(distance_df, args.output_dir)
-
+    
     # Create a distance summary
     print("Creating distance summary...")
     create_distance_summary(distance_df, args.output_dir)
-
+    
     # Load variant data
     print("Loading variant data...")
     variants_df = load_variant_data(args.variant_dir)
-
+    
     # Analyze variants by distance
     print("Analyzing variants by distance...")
     analyze_variants_by_distance(variants_df, distance_df, args.output_dir)
-
+    
     print("OSH-ERG distance analysis complete!")
 
 if __name__ == "__main__":

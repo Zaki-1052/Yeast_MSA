@@ -1,22 +1,27 @@
 OSH vs ERG Gene Variant Analysis
 ==============================
-Total OSH gene variants: 0
-Total ERG gene variants: 59
+Total OSH gene variants: 140
+Total ERG gene variants: 344
 OSH genes analyzed: 5
 ERG genes analyzed: 11
-Average variants per OSH gene: 0.00
-Average variants per ERG gene: 5.36
+Average variants per OSH gene: 28.00
+Average variants per ERG gene: 31.27
 
 Variants by treatment:
 
 OSH gene variants:
-  WT-37: 0
-  WTA: 0
-  STC: 0
-  CAS: 0
+  WT-37: 27
+  WTA: 26
+  STC: 29
+  CAS: 31
 
 ERG gene variants:
-  WT-37: 11
-  WTA: 12
-  STC: 12
-  CAS: 12
+  WT-37: 70
+  WTA: 64
+  STC: 68
+  CAS: 77
+
+Statistical comparison:
+Fisher's exact test p-value: 0.7860
+Odds ratio: 0.8953
+Conclusion: No significant difference in variant counts between OSH and ERG genes

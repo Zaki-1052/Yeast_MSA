@@ -161,11 +161,20 @@ def load_variant_data(variant_dir):
         print(f"ERROR: Variant directory not found: {variant_dir}")
         sys.exit(1)
 
-    # Load all gene variants file
-    all_variants_file = os.path.join(variant_dir, "all_gene_variants.tsv")
+    # Define project root directory
+    project_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+    # Load all scaffold variants file instead of gene-filtered variants
+    all_variants_file = os.path.join(project_dir, "results/scaffold_variants/all_scaffold_variants.tsv")
     if not os.path.exists(all_variants_file):
-        print(f"ERROR: All gene variants file not found: {all_variants_file}")
-        sys.exit(1)
+        print(f"ERROR: All scaffold variants file not found: {all_variants_file}")
+        print(f"Falling back to gene variants file")
+
+        # Fallback to gene variants file
+        all_variants_file = os.path.join(variant_dir, "all_gene_variants.tsv")
+        if not os.path.exists(all_variants_file):
+            print(f"ERROR: All gene variants file not found: {all_variants_file}")
+            sys.exit(1)
 
     try:
         variants_df = pd.read_csv(all_variants_file, sep="\t")
@@ -201,6 +210,40 @@ def load_variant_data(variant_dir):
         if not scaffold_found:
             print("WARNING: No scaffold information found in variant data. Using placeholder.")
             variants_df['scaffold'] = "unknown"
+
+        # Standardize column names (adapt scaffold variants file columns to match expected format)
+        # Handle Position column
+        if 'Position' not in variants_df.columns and 'position' in variants_df.columns:
+            variants_df['Position'] = variants_df['position']
+        elif 'Position' not in variants_df.columns:
+            print("WARNING: No position column found. Using placeholder.")
+            variants_df['Position'] = 0
+
+        # Handle Ref column
+        if 'Ref' not in variants_df.columns and 'ref' in variants_df.columns:
+            variants_df['Ref'] = variants_df['ref']
+        elif 'Ref' not in variants_df.columns:
+            print("WARNING: No reference column found. Using placeholder.")
+            variants_df['Ref'] = ""
+
+        # Handle Alt column
+        if 'Alt' not in variants_df.columns and 'alt' in variants_df.columns:
+            variants_df['Alt'] = variants_df['alt']
+        elif 'Alt' not in variants_df.columns:
+            print("WARNING: No alternate column found. Using placeholder.")
+            variants_df['Alt'] = ""
+
+        # Handle Treatment column
+        if 'Treatment' not in variants_df.columns and 'treatment' in variants_df.columns:
+            variants_df['Treatment'] = variants_df['treatment']
+
+        # Handle Impact column
+        if 'Impact' not in variants_df.columns and 'Impact' in variants_df.columns:
+            variants_df['Impact'] = variants_df['impact']
+
+        # Handle Effect column
+        if 'Effect' not in variants_df.columns and 'effect' in variants_df.columns:
+            variants_df['Effect'] = variants_df['effect']
 
         # Print sample values to verify
         if 'scaffold' in variants_df.columns:

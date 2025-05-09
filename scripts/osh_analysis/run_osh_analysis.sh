@@ -22,20 +22,20 @@ echo "Project directory: $PROJECT_DIR"
 echo "Output directory: $OUTPUT_DIR"
 echo "========================================================"
 
-# Step 1: Map OSH genes in the reference genomeecho
+# Step 1: Map OSH genes in the reference genome
 echo
-     27  echo "Step 1: Mapping OSH family genes in the reference genome..."
-     28  echo "========================================================"
-     29  python3 "$SCRIPT_DIR/analyze_osh_genes.py" \
-     30    --ref-genome "$PROJECT_DIR/reference/w303_chromosomal.fasta" \
-     31    --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
-     32    --output-dir "$OUTPUT_DIR"
-     
-     30  if [ $? -ne 0 ]; then
-     31    echo "Error in OSH gene mapping analysis. Exiting."
-     32    exit 1
-     33  fi
-     34  
+echo "Step 1: Mapping OSH family genes in the reference genome..."
+echo "========================================================"
+python3 "$SCRIPT_DIR/analyze_osh_genes.py" \
+  --ref-genome "$PROJECT_DIR/reference/w303_chromosomal.fasta" \
+  --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
+  --output-dir "$OUTPUT_DIR"
+
+if [ $? -ne 0 ]; then
+  echo "Error in OSH gene mapping analysis. Exiting."
+  exit 1
+fi
+
 # Step 2: Analyze variants in and around OSH genes
 echo
 echo "Step 2: Analyzing variants in and around OSH genes..."
@@ -57,14 +57,9 @@ echo "Step 3: Calculating genomic distances between OSH and ERG genes..."
 echo "========================================================"
 python3 "$SCRIPT_DIR/osh_erg_distance.py" \
   --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
+  --genome-file "$PROJECT_DIR/reference/w303_chromosomal.fasta" \
+  --variant-dir "$PROJECT_DIR/results/gene_variants_expanded" \
   --output-dir "$OUTPUT_DIR"
-
-  python3 "$SCRIPT_DIR/osh_erg_distance.py" \
-     50    --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
-     51    --genome-file "$PROJECT_DIR/reference/w303_chromosomal.fasta" \
-     52    --variant-dir "$PROJECT_DIR/results/gene_variants_expanded" \
-     51    --output-dir "$OUTPUT_DIR"
-     52 
 
 if [ $? -ne 0 ]; then
   echo "Error in OSH-ERG distance analysis. Exiting."
