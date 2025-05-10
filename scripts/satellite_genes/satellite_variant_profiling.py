@@ -111,7 +111,10 @@ def identify_satellite_variants(satellite_df, variants_df):
     """Identify variants associated with satellite genes"""
     # Create a DataFrame to store satellite gene variants
     satellite_variants = []
-    
+
+    # Get all unique scaffolds in the variants dataframe
+    variant_scaffolds = set(variants_df['Scaffold'].unique())
+
     # For each satellite gene, find associated variants
     for _, satellite in satellite_df.iterrows():
         # Extract satellite gene information
@@ -122,40 +125,76 @@ def identify_satellite_variants(satellite_df, variants_df):
         end = satellite.get('satellite_end', 0)
         erg_gene_id = satellite.get('erg_gene_id', '')
         erg_gene_name = satellite.get('erg_gene_name', '')
+        erg_start = satellite.get('erg_start', 0)
+        erg_end = satellite.get('erg_end', 0)
         function_category = satellite.get('function_category', 'Unknown')
-        
-        # Skip if we don't have position information
-        if start == 0 or end == 0 or not scaffold:
+
+        # Skip if we don't have a valid scaffold or if it's not in variants
+        if not scaffold or scaffold not in variant_scaffolds:
             continue
 
-        # Since many satellite genes don't have IDs, we'll primarily rely on position-based matching
-        # Find variants in the satellite gene region by position
-        position_variants = variants_df[
-            (variants_df['Scaffold'] == scaffold) &
-            (variants_df['Position'] >= start) &
-            (variants_df['Position'] <= end)
-        ]
+        # Only print for known genes to reduce noise
+        if satellite_name and satellite_name != 'Unknown' and not pd.isna(satellite_name):
+            print(f"Looking for satellite gene with ID: {satellite_id} or name: {satellite_name}")
 
-        # Additionally, try to find variants directly associated with this satellite gene if ID exists
-        if satellite_id or satellite_name:
-            # Only print for meaningful satellite IDs to reduce noise
-            if satellite_id != 'nan' and satellite_name != 'Unknown':
-                print(f"Looking for satellite gene with ID: {satellite_id} or name: {satellite_name}")
+        # Filter variants on the same scaffold
+        scaffold_variants = variants_df[variants_df['Scaffold'] == scaffold]
+        gene_variants = pd.DataFrame()
 
-            # Try to match on Gene_ID or SC_Gene_ID
-            id_matches = variants_df[
-                ((variants_df['Gene_ID'] == satellite_id) |
-                 (variants_df['SC_Gene_ID'] == satellite_id) |
-                 (variants_df['Gene_ID'] == satellite_name) |
-                 (variants_df['SC_Gene_ID'] == satellite_name)) &
-                (variants_df['Scaffold'] == scaffold)
+        # 1. Look for variants within the satellite gene
+        if start > 0 and end > 0:
+            within_variants = scaffold_variants[
+                (scaffold_variants['Position'] >= start) &
+                (scaffold_variants['Position'] <= end)
             ]
+            if not within_variants.empty:
+                gene_variants = pd.concat([gene_variants, within_variants])
 
-            # Combine with position variants
-            gene_variants = pd.concat([position_variants, id_matches]).drop_duplicates()
-        else:
-            # Just use position variants
-            gene_variants = position_variants
+        # 2. Look for variants associated with the satellite gene by name/ID
+        if satellite_name and satellite_name != 'Unknown' and not pd.isna(satellite_name):
+            try:
+                # Direct ID match
+                id_matches = scaffold_variants[
+                    (scaffold_variants['SC_Gene_ID'] == satellite_name) |
+                    (scaffold_variants['Gene_ID'] == satellite_name)
+                ]
+                if not id_matches.empty:
+                    gene_variants = pd.concat([gene_variants, id_matches])
+
+                # Partial ID match for systematic names
+                if satellite_name.startswith('Y') and len(satellite_name) >= 7:
+                    partial_matches = scaffold_variants[
+                        scaffold_variants['SC_Gene_ID'].str.contains(satellite_name,
+                                                                    regex=False,
+                                                                    na=False)
+                    ]
+                    if not partial_matches.empty:
+                        gene_variants = pd.concat([gene_variants, partial_matches])
+            except Exception as e:
+                # Skip errors in string operations
+                pass
+
+        # 3. Look for variants that refer to the ERG gene this satellite is associated with
+        if erg_gene_name:
+            erg_variants = scaffold_variants[
+                (scaffold_variants['ERG_Name'] == erg_gene_name)
+            ]
+            if not erg_variants.empty:
+                # For each ERG variant, check if it's also associated with this satellite gene
+                for _, erg_variant in erg_variants.iterrows():
+                    erg_variant_pos = erg_variant['Position']
+                    # If the variant position is closer to the satellite gene than to the ERG gene
+                    if erg_start > 0 and erg_end > 0 and start > 0 and end > 0:
+                        # Calculate distances to satellite gene and ERG gene
+                        dist_to_satellite = min(abs(erg_variant_pos - start), abs(erg_variant_pos - end))
+                        dist_to_erg = min(abs(erg_variant_pos - erg_start), abs(erg_variant_pos - erg_end))
+
+                        # Add variants that are closer to satellite gene than ERG gene
+                        if dist_to_satellite < dist_to_erg:
+                            gene_variants = pd.concat([gene_variants, pd.DataFrame([erg_variant])])
+
+        # Remove duplicates
+        gene_variants = gene_variants.drop_duplicates()
         
         # Add satellite gene information to variants
         for _, variant in gene_variants.iterrows():
@@ -763,6 +802,54 @@ def main():
             # Count satellite genes on common scaffolds
             satellite_on_common = satellite_df[satellite_df['scaffold'].isin(common_scaffolds)]
             print(f"Satellite genes on common scaffolds: {len(satellite_on_common)} ({len(satellite_on_common)/len(satellite_df)*100:.1f}% of total)")
+
+            # Analyze variant positions vs satellite gene positions
+            print("\nAnalyzing variant positions relative to satellite genes:")
+
+            # Compute min/max positions of satellite genes in common scaffolds
+            for scaffold in common_scaffolds:
+                scaffold_satellites = satellite_df[satellite_df['scaffold'] == scaffold]
+                scaffold_variants = variants_df[variants_df['Scaffold'] == scaffold]
+
+                satellite_min_pos = scaffold_satellites['satellite_start'].min()
+                satellite_max_pos = scaffold_satellites['satellite_end'].max()
+
+                variant_min_pos = scaffold_variants['Position'].min()
+                variant_max_pos = scaffold_variants['Position'].max()
+
+                print(f"  Scaffold {scaffold}:")
+                print(f"    Satellite genes positions: {satellite_min_pos} - {satellite_max_pos}")
+                print(f"    Variants positions: {variant_min_pos} - {variant_max_pos}")
+
+                # Check if there's position overlap
+                if (variant_min_pos <= satellite_max_pos and variant_max_pos >= satellite_min_pos):
+                    print(f"    OVERLAP: Some variants may fall within satellite gene positions")
+                else:
+                    print(f"    NO OVERLAP: Variants and satellite genes are in different regions")
+
+                # Look at the ERG genes on this scaffold
+                scaffold_ergs = []
+                for erg_name in scaffold_satellites['erg_gene_name'].unique():
+                    if erg_name in scaffold_ergs:
+                        continue
+                    scaffold_ergs.append(erg_name)
+
+                    # Get position of this ERG gene
+                    erg_rows = scaffold_satellites[scaffold_satellites['erg_gene_name'] == erg_name]
+                    if not erg_rows.empty:
+                        erg_start = erg_rows['erg_start'].iloc[0]
+                        erg_end = erg_rows['erg_end'].iloc[0]
+
+                        if erg_start > 0 and erg_end > 0:
+                            # Check variants near this ERG gene
+                            near_variants = scaffold_variants[
+                                (scaffold_variants['Position'] >= erg_start - 5000) &
+                                (scaffold_variants['Position'] <= erg_end + 5000)
+                            ]
+                            if len(near_variants) > 0:
+                                print(f"    ERG gene {erg_name} position: {erg_start} - {erg_end}")
+                                print(f"    Variants near this ERG gene: {len(near_variants)}")
+                                print(f"    Confirming these variants are in the buffer zone, not satellite zone")
         else:
             print("WARNING: No common scaffolds between satellite genes and variants!")
             print("This explains why no satellite variants will be found.")

@@ -1,0 +1,313 @@
+======================================================
+Satellite Gene Variant Profiling
+======================================================
+Loaded 593 satellite genes from file
+Loaded 59 variants from file
+Columns in variants file: ['Sample', 'Treatment', 'Scaffold', 'Position', 'Ref', 'Alt', 'Quality', 'Gene_ID', 'ERG_Name', 'SC_Gene_ID', 'Effect', 'Impact', 'Codon_Change', 'Amino_Acid_Change', 'Distance', 'Variant_Type']
+Sample row: {'Sample': 'CAS-55-1', 'Treatment': 'CAS', 'Scaffold': 'w303_scaffold_7', 'Position': 606238, 'Ref': 'T', 'Alt': 'TA', 'Quality': 197.227, 'Gene_ID': 'W3030G02990', 'ERG_Name': 'ERG25', 'SC_Gene_ID': 'YGR060W', 'Effect': 'upstream_gene_variant', 'Impact': 'MODIFIER', 'Codon_Change': 'c.-1454_-1453insA', 'Amino_Acid_Change': nan, 'Distance': 1453, 'Variant_Type': 'INSERTION'}
+Unique scaffolds in variants: ['w303_scaffold_7' 'w303_scaffold_16']
+Variants per scaffold:
+  w303_scaffold_7: 44 variants
+  w303_scaffold_16: 15 variants
+
+Scaffold analysis:
+Satellite genes found on 5 unique scaffolds
+Variants found on 2 unique scaffolds
+Scaffolds in common: 2
+Common scaffolds: {'w303_scaffold_16', 'w303_scaffold_7'}
+Satellite genes on common scaffolds: 318 (53.6% of total)
+
+Analyzing variant positions relative to satellite genes:
+  Scaffold w303_scaffold_16:
+    Satellite genes positions: 147759 - 768126
+    Variants positions: 667515 - 667515
+    OVERLAP: Some variants may fall within satellite gene positions
+    ERG gene YMR202W position: 667848 - 668516
+    Variants near this ERG gene: 15
+    Confirming these variants are in the buffer zone, not satellite zone
+  Scaffold w303_scaffold_7:
+    Satellite genes positions: 368605 - 949104
+    Variants positions: 606238 - 848101
+    OVERLAP: Some variants may fall within satellite gene positions
+    ERG gene YGR060W position: 607692 - 608621
+    Variants near this ERG gene: 15
+    Confirming these variants are in the buffer zone, not satellite zone
+    ERG gene YGR175C position: 846496 - 847986
+    Variants near this ERG gene: 29
+    Confirming these variants are in the buffer zone, not satellite zone
+
+Identifying variants in satellite genes...
+Looking for satellite gene with ID: nan or name: YML059C
+Looking for satellite gene with ID: nan or name: YML058W
+Looking for satellite gene with ID: nan or name: YLR437C
+Looking for satellite gene with ID: nan or name: YLR433C
+Looking for satellite gene with ID: nan or name: YML056C
+Looking for satellite gene with ID: nan or name: YML055W
+Looking for satellite gene with ID: nan or name: YML054C
+Looking for satellite gene with ID: nan or name: YML053C
+Looking for satellite gene with ID: nan or name: YML052W
+Looking for satellite gene with ID: nan or name: YML051W
+Looking for satellite gene with ID: nan or name: YML050W
+Looking for satellite gene with ID: nan or name: YML049C
+Looking for satellite gene with ID: nan or name: YML048W
+Looking for satellite gene with ID: nan or name: YJR054W
+Looking for satellite gene with ID: nan or name: YML046W
+Looking for satellite gene with ID: nan or name: YML043C
+Looking for satellite gene with ID: nan or name: YML042W
+Looking for satellite gene with ID: nan or name: YML041C
+Looking for satellite gene with ID: nan or name: YKL043W
+Looking for satellite gene with ID: nan or name: YMR017W
+Looking for satellite gene with ID: nan or name: YMR018W
+Looking for satellite gene with ID: nan or name: YMR019W
+Looking for satellite gene with ID: nan or name: YMR020W
+Looking for satellite gene with ID: nan or name: YMR021C
+Looking for satellite gene with ID: nan or name: YMR022W
+Looking for satellite gene with ID: nan or name: YMR023C
+Looking for satellite gene with ID: nan or name: YMR024W
+Looking for satellite gene with ID: nan or name: YMR025W
+Looking for satellite gene with ID: nan or name: YMR026C
+Looking for satellite gene with ID: nan or name: YMR027W
+Looking for satellite gene with ID: nan or name: YMR028W
+Looking for satellite gene with ID: nan or name: YMR029C
+Looking for satellite gene with ID: nan or name: YMR030W
+Looking for satellite gene with ID: nan or name: YKL050C
+Looking for satellite gene with ID: nan or name: YMR032W
+Looking for satellite gene with ID: nan or name: YMR033W
+Looking for satellite gene with ID: nan or name: YMR034C
+Looking for satellite gene with ID: nan or name: YMR035W
+Looking for satellite gene with ID: nan or name: YMR036C
+Looking for satellite gene with ID: nan or name: YKL062W
+Looking for satellite gene with ID: nan or name: YMR038C
+Looking for satellite gene with ID: nan or name: YMR039C
+Looking for satellite gene with ID: nan or name: YKL065C
+Looking for satellite gene with ID: nan or name: YMR041C
+Looking for satellite gene with ID: nan or name: YMR042W
+Looking for satellite gene with ID: nan or name: YML038C
+Looking for satellite gene with ID: nan or name: YML037C
+Looking for satellite gene with ID: nan or name: YML036W
+Looking for satellite gene with ID: nan or name: YML035C
+Looking for satellite gene with ID: nan or name: YDR458C
+Looking for satellite gene with ID: nan or name: YML032C
+Looking for satellite gene with ID: nan or name: YML031W
+Looking for satellite gene with ID: nan or name: YML030W
+Looking for satellite gene with ID: nan or name: YML029W
+Looking for satellite gene with ID: nan or name: YDR453C
+Looking for satellite gene with ID: nan or name: YDR451C
+Looking for satellite gene with ID: nan or name: YDR450W
+Looking for satellite gene with ID: nan or name: YML025C
+Looking for satellite gene with ID: nan or name: YDR447C
+Looking for satellite gene with ID: nan or name: YML023C
+Looking for satellite gene with ID: nan or name: YDR441C
+Looking for satellite gene with ID: nan or name: YML021C
+Looking for satellite gene with ID: nan or name: YML020W
+Looking for satellite gene with ID: nan or name: YML019W
+Looking for satellite gene with ID: nan or name: YDR438W
+Looking for satellite gene with ID: nan or name: YDR436W
+Looking for satellite gene with ID: nan or name: YML015C
+Looking for satellite gene with ID: nan or name: YML014W
+Looking for satellite gene with ID: nan or name: YML013W
+Looking for satellite gene with ID: nan or name: YML012W
+Looking for satellite gene with ID: nan or name: YML011C
+Looking for satellite gene with ID: nan or name: YML010W
+Looking for satellite gene with ID: nan or name: YMR042W
+Looking for satellite gene with ID: nan or name: YMR043W
+Looking for satellite gene with ID: nan or name: YMR044W
+Looking for satellite gene with ID: nan or name: YKL068W
+Looking for satellite gene with ID: nan or name: YMR048W
+Looking for satellite gene with ID: nan or name: YMR049C
+Looking for satellite gene with ID: nan or name: YMR052W
+Looking for satellite gene with ID: nan or name: YKL072W
+Looking for satellite gene with ID: nan or name: YMR054W
+Looking for satellite gene with ID: nan or name: YMR055C
+Looking for satellite gene with ID: nan or name: YMR056C
+Looking for satellite gene with ID: nan or name: YMR058W
+Looking for satellite gene with ID: nan or name: YMR059W
+Looking for satellite gene with ID: nan or name: YMR060C
+Looking for satellite gene with ID: nan or name: YMR061W
+Looking for satellite gene with ID: nan or name: YMR062C
+Looking for satellite gene with ID: nan or name: YMR063W
+Looking for satellite gene with ID: nan or name: YMR064W
+Looking for satellite gene with ID: nan or name: YMR065W
+Looking for satellite gene with ID: nan or name: YMR066W
+Looking for satellite gene with ID: nan or name: YMR154C
+Looking for satellite gene with ID: nan or name: YMR155W
+Looking for satellite gene with ID: nan or name: YMR156C
+Looking for satellite gene with ID: nan or name: YMR157C
+Looking for satellite gene with ID: nan or name: YMR158W
+Looking for satellite gene with ID: nan or name: YMR159C
+Looking for satellite gene with ID: nan or name: YMR160W
+Looking for satellite gene with ID: nan or name: YMR161W
+Looking for satellite gene with ID: nan or name: YMR162C
+Looking for satellite gene with ID: nan or name: YMR163C
+Looking for satellite gene with ID: nan or name: YMR164C
+Looking for satellite gene with ID: nan or name: YMR165C
+Looking for satellite gene with ID: nan or name: YMR166C
+Looking for satellite gene with ID: nan or name: YMR167W
+Looking for satellite gene with ID: nan or name: YMR168C
+Looking for satellite gene with ID: nan or name: YMR169C
+Looking for satellite gene with ID: nan or name: YMR170C
+Looking for satellite gene with ID: nan or name: YMR171C
+Looking for satellite gene with ID: nan or name: YMR172W
+Looking for satellite gene with ID: nan or name: YMR173W
+Looking for satellite gene with ID: nan or name: YMR174C
+Looking for satellite gene with ID: nan or name: YMR175W
+Looking for satellite gene with ID: nan or name: YMR176W
+Looking for satellite gene with ID: nan or name: YMR224C
+Looking for satellite gene with ID: nan or name: YMR225C
+Looking for satellite gene with ID: nan or name: YMR226C
+Looking for satellite gene with ID: nan or name: YMR227C
+Looking for satellite gene with ID: nan or name: YMR228W
+Looking for satellite gene with ID: nan or name: YMR229C
+Looking for satellite gene with ID: nan or name: YMR230W
+Looking for satellite gene with ID: nan or name: YMR231W
+Looking for satellite gene with ID: nan or name: YMR232W
+Looking for satellite gene with ID: nan or name: YMR233W
+Looking for satellite gene with ID: nan or name: YMR234W
+Looking for satellite gene with ID: nan or name: YMR235C
+Looking for satellite gene with ID: nan or name: YMR236W
+Looking for satellite gene with ID: nan or name: YMR237W
+Looking for satellite gene with ID: nan or name: YMR238W
+Looking for satellite gene with ID: nan or name: YMR239C
+Looking for satellite gene with ID: nan or name: YMR240C
+Looking for satellite gene with ID: nan or name: YMR241W
+Looking for satellite gene with ID: nan or name: YMR242C
+Looking for satellite gene with ID: nan or name: YMR243C
+Looking for satellite gene with ID: nan or name: YMR244W
+Looking for satellite gene with ID: nan or name: YMR244C
+Looking for satellite gene with ID: nan or name: YMR246W
+Looking for satellite gene with ID: nan or name: YGL071W
+Looking for satellite gene with ID: nan or name: YGL070C
+Looking for satellite gene with ID: nan or name: YGL068W
+Looking for satellite gene with ID: nan or name: YGL067W
+Looking for satellite gene with ID: nan or name: YGL066W
+Looking for satellite gene with ID: nan or name: YGL065C
+Looking for satellite gene with ID: nan or name: YGL064C
+Looking for satellite gene with ID: nan or name: YGL063W
+Looking for satellite gene with ID: nan or name: YBR218C
+Looking for satellite gene with ID: nan or name: YGL061C
+Looking for satellite gene with ID: nan or name: YBR216C
+Looking for satellite gene with ID: nan or name: YGL059W
+Looking for satellite gene with ID: nan or name: YGL058W
+Looking for satellite gene with ID: nan or name: YGL057C
+Looking for satellite gene with ID: nan or name: YBR214W
+Looking for satellite gene with ID: nan or name: YGL055W
+Looking for satellite gene with ID: nan or name: YBR210W
+Looking for satellite gene with ID: nan or name: YGL053W
+Looking for satellite gene with ID: nan or name: YGL051W
+Looking for satellite gene with ID: nan or name: YGL050W
+Looking for satellite gene with ID: nan or name: YGL049C
+Looking for satellite gene with ID: nan or name: YGL048C
+Looking for satellite gene with ID: nan or name: YGL047W
+Looking for satellite gene with ID: nan or name: YGL045W
+Looking for satellite gene with ID: nan or name: YGL044C
+Looking for satellite gene with ID: nan or name: YGL043W
+Looking for satellite gene with ID: nan or name: YGL041W
+Looking for satellite gene with ID: nan or name: YGL040C
+Looking for satellite gene with ID: nan or name: YGR019W
+Looking for satellite gene with ID: nan or name: YGR020C
+Looking for satellite gene with ID: nan or name: YGR021W
+Looking for satellite gene with ID: nan or name: YGR023W
+Looking for satellite gene with ID: nan or name: YGR024C
+Looking for satellite gene with ID: nan or name: YGR026W
+Looking for satellite gene with ID: nan or name: YGR027C
+Looking for satellite gene with ID: nan or name: YGR028W
+Looking for satellite gene with ID: nan or name: YGR029W
+Looking for satellite gene with ID: nan or name: YGR030C
+Looking for satellite gene with ID: nan or name: YGR031W
+Looking for satellite gene with ID: nan or name: YGR032W
+Looking for satellite gene with ID: nan or name: YGR033C
+Looking for satellite gene with ID: nan or name: YGR034W
+Looking for satellite gene with ID: nan or name: YGR035C
+Looking for satellite gene with ID: nan or name: YGR036C
+Looking for satellite gene with ID: nan or name: YGR038W
+Looking for satellite gene with ID: nan or name: YGR009C
+Looking for satellite gene with ID: nan or name: YGR010W
+Looking for satellite gene with ID: nan or name: YGR012W
+Looking for satellite gene with ID: nan or name: YGR013W
+Looking for satellite gene with ID: nan or name: YGR014W
+Looking for satellite gene with ID: nan or name: YGR015C
+Looking for satellite gene with ID: nan or name: YGR016W
+Looking for satellite gene with ID: nan or name: YGR017W
+Looking for satellite gene with ID: nan or name: YGR019W
+Looking for satellite gene with ID: nan or name: YGR020C
+Looking for satellite gene with ID: nan or name: YGR021W
+Looking for satellite gene with ID: nan or name: YGR023W
+Looking for satellite gene with ID: nan or name: YGR024C
+Looking for satellite gene with ID: nan or name: YGR026W
+Looking for satellite gene with ID: nan or name: YGR027C
+Looking for satellite gene with ID: nan or name: YGR028W
+Looking for satellite gene with ID: nan or name: YGR029W
+Looking for satellite gene with ID: nan or name: YGR030C
+Looking for satellite gene with ID: nan or name: YGR031W
+Looking for satellite gene with ID: nan or name: YGR032W
+Looking for satellite gene with ID: nan or name: YGR033C
+Looking for satellite gene with ID: nan or name: YGR034W
+Looking for satellite gene with ID: nan or name: YGR035C
+Looking for satellite gene with ID: nan or name: YGR036C
+Looking for satellite gene with ID: nan or name: YGR090W
+Looking for satellite gene with ID: nan or name: YGR091W
+Looking for satellite gene with ID: nan or name: YGR092W
+Looking for satellite gene with ID: nan or name: YGR093W
+Looking for satellite gene with ID: nan or name: YGR094W
+Looking for satellite gene with ID: nan or name: YGR095C
+Looking for satellite gene with ID: nan or name: YGR096W
+Looking for satellite gene with ID: nan or name: YGR097W
+Looking for satellite gene with ID: nan or name: YGR098C
+Looking for satellite gene with ID: nan or name: YGR099W
+Looking for satellite gene with ID: nan or name: YGR100W
+Looking for satellite gene with ID: nan or name: YGR101W
+Looking for satellite gene with ID: nan or name: YGR102C
+Looking for satellite gene with ID: nan or name: YGR103W
+Looking for satellite gene with ID: nan or name: YGR104C
+Looking for satellite gene with ID: nan or name: YGR105W
+Looking for satellite gene with ID: nan or name: YGR106C
+Looking for satellite gene with ID: nan or name: YGR123C
+Looking for satellite gene with ID: nan or name: YGR124W
+Looking for satellite gene with ID: nan or name: YGR125W
+Looking for satellite gene with ID: nan or name: YGR126W
+Looking for satellite gene with ID: nan or name: YGR127W
+Looking for satellite gene with ID: nan or name: YGR128C
+Looking for satellite gene with ID: nan or name: YGR129W
+Looking for satellite gene with ID: nan or name: YGR130C
+Looking for satellite gene with ID: nan or name: YGR131W
+Looking for satellite gene with ID: nan or name: YGR132C
+Looking for satellite gene with ID: nan or name: YGR133W
+Looking for satellite gene with ID: nan or name: YGR134W
+Looking for satellite gene with ID: nan or name: YGR135W
+Looking for satellite gene with ID: nan or name: YGR136W
+Looking for satellite gene with ID: nan or name: YGR138C
+Looking for satellite gene with ID: nan or name: YGR140W
+Looking for satellite gene with ID: nan or name: YGR141W
+Looking for satellite gene with ID: nan or name: YGR142W
+Looking for satellite gene with ID: nan or name: YGR143W
+Looking for satellite gene with ID: nan or name: YGR144W
+Looking for satellite gene with ID: nan or name: YGR145W
+Looking for satellite gene with ID: nan or name: YGR146C
+Looking for satellite gene with ID: nan or name: YGR200C
+Looking for satellite gene with ID: nan or name: YGR201C
+Looking for satellite gene with ID: nan or name: YGR202C
+Looking for satellite gene with ID: nan or name: YGR203W
+Looking for satellite gene with ID: nan or name: YGR204W
+Looking for satellite gene with ID: nan or name: YGR205W
+Looking for satellite gene with ID: nan or name: YGR206W
+Looking for satellite gene with ID: nan or name: YGR207C
+Looking for satellite gene with ID: nan or name: YGR208W
+Looking for satellite gene with ID: nan or name: YGR209C
+Looking for satellite gene with ID: nan or name: YGR210C
+Looking for satellite gene with ID: nan or name: YGR211W
+Looking for satellite gene with ID: nan or name: YGR212W
+Looking for satellite gene with ID: nan or name: YGR213C
+Looking for satellite gene with ID: nan or name: YGR214W
+Looking for satellite gene with ID: nan or name: YGR215W
+Looking for satellite gene with ID: nan or name: YGR216C
+Looking for satellite gene with ID: nan or name: YGR217W
+Looking for satellite gene with ID: nan or name: YGR218W
+Looking for satellite gene with ID: nan or name: YGR220C
+Looking for satellite gene with ID: nan or name: YGR221C
+Looking for satellite gene with ID: nan or name: YGR222W
+Looking for satellite gene with ID: nan or name: YGR223C
+Looking for satellite gene with ID: nan or name: YGR224W
+Looking for satellite gene with ID: nan or name: YGR225W
+Looking for satellite gene with ID: nan or name: YGR227W
+No variants found in satellite genes
+Satellite gene variant profiling complete!
