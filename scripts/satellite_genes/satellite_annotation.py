@@ -4,7 +4,7 @@
 """
 Script to gather functional annotations and GO terms for satellite genes.
 This script extends the satellite gene identification by enriching the data
-with functional annotations from reference databases.
+with functional annotations from the GenBank files and SGD database.
 """
 
 import os
@@ -15,21 +15,58 @@ import seaborn as sns
 from collections import defaultdict, Counter
 import argparse
 import sys
-import requests
-import json
 import re
 import time
-from matplotlib.pyplot import figure
+from Bio import SeqIO, Entrez
+import requests
+import json
 
 # Add the parent directory to the path to access shared modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.tools import ensure_dir, save_tsv, load_tsv, setup_plotting_style, save_plot
+
+# Define functional categories and their keywords
+FUNCTION_CATEGORIES = {
+    'Metabolism': ['metabolism', 'metabolic', 'biosynthesis', 'degradation', 'fatty acid', 'lipid', 
+                 'glucose', 'catabolism', 'glycolysis', 'TCA', 'respiration', 'oxidation', 
+                 'reduction', 'synthase', 'synthetase', 'dehygrogenase', 'oxidase', 'reductase',
+                 'transferase', 'hydrolase', 'kinase', 'phosphatase'],
+    'Transport': ['transport', 'transporter', 'transmembrane', 'uptake', 'export', 'import', 
+                'channel', 'pump', 'porter', 'exchange', 'trafficking', 'permease', 'carrier',
+                'uptake', 'efflux'],
+    'Transcription': ['transcription', 'transcriptional', 'transcription factor', 'RNA polymerase', 
+                    'promoter', 'gene expression', 'DNA-binding', 'zinc finger', 'helicase',
+                    'transcriptase', 'activator', 'repressor', 'silencing'],
+    'Translation': ['translation', 'ribosome', 'ribosomal', 'tRNA', 'protein synthesis', 
+                  'elongation', 'initiation', 'termination factor', 'aminoacyl', 'synthetase',
+                  'peptidyl', 'translational'],
+    'Protein Modification': ['chaperone', 'folding', 'protease', 'peptidase', 'isomerase', 
+                           'glycosylation', 'ubiquitin', 'proteolysis', 'degradation', 
+                           'proteasome', 'isomerase', 'modification', 'processing'],
+    'Signaling': ['signaling', 'signal', 'receptor', 'kinase', 'phosphatase', 'cascade', 
+                 'pathway', 'regulation', 'regulator', 'GTPase', 'phosphorylation',
+                 'transduction', 'response'],
+    'Stress Response': ['stress', 'heat shock', 'oxidative', 'response', 'resistance', 
+                      'adaptation', 'temperature', 'oxygen', 'hypoxia', 'anaerobic', 
+                      'protection', 'defense', 'shock', 'tolerance'],
+    'Cell Cycle': ['cell cycle', 'mitosis', 'meiosis', 'division', 'checkpoint', 'spindle', 
+                  'chromosome segregation', 'cytokinesis', 'replication', 'G1', 'S phase',
+                  'G2', 'M phase', 'mitotic'],
+    'Membrane': ['membrane', 'lipid raft', 'vesicle', 'endosome', 'vacuole', 'endoplasmic reticulum', 
+               'golgi', 'ergosterol', 'sterol', 'sphingolipid', 'phospholipid', 'transmembrane',
+               'integral membrane', 'plasma membrane', 'cell wall'],
+    'DNA Processes': ['DNA', 'replication', 'repair', 'recombination', 'nucleotide', 'helicase', 
+                    'telomere', 'chromatin', 'histone', 'nuclease', 'topoisomerase',
+                    'polymerase', 'nucleosome', 'chromosome'],
+}
 
 def parse_args():
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(description="Annotate satellite genes with functional information")
     parser.add_argument("--satellite-genes", default="/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/satellite_genes/satellite_genes.tsv",
                       help="Path to satellite genes TSV file from identification step")
+    parser.add_argument("--genbank-dir", default="/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/reference/w303_annotations",
+                      help="Directory containing GenBank annotation files")
     parser.add_argument("--gene-mapping", default="/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/reference/gene_mapping_full.tsv",
                       help="Path to gene mapping file with annotations")
     parser.add_argument("--output-dir", default="/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/satellite_genes",
@@ -66,195 +103,93 @@ def load_gene_mapping(gene_mapping_file):
         print(f"ERROR: Failed to load gene mapping file: {e}")
         sys.exit(1)
 
-def merge_annotations(satellite_df, gene_df):
-    """Merge satellite genes with annotations from gene mapping"""
-    # Create a copy to avoid modifying the original
-    annotated_df = satellite_df.copy()
+def parse_genbank_files(genbank_dir):
+    """Parse GenBank files to extract gene annotations"""
+    print(f"Parsing GenBank files from {genbank_dir}...")
     
-    # Extract relevant annotation columns from gene_df
-    annotation_columns = ['sc_gene_id', 'std_gene_name', 'product', 'note', 'function']
-    annotation_columns = [col for col in annotation_columns if col in gene_df.columns]
+    gene_annotations = {}
+    genbank_files = [f for f in os.listdir(genbank_dir) if f.endswith('.genbank')]
     
-    # Add any additional useful columns
-    optional_columns = ['go_terms', 'gene_ontology', 'molecular_function', 'biological_process', 'cellular_component']
-    for col in optional_columns:
-        if col in gene_df.columns:
-            annotation_columns.append(col)
+    for file in genbank_files:
+        try:
+            file_path = os.path.join(genbank_dir, file)
+            for record in SeqIO.parse(file_path, "genbank"):
+                for feature in record.features:
+                    if feature.type == "gene":
+                        gene_id = feature.qualifiers.get("gene", [""])[0]
+                        
+                        # Skip if we don't have a gene ID
+                        if not gene_id:
+                            continue
+                        
+                        # Find the corresponding CDS feature
+                        cds = None
+                        for cds_feature in record.features:
+                            if cds_feature.type == "CDS" and cds_feature.qualifiers.get("gene", [""])[0] == gene_id:
+                                cds = cds_feature
+                                break
+                        
+                        if cds:
+                            sc_gene_id = None
+                            product = cds.qualifiers.get("product", ["hypothetical protein"])[0]
+                            note = "; ".join(cds.qualifiers.get("note", []))
+                            
+                            # Try to extract the systematic gene ID (e.g., YNL331C) from notes
+                            if note:
+                                # Look for inference or similarity to known genes
+                                sc_match = re.search(r'similar to.+?([Y][A-Z]{2}\d+[WC])', note)
+                                if sc_match:
+                                    sc_gene_id = sc_match.group(1)
+                                
+                                # Extract function information if available
+                                function = note
+                            else:
+                                function = ""
+                            
+                            gene_annotations[gene_id] = {
+                                "w303_gene_id": gene_id,
+                                "sc_gene_id": sc_gene_id,
+                                "product": product,
+                                "note": note,
+                                "function": function
+                            }
+                            
+                            # If we found a systematic ID, also index it
+                            if sc_gene_id:
+                                gene_annotations[sc_gene_id] = gene_annotations[gene_id]
+        
+        except Exception as e:
+            print(f"Error parsing GenBank file {file}: {e}")
     
-    # Create a subset of gene_df with only the annotation columns
-    gene_annotations = gene_df[annotation_columns]
-    
-    # Merge satellite_df with annotations based on satellite_gene_id
-    annotated_df = pd.merge(
-        annotated_df,
-        gene_annotations,
-        left_on='satellite_gene_id',
-        right_on='sc_gene_id',
-        how='left',
-        suffixes=('', '_annotation')
-    )
-    
-    # Fill missing values
-    for col in annotated_df.columns:
-        if annotated_df[col].dtype == 'object':
-            annotated_df[col] = annotated_df[col].fillna('Unknown')
-    
-    return annotated_df
+    print(f"Extracted annotations for {len(gene_annotations)} genes from GenBank files")
+    return gene_annotations
 
-def categorize_functions(annotated_df):
-    """Categorize satellite genes by function based on annotations"""
-    # Initialize function category column
-    annotated_df['function_category'] = 'Unknown'
+def categorize_by_function(annotations):
+    """Categorize genes by function based on their annotations"""
+    if not annotations:
+        return "Unknown"
     
-    # Define functional categories and their keywords
-    function_categories = {
-        'Metabolism': ['metabolism', 'metabolic', 'biosynthesis', 'degradation', 'fatty acid', 'lipid', 'glucose', 
-                      'catabolism', 'glycolysis', 'TCA', 'respiration', 'oxidation', 'reduction'],
-        'Stress Response': ['stress', 'heat shock', 'oxidative', 'response', 'resistance', 'adaptation', 'temperature',
-                           'oxygen', 'hypoxia', 'anaerobic', 'protection'],
-        'Transcription': ['transcription', 'transcriptional', 'transcription factor', 'RNA polymerase', 'promoter', 
-                        'gene expression', 'DNA-binding'],
-        'Translation': ['translation', 'ribosome', 'ribosomal', 'tRNA', 'protein synthesis', 'elongation', 'initiation'],
-        'Transport': ['transport', 'transporter', 'transmembrane', 'uptake', 'export', 'import', 'channel', 'pump',
-                     'porter', 'exchange', 'trafficking'],
-        'Signaling': ['signaling', 'signal', 'receptor', 'kinase', 'phosphatase', 'cascade', 'pathway', 'regulation',
-                     'regulator', 'GTPase', 'phosphorylation'],
-        'Cell Cycle': ['cell cycle', 'mitosis', 'meiosis', 'division', 'checkpoint', 'spindle', 'chromosome segregation'],
-        'Protein Modification': ['modification', 'ubiquitin', 'proteolysis', 'degradation', 'proteasome', 'folding',
-                               'chaperone', 'isomerase', 'glycosylation'],
-        'Membrane': ['membrane', 'lipid raft', 'vesicle', 'endosome', 'vacuole', 'endoplasmic reticulum', 'golgi',
-                    'ergosterol', 'sterol', 'sphingolipid', 'phospholipid'],
-        'DNA Processes': ['DNA', 'replication', 'repair', 'recombination', 'nucleotide', 'helicase', 'telomere', 'chromatin'],
-    }
+    # Create a combined text to search
+    search_text = ""
+    for key in ["product", "note", "function"]:
+        if key in annotations and annotations[key]:
+            search_text += " " + str(annotations[key]).lower()
     
-    # Function to categorize based on keywords
-    def categorize_by_keywords(row):
-        # Combine relevant text fields for searching
-        text_fields = []
-        for field in ['product', 'note', 'function', 'molecular_function', 'biological_process']:
-            if field in row and not pd.isna(row[field]):
-                text_fields.append(str(row[field]).lower())
-        
-        search_text = ' '.join(text_fields)
-        
-        # Check each category
-        for category, keywords in function_categories.items():
-            if any(keyword.lower() in search_text for keyword in keywords):
+    # If still empty or only has generic terms
+    if not search_text or search_text.strip() in ["", "hypothetical protein", "unknown"]:
+        return "Unknown"
+    
+    # Check each functional category
+    for category, keywords in FUNCTION_CATEGORIES.items():
+        for keyword in keywords:
+            if keyword.lower() in search_text:
                 return category
-        
-        return 'Unknown'
     
-    # Apply categorization
-    annotated_df['function_category'] = annotated_df.apply(categorize_by_keywords, axis=1)
+    # If we found annotations but couldn't categorize
+    if len(search_text.strip()) > 20:  # Arbitrary length to filter out very short annotations
+        return "Other"
     
-    return annotated_df
-
-def analyze_go_terms(annotated_df):
-    """Analyze GO terms in satellite genes if available"""
-    # Check if GO term columns exist
-    go_columns = ['go_terms', 'gene_ontology', 'molecular_function', 'biological_process', 'cellular_component']
-    available_go_columns = [col for col in go_columns if col in annotated_df.columns]
-    
-    if not available_go_columns:
-        print("No GO term columns found in the data")
-        return annotated_df, None
-    
-    # Create a consolidated GO term field if multiple columns exist
-    if len(available_go_columns) > 1:
-        annotated_df['consolidated_go'] = annotated_df[available_go_columns].apply(
-            lambda row: ' '.join([str(x) for x in row if not pd.isna(x) and str(x) != 'Unknown']), 
-            axis=1
-        )
-    else:
-        # Use the single available column
-        annotated_df['consolidated_go'] = annotated_df[available_go_columns[0]]
-    
-    # Extract and count GO terms
-    all_go_terms = []
-    for terms in annotated_df['consolidated_go']:
-        if pd.isna(terms) or terms == 'Unknown':
-            continue
-        
-        # Extract GO terms - can be in multiple formats
-        # Format 1: GO:0005634, GO:0016021
-        # Format 2: cellular component (GO:0005634), molecular function (GO:0003677)
-        go_matches = re.findall(r'GO:\d+', str(terms))
-        all_go_terms.extend(go_matches)
-    
-    # Count occurrences
-    go_counter = Counter(all_go_terms)
-    go_counts = pd.DataFrame({
-        'go_term': list(go_counter.keys()),
-        'count': list(go_counter.values())
-    }).sort_values('count', ascending=False)
-    
-    return annotated_df, go_counts
-
-def visualize_annotations(annotated_df, go_counts, output_dir):
-    """Create visualizations of the functional annotations"""
-    setup_plotting_style()
-    
-    # Create output directory for visualizations
-    viz_dir = os.path.join(output_dir, "visualizations")
-    ensure_dir(viz_dir)
-    
-    # 1. Function category distribution
-    plt.figure(figsize=(12, 8))
-    category_counts = annotated_df['function_category'].value_counts()
-    sns.barplot(x=category_counts.index, y=category_counts.values)
-    plt.title('Distribution of Satellite Genes by Functional Category')
-    plt.xlabel('Functional Category')
-    plt.ylabel('Number of Genes')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    save_plot(plt, os.path.join(viz_dir, "satellite_function_categories.png"))
-    plt.close()
-    
-    # 2. Function categories by ERG gene
-    plt.figure(figsize=(14, 10))
-    category_by_erg = pd.crosstab(annotated_df['erg_gene_name'], annotated_df['function_category'])
-    # Convert to proportions
-    category_by_erg_prop = category_by_erg.div(category_by_erg.sum(axis=1), axis=0)
-    sns.heatmap(category_by_erg_prop, cmap='YlGnBu', annot=False, cbar_kws={'label': 'Proportion'})
-    plt.title('Functional Categories of Satellite Genes by ERG Gene')
-    plt.xlabel('Functional Category')
-    plt.ylabel('ERG Gene')
-    plt.tight_layout()
-    save_plot(plt, os.path.join(viz_dir, "satellite_function_by_erg.png"))
-    plt.close()
-    
-    # 3. Function categories by relative position
-    plt.figure(figsize=(12, 8))
-    pos_by_func = pd.crosstab(annotated_df['relative_position'], annotated_df['function_category'])
-    pos_by_func_prop = pos_by_func.div(pos_by_func.sum(axis=1), axis=0)
-    sns.heatmap(pos_by_func_prop, cmap='YlGnBu', annot=True, fmt='.2f')
-    plt.title('Functional Categories of Satellite Genes by Position')
-    plt.tight_layout()
-    save_plot(plt, os.path.join(viz_dir, "satellite_function_by_position.png"))
-    plt.close()
-    
-    # 4. Top GO terms if available
-    if go_counts is not None and not go_counts.empty:
-        plt.figure(figsize=(12, 8))
-        top_go = go_counts.head(20)  # Top 20 GO terms
-        sns.barplot(x='count', y='go_term', data=top_go)
-        plt.title('Top 20 GO Terms Among Satellite Genes')
-        plt.xlabel('Number of Genes')
-        plt.ylabel('GO Term')
-        plt.tight_layout()
-        save_plot(plt, os.path.join(viz_dir, "satellite_top_go_terms.png"))
-        plt.close()
-    
-    # 5. Distance vs function category
-    plt.figure(figsize=(12, 8))
-    sns.boxplot(x='function_category', y='distance_kb', data=annotated_df)
-    plt.title('Distribution of Distances by Functional Category')
-    plt.xlabel('Functional Category')
-    plt.ylabel('Distance (kb)')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    save_plot(plt, os.path.join(viz_dir, "satellite_distance_by_function.png"))
-    plt.close()
+    return "Unknown"
 
 def query_sgd_for_annotation(gene_id):
     """Query Saccharomyces Genome Database (SGD) for additional annotation"""
@@ -288,13 +223,16 @@ def query_sgd_for_annotation(gene_id):
                     if 'phenotype' in pheno and 'display_name' in pheno['phenotype']:
                         phenotypes.append(pheno['phenotype']['display_name'])
             
+            # Extract description
+            description = data.get('description', '')
+            
             # Compile results
             result = {
                 'sgd_molecular_function': '; '.join(go_annotations['molecular_function']),
                 'sgd_biological_process': '; '.join(go_annotations['biological_process']),
                 'sgd_cellular_component': '; '.join(go_annotations['cellular_component']),
                 'sgd_phenotypes': '; '.join(phenotypes[:5]),  # Limit to top 5 phenotypes
-                'sgd_description': data.get('description', '')
+                'sgd_description': description
             }
             
             return result
@@ -314,10 +252,20 @@ def enrich_with_sgd_data(annotated_df):
     for col in sgd_columns:
         annotated_df[col] = ''
     
-    print(f"Querying SGD for {len(annotated_df)} genes (this may take some time)...")
+    print(f"Querying SGD for genes (this may take some time)...")
     
     # Get unique gene IDs to avoid redundant queries
-    unique_genes = annotated_df['satellite_gene_id'].unique()
+    unique_genes = []
+    for _, row in annotated_df.iterrows():
+        gene_id = row['satellite_gene_id']
+        gene_name = row['satellite_gene_name']
+        
+        if gene_id and gene_id != 'Unknown' and gene_id not in unique_genes:
+            unique_genes.append(gene_id)
+        
+        if gene_name and gene_name != 'Unknown' and gene_name not in unique_genes:
+            unique_genes.append(gene_name)
+    
     total_genes = len(unique_genes)
     
     gene_data = {}
@@ -330,13 +278,140 @@ def enrich_with_sgd_data(annotated_df):
     
     # Add SGD data to dataframe
     for i, row in annotated_df.iterrows():
+        # Try satellite_gene_id first
         gene_id = row['satellite_gene_id']
-        if gene_id in gene_data:
+        if gene_id in gene_data and gene_data[gene_id]:
             for col in sgd_columns:
                 annotated_df.at[i, col] = gene_data[gene_id].get(col, '')
+            continue
+            
+        # If no data for satellite_gene_id, try satellite_gene_name
+        gene_name = row['satellite_gene_name']
+        if gene_name in gene_data and gene_data[gene_name]:
+            for col in sgd_columns:
+                annotated_df.at[i, col] = gene_data[gene_name].get(col, '')
     
     print(f"Completed SGD data enrichment for {len(gene_data)} unique genes")
     return annotated_df
+
+def annotate_satellite_genes(satellite_df, genbank_annotations, gene_df):
+    """Annotate satellite genes with functional information"""
+    # Create a copy to avoid modifying the original
+    annotated_df = satellite_df.copy()
+    
+    # Initialize annotation columns
+    annotated_df['gene_note'] = ''
+    annotated_df['gene_function'] = ''
+    annotated_df['function_category'] = 'Unknown'
+    
+    # Go through each satellite gene and add annotations
+    for idx, row in annotated_df.iterrows():
+        w303_gene_id = row.get('w303_gene_id', '')
+        sc_gene_id = row.get('satellite_gene_id', '')
+        
+        # Try to get annotations from GenBank data
+        annotations = None
+        
+        # Try using w303_gene_id
+        if w303_gene_id and w303_gene_id in genbank_annotations:
+            annotations = genbank_annotations[w303_gene_id]
+        
+        # If not found, try sc_gene_id
+        elif sc_gene_id and sc_gene_id in genbank_annotations:
+            annotations = genbank_annotations[sc_gene_id]
+            
+        # If not found in GenBank, try mapping file
+        elif sc_gene_id:
+            mapping_match = gene_df[gene_df['sc_gene_id'] == sc_gene_id]
+            if not mapping_match.empty:
+                match = mapping_match.iloc[0]
+                annotations = {
+                    "w303_gene_id": match.get('w303_gene_id', ''),
+                    "sc_gene_id": sc_gene_id,
+                    "product": match.get('product', 'hypothetical protein'),
+                    "note": "",
+                    "function": ""
+                }
+        
+        # If we found annotations, add them to the dataframe
+        if annotations:
+            # Update satellite_gene_name if empty
+            if pd.isna(row['satellite_gene_name']) or row['satellite_gene_name'] == '':
+                annotated_df.at[idx, 'satellite_gene_name'] = annotations.get('sc_gene_id', '')
+            
+            # Update satellite_product if it's a generic value
+            current_product = row.get('satellite_product', '')
+            if pd.isna(current_product) or current_product in ['', 'hypothetical protein', 'Unknown']:
+                annotated_df.at[idx, 'satellite_product'] = annotations.get('product', 'hypothetical protein')
+            
+            # Add note and function
+            annotated_df.at[idx, 'gene_note'] = annotations.get('note', '')
+            annotated_df.at[idx, 'gene_function'] = annotations.get('function', '')
+            
+            # Categorize by function
+            annotated_df.at[idx, 'function_category'] = categorize_by_function(annotations)
+    
+    # Fill missing values
+    for col in annotated_df.columns:
+        if annotated_df[col].dtype == 'object':
+            annotated_df[col] = annotated_df[col].fillna('Unknown')
+    
+    return annotated_df
+
+def visualize_annotations(annotated_df, output_dir):
+    """Create visualizations of the functional annotations"""
+    setup_plotting_style()
+    
+    # Create output directory for visualizations
+    viz_dir = os.path.join(output_dir, "visualizations")
+    ensure_dir(viz_dir)
+    
+    # 1. Function category distribution
+    plt.figure(figsize=(12, 8))
+    category_counts = annotated_df['function_category'].value_counts()
+    sns.barplot(x=category_counts.index, y=category_counts.values)
+    plt.title('Distribution of Satellite Genes by Functional Category')
+    plt.xlabel('Functional Category')
+    plt.ylabel('Number of Genes')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    save_plot(plt, os.path.join(viz_dir, "satellite_function_categories.png"))
+    plt.close()
+    
+    # 2. Function categories by ERG gene
+    plt.figure(figsize=(14, 10))
+    # Get counts of function_category for each erg_gene_name
+    crosstab = pd.crosstab(annotated_df['erg_gene_name'], annotated_df['function_category'])
+    # Convert to proportions for better visualization
+    category_by_erg_prop = crosstab.div(crosstab.sum(axis=1), axis=0)
+    sns.heatmap(category_by_erg_prop, cmap='YlGnBu', annot=False, cbar_kws={'label': 'Proportion'})
+    plt.title('Functional Categories of Satellite Genes by ERG Gene')
+    plt.xlabel('Functional Category')
+    plt.ylabel('ERG Gene')
+    plt.tight_layout()
+    save_plot(plt, os.path.join(viz_dir, "satellite_function_by_erg.png"))
+    plt.close()
+    
+    # 3. Function categories by relative position
+    plt.figure(figsize=(12, 8))
+    pos_by_func = pd.crosstab(annotated_df['relative_position'], annotated_df['function_category'])
+    pos_by_func_prop = pos_by_func.div(pos_by_func.sum(axis=1), axis=0)
+    sns.heatmap(pos_by_func_prop, cmap='YlGnBu', annot=True, fmt='.2f')
+    plt.title('Functional Categories of Satellite Genes by Position')
+    plt.tight_layout()
+    save_plot(plt, os.path.join(viz_dir, "satellite_function_by_position.png"))
+    plt.close()
+    
+    # 4. Distance vs function category
+    plt.figure(figsize=(12, 8))
+    sns.boxplot(x='function_category', y='distance_kb', data=annotated_df)
+    plt.title('Distribution of Distances by Functional Category')
+    plt.xlabel('Functional Category')
+    plt.ylabel('Distance (kb)')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    save_plot(plt, os.path.join(viz_dir, "satellite_distance_by_function.png"))
+    plt.close()
 
 def main():
     # Parse command line arguments
@@ -355,17 +430,12 @@ def main():
     # Load gene mapping data with annotations
     gene_df = load_gene_mapping(args.gene_mapping)
     
-    # Merge annotations
-    print("Merging annotations from gene mapping...")
-    annotated_df = merge_annotations(satellite_df, gene_df)
+    # Parse GenBank files for better annotations
+    genbank_annotations = parse_genbank_files(args.genbank_dir)
     
-    # Categorize by function
-    print("Categorizing satellite genes by function...")
-    annotated_df = categorize_functions(annotated_df)
-    
-    # Analyze GO terms
-    print("Analyzing GO terms...")
-    annotated_df, go_counts = analyze_go_terms(annotated_df)
+    # Annotate satellite genes with functional information
+    print("Annotating satellite genes with functional information...")
+    annotated_df = annotate_satellite_genes(satellite_df, genbank_annotations, gene_df)
     
     # Query SGD for additional annotations if requested
     if args.sgd_query:
@@ -377,15 +447,9 @@ def main():
     save_tsv(annotated_df, output_file)
     print(f"Annotated satellite gene data saved to {output_file}")
     
-    # Save GO term counts if available
-    if go_counts is not None:
-        go_output = os.path.join(args.output_dir, "satellite_go_terms.tsv")
-        save_tsv(go_counts, go_output)
-        print(f"GO term counts saved to {go_output}")
-    
     # Create visualizations
     print("Creating visualizations...")
-    visualize_annotations(annotated_df, go_counts, args.output_dir)
+    visualize_annotations(annotated_df, args.output_dir)
     
     # Generate summary report
     summary_file = os.path.join(args.output_dir, "satellite_annotation_summary.txt")
@@ -403,19 +467,22 @@ def main():
         for category, count in category_counts.items():
             f.write(f"- {category}: {count} genes ({count/total*100:.1f}%)\n")
         
-        f.write("\nTop GO Terms:\n")
-        if go_counts is not None and not go_counts.empty:
-            for _, row in go_counts.head(10).iterrows():
-                f.write(f"- {row['go_term']}: {row['count']} genes\n")
-        else:
-            f.write("- No GO terms available in the data\n")
-        
-        # Category distribution by ERG gene
+        # Add information about functions by ERG gene
         f.write("\nFunctional Category Distribution by ERG Gene:\n")
-        category_by_erg = pd.crosstab(annotated_df['erg_gene_name'], annotated_df['function_category'])
-        for erg_gene, row in category_by_erg.iterrows():
-            top_categories = row.sort_values(ascending=False).head(3)
-            category_str = ', '.join([f"{cat} ({count})" for cat, count in top_categories.items()])
+        for erg_gene in annotated_df['erg_gene_name'].unique():
+            if pd.isna(erg_gene) or erg_gene == '':
+                continue
+                
+            erg_genes = annotated_df[annotated_df['erg_gene_name'] == erg_gene]
+            categories = erg_genes['function_category'].value_counts()
+            
+            # Get the top 3 categories for this ERG gene
+            top_categories = []
+            for category, count in categories.items():
+                if len(top_categories) < 3:
+                    top_categories.append(f"{category} ({count})")
+            
+            category_str = ', '.join(top_categories)
             f.write(f"- {erg_gene}: {category_str}\n")
         
         f.write("\nFor full annotations, see the satellite_genes_annotated.tsv file.")
