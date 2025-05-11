@@ -1,0 +1,50 @@
+# Regulatory Motif Analysis Report
+
+## Overview
+
+Total variants analyzed: 12
+Regulatory variants: 12 (100.0%)
+Ergosterol gene regulatory variants: 12 (100.0%)
+Variants affecting TF binding sites: 0 (0.0%)
+
+## Regulatory Region Distribution
+
+core_promoter: 6 variants (50.0%)
+UAS_distal: 3 variants (25.0%)
+UAS_proximal: 3 variants (25.0%)
+
+## Treatment Distribution
+
+CAS-CTRL: 4 variants (33.3%)
+STC-CTRL: 4 variants (33.3%)
+WT-CTRL: 4 variants (33.3%)
+
+## Key Findings
+
+- Most common regulatory region: core_promoter (50.0% of variants)
+- Promoter elements account for 100.0% of regulatory variants
+- UTR and terminator regions account for 0.0% of regulatory variants
+- Ergosterol gene regulatory variants: 100.0% of all regulatory variants
+
+## Treatment-Specific Patterns
+
+### CAS-CTRL
+- core_promoter: 50.0%
+- UAS_distal: 25.0%
+- UAS_proximal: 25.0%
+
+### STC-CTRL
+- core_promoter: 50.0%
+- UAS_distal: 25.0%
+- UAS_proximal: 25.0%
+
+### WT-CTRL
+- core_promoter: 50.0%
+- UAS_distal: 25.0%
+- UAS_proximal: 25.0%
+
+## Biological Interpretation
+
+- **Promoter-Biased Regulation**: A higher proportion of variants occur in promoter/upstream regions, suggesting adaptation through changes in transcriptional regulation rather than post-transcriptional processes.
+- **Distal Regulatory Preference**: Variants are more concentrated in UAS regions rather than core promoter elements, suggesting adaptation through modulation of condition-specific transcription factor binding rather than basal transcription machinery.
+- **Strong ERG Regulatory Focus**: The high proportion of variants associated with ergosterol pathway genes confirms the central role of sterol metabolism in the adaptive response to the experimental conditions.

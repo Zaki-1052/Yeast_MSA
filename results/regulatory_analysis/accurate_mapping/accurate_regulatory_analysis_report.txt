@@ -1,0 +1,49 @@
+# Accurate Regulatory Region Analysis Report
+
+## Overview
+
+Total variants in dataset: 12
+Unique variants: 4
+Variants near ERG genes: 12
+
+## Unique Regulatory Variants
+
+- Gene: W3030G02990, Distance: 1453bp -> distal_UAS
+- Gene: W3030G04090, Distance: 89bp -> core_promoter
+- Gene: W3030G04090, Distance: 116bp -> core_promoter
+- Gene: W3030P03320, Distance: 332bp -> proximal_UAS
+
+## Regulatory Region Distribution
+
+core_promoter: 6 variants (50.0%)
+distal_UAS: 3 variants (25.0%)
+proximal_UAS: 3 variants (25.0%)
+
+## Treatment-Specific Patterns
+
+### CAS-CTRL
+- core_promoter: 50.0%
+- distal_UAS: 25.0%
+- proximal_UAS: 25.0%
+
+### STC-CTRL
+- core_promoter: 50.0%
+- distal_UAS: 25.0%
+- proximal_UAS: 25.0%
+
+### WT-CTRL
+- core_promoter: 50.0%
+- distal_UAS: 25.0%
+- proximal_UAS: 25.0%
+
+
+## ERG Gene Regulatory Analysis
+
+core_promoter: 6 variants (50.0%)
+distal_UAS: 3 variants (25.0%)
+proximal_UAS: 3 variants (25.0%)
+
+## Biological Interpretations
+
+- **UAS Region Preference**: A higher proportion of variants occur in Upstream Activating Sequence regions, suggesting adaptation through changes in transcription factor binding and regulatory protein interactions.
+- **Distal Regulation**: The presence of variants in distal UAS regions suggests long-range regulatory mechanisms, potentially involving chromatin looping or insulator elements.

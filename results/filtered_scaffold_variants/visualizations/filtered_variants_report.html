@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Treatment-Specific Variants Near ERG Genes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .figure {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .figure img {
+            max-width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .figure-caption {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .key-finding {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2c3e50;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Treatment-Specific Variants Near ERG Genes</h1>
+    
+    <p>This report summarizes the analysis of treatment-specific variants found near ergosterol pathway genes,
+    focusing on the hierarchical conservation pattern observed in these essential genes.</p>
+    
+    <div class="key-finding">
+        <h3>Key Finding: Hierarchical Conservation Pattern</h3>
+        <p>The analysis reveals a clear hierarchical conservation pattern around ERG genes:</p>
+        <ul>
+            <li><strong>Core Zone (0bp)</strong>: No variants within ERG genes</li>
+            <li><strong>Buffer Zone (0-1000bp)</strong>: No variants in immediate regulatory regions</li>
+            <li><strong>Intermediate Zone (1000-10000bp)</strong>: 18 variants</li>
+            <li><strong>Satellite Zone (10000-50000bp)</strong>: 27 variants</li>
+        </ul>
+        <p>This pattern strongly supports the biological model of purifying selection protecting essential gene functions.</p>
+    </div>
+    
+    <h2>Overview Statistics</h2>
+    <p>Total treatment-specific variants within 50kb of ERG genes: 45</p>
+    <p>Distribution by treatment:</p>
+    <ul>
+        <li><strong>WT-37</strong>: 18 variants (40.0%)</li>
+        <li><strong>CAS</strong>: 15 variants (33.3%)</li>
+        <li><strong>STC</strong>: 8 variants (17.8%)</li>
+        <li><strong>WTA</strong>: 4 variants (8.9%)</li>
+    </ul>
+    
+    <h2>Distance Distribution</h2>
+    
+    <div class="figure">
+        <img src="distance_distribution_histogram.png" alt="Distance Distribution Histogram">
+        <div class="figure-caption">Figure 1: Distribution of treatment-specific variants by distance to nearest ERG gene.</div>
+    </div>
+    
+    <div class="figure">
+        <img src="distance_category_counts.png" alt="Variant Counts by Distance Category">
+        <div class="figure-caption">Figure 2: Number of treatment-specific variants in each distance category.</div>
+    </div>
+    
+    <h2>Treatment Patterns</h2>
+    
+    <div class="figure">
+        <img src="treatment_distribution.png" alt="Treatment Distribution">
+        <div class="figure-caption">Figure 3: Distribution of treatment-specific variants by treatment group.</div>
+    </div>
+    
+    <div class="figure">
+        <img src="gene_treatment_heatmap.png" alt="Gene-Treatment Heatmap">
+        <div class="figure-caption">Figure 4: Heatmap showing the distribution of variants by ERG gene and treatment.</div>
+    </div>
+    
+    <h2>Variant Effects and Impacts</h2>
+    
+    <div class="figure">
+        <img src="variant_effects.png" alt="Variant Effects">
+        <div class="figure-caption">Figure 5: Distribution of treatment-specific variants by effect type.</div>
+    </div>
+    
+    <div class="figure">
+        <img src="variant_impacts.png" alt="Variant Impacts">
+        <div class="figure-caption">Figure 6: Distribution of treatment-specific variants by impact severity.</div>
+    </div>
+    
+    <h2>Integrated Analyses</h2>
+    
+    <div class="figure">
+        <img src="impact_by_distance.png" alt="Impact by Distance">
+        <div class="figure-caption">Figure 7: Distribution of variant impacts by distance from ERG genes.</div>
+    </div>
+    
+    <div class="figure">
+        <img src="treatment_by_distance.png" alt="Treatment by Distance">
+        <div class="figure-caption">Figure 8: Distribution of treatment groups by distance from ERG genes.</div>
+    </div>
+    
+    <div class="figure">
+        <img src="treatment_impact_heatmap.png" alt="Treatment-Impact Heatmap">
+        <div class="figure-caption">Figure 9: Heatmap showing the distribution of variants by treatment and impact.</div>
+    </div>
+    
+    <h2>Table of ERG Genes and Variant Counts</h2>
+    
+    <table>
+        <tr>
+            <th>Gene ID</th>
+            <th>ERG Name</th>
+            <th>Variants Within 5kb</th>
+            <th>Variants Within 50kb</th>
+            <th>Gene Location</th>
+        </tr>
+        <tr>
+            <td>W3030G04090</td>
+            <td>ERG1 (YGR175C)</td>
+            <td>0</td>
+            <td>10</td>
+            <td>w303_scaffold_7:846495-847986</td>
+        </tr>
+        <tr>
+            <td>W3030H00650</td>
+            <td>ERG11 (YHR007C)</td>
+            <td>1</td>
+            <td>9</td>
+            <td>w303_scaffold_8:115709-117302</td>
+        </tr>
+        <tr>
+            <td>W3030P03320</td>
+            <td>ERG2 (YMR202W)</td>
+            <td>0</td>
+            <td>2</td>
+            <td>w303_scaffold_16:667847-668516</td>
+        </tr>
+        <tr>
+            <td>W3030Q00650</td>
+            <td>ERG24 (YNL280C)</td>
+            <td>0</td>
+            <td>8</td>
+            <td>w303_scaffold_17:109648-110965</td>
+        </tr>
+        <tr>
+            <td>W3030G02990</td>
+            <td>ERG25 (YGR060W)</td>
+            <td>0</td>
+            <td>5</td>
+            <td>w303_scaffold_7:607691-608621</td>
+        </tr>
+        <tr>
+            <td>W3030L01320</td>
+            <td>ERG3 (YLR056W)</td>
+            <td>0</td>
+            <td>1</td>
+            <td>w303_scaffold_12:269077-270175</td>
+        </tr>
+        <tr>
+            <td>W3030G02340</td>
+            <td>ERG4 (YGL012W)</td>
+            <td>0</td>
+            <td>0</td>
+            <td>w303_scaffold_7:469848-471270</td>
+        </tr>
+        <tr>
+            <td>W3030P01520</td>
+            <td>ERG5 (YMR015C)</td>
+            <td>0</td>
+            <td>4</td>
+            <td>w303_scaffold_16:301194-302811</td>
+        </tr>
+        <tr>
+            <td>W3030P01300</td>
+            <td>ERG6 (YML008C)</td>
+            <td>0</td>
+            <td>0</td>
+            <td>w303_scaffold_16:252164-253316</td>
+        </tr>
+        <tr>
+            <td>W3030H01430</td>
+            <td>ERG7 (YHR072W)</td>
+            <td>0</td>
+            <td>2</td>
+            <td>w303_scaffold_8:247127-249323</td>
+        </tr>
+        <tr>
+            <td>W3030H01440</td>
+            <td>ERG7 (YHR072W)</td>
+            <td>0</td>
+            <td>0</td>
+            <td>w303_scaffold_8:249693-249870</td>
+        </tr>
+        <tr>
+            <td>W3030H02610</td>
+            <td>ERG9 (YHR190W)</td>
+            <td>0</td>
+            <td>4</td>
+            <td>w303_scaffold_8:492912-494247</td>
+        </tr>
+    </table>
+    
+    <h2>Conclusions</h2>
+    
+    <p>The analysis of treatment-specific variants near ERG genes reveals several important patterns:</p>
+    
+    <ol>
+        <li>The four-zone conservation pattern is strongly supported by the data, with strong conservation in core and buffer zones.</li>
+        <li>Different treatments show distinct patterns of genetic adaptation, with temperature-related treatments (WT-37, CAS) having more variants.</li>
+        <li>Most variants are MODIFIER impact (66.67%), affecting regulatory regions rather than protein structure.</li>
+        <li>The hierarchical conservation architecture allows adaptation while protecting essential gene functions.</li>
+    </ol>
+    
+    <p>These findings provide compelling evidence for the model of purifying selection on ergosterol pathway genes coupled with adaptive flexibility at increasing distances from these essential genes.</p>
+    
+    <p><small>Report generated on 2025-05-10 23:50:06</small></p>
+</body>
+</html>
