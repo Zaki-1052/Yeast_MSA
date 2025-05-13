@@ -53,16 +53,16 @@ def load_data(data_dir):
     data = {}
     
     # Load main variant file
-    data['variants'] = pd.read_csv(os.path.join(data_dir, 'all_scaffold_variants.tsv'), sep='\t')
+    data['variants'] = pd.read_csv(os.path.join(data_dir, 'treatment_specific_scaffold_variants.tsv'), sep='\t')
     
     # Load gene proximity summary
-    data['gene_proximity'] = pd.read_csv(os.path.join(data_dir, 'gene_proximity_summary.tsv'), sep='\t')
+    data['gene_proximity'] = pd.read_csv(os.path.join(data_dir, 'gene_proximity_treatment_specific_summary.tsv'), sep='\t')
     
     # Load treatment comparison
-    data['treatment'] = pd.read_csv(os.path.join(data_dir, 'treatment_comparison.tsv'), sep='\t')
+    data['treatment'] = pd.read_csv(os.path.join(data_dir, 'treatment_specific_comparison.tsv'), sep='\t')
     
     # Load summary text
-    with open(os.path.join(data_dir, 'scaffold_variant_summary.txt'), 'r') as f:
+    with open(os.path.join(data_dir, 'treatment_specific_scaffold_variant_summary.txt'), 'r') as f:
         data['summary'] = f.read()
     
     # Extract key statistics

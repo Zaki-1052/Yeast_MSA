@@ -112,7 +112,7 @@ def collect_data():
     # Collect report files
     report_files = [
         "vcf/analysis_report.txt",
-        "results/scaffold_variants/scaffold_variant_summary.txt",
+        "results/filtered_scaffold_variants/treatment_specific_scaffold_variant_summary.txt",
     ]
     
     for file_path in report_files:
@@ -123,8 +123,8 @@ def collect_data():
     
     # Collect TSV table files
     key_table_files = [
-        "results/scaffold_variants/gene_proximity_summary.tsv",
-        "results/gene_variants/gene_summary.tsv",
+        "results/filtered_scaffold_variants/gene_proximity_treatment_specific_summary.tsv",
+        "results/gene_variants_expanded/gene_summary.tsv",
         "results/treatment_analysis/statistical_results.tsv",
         "results/scaffold_variants/treatment_comparison.tsv",
     ]

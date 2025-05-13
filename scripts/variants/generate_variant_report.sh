@@ -3,7 +3,7 @@
 # generate_variant_report.sh - Create a visual report of the scaffold variant analysis
 
 # Check if the required directories exist
-if [ ! -d "results/scaffold_variants" ]; then
+if [ ! -d "results/filtered_scaffold_variants" ]; then
     echo "Error: Directory results/scaffold_variants does not exist"
     exit 1
 fi
@@ -13,8 +13,8 @@ mkdir -p results/reports
 
 # Run the Python script
 echo "Generating variant analysis report..."
-python scripts/generate_variant_report.py \
-  --data_dir results/scaffold_variants \
+python scripts/variants/generate_variant_report.py \
+  --data_dir results/filtered_scaffold_variants \
   --output results/reports/ergosterol_variant_analysis.html
 
 # Check if the report generation was successful

@@ -17,7 +17,6 @@ echo "Running treatment-specific variant analysis..."
 python scripts/functional_impact/analyze_treatment_specific_patterns.py \
   --variants_file "$VARIANTS_FILE" \
   --output_dir "$OUTPUT_DIR" \
-  --control_group "$CONTROL_GROUP" \
-  $INCLUDE_CONTROLS
+  --control_group "$CONTROL_GROUP"
 
 echo "Analysis complete! Results are in $OUTPUT_DIR"
