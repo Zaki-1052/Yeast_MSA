@@ -18,7 +18,7 @@ mkdir -p results/gene_variants
 
 # Run the Python script
 echo "Extracting variants affecting ergosterol pathway genes..."
-python scripts/extract_gene_variants.py \
+python scripts/variants/extract_gene_variants_fixed.py \
   --vcf_dir vcf/annotated \
   --gene_mapping reference/genes_of_interest_mapping.tsv \
   --output_dir results/gene_variants
