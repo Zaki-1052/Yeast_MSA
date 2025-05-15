@@ -549,11 +549,12 @@ def generate_summary_statistics(variants, categories, genes, scaffold_genes, out
         writer = csv.writer(f, delimiter='\t')
         writer.writerow(['Gene_ID', 'ERG_Name', 'SC_Gene_ID', 'Variants_Within', 'Variants_Upstream_1kb', 
                          'Variants_Downstream_1kb', 'Variants_Upstream_5kb', 'Variants_Downstream_5kb', 
-                         'Total_Within_5kb'])
+                         'Total_Within_5kb', 'Variants_Within_50kb'])
         
         gene_position_counts = defaultdict(lambda: defaultdict(int))
         for variant in variants:
             if 'nearest_gene' in variant and variant['nearest_gene']:
+                print(f"Variant {variant} assigned to gene {variant['nearest_gene']}")
                 gene_id = variant['nearest_gene']
                 position_relative = variant.get('position_relative', 'unknown')
                 distance = variant.get('distance_to_nearest_gene', float('inf'))
@@ -568,6 +569,8 @@ def generate_summary_statistics(variants, categories, genes, scaffold_genes, out
                     gene_position_counts[gene_id]['upstream_5kb'] += 1
                 elif position_relative == 'downstream' and distance <= 5000:
                     gene_position_counts[gene_id]['downstream_5kb'] += 1
+                elif position_relative in ['upstream', 'downstream'] and distance <= 50000:
+                    gene_position_counts[gene_id]['within_50kb'] += 1
         
         for gene_id in sorted(genes.keys()):
             if gene_id in gene_position_counts:
@@ -578,6 +581,7 @@ def generate_summary_statistics(variants, categories, genes, scaffold_genes, out
                 upstream_5kb = counts.get('upstream_5kb', 0)
                 downstream_5kb = counts.get('downstream_5kb', 0)
                 total_5kb = within + upstream_1kb + downstream_1kb + upstream_5kb + downstream_5kb
+                within_50kb = counts.get('within_50kb', 0)
                 
                 writer.writerow([
                     gene_id,
@@ -588,14 +592,15 @@ def generate_summary_statistics(variants, categories, genes, scaffold_genes, out
                     downstream_1kb,
                     upstream_5kb,
                     downstream_5kb,
-                    total_5kb
+                    total_5kb,
+                    within_50kb
                 ])
             else:
                 writer.writerow([
                     gene_id,
                     genes[gene_id]['erg_name'],
                     genes[gene_id]['sc_gene_id'],
-                    0, 0, 0, 0, 0, 0
+                    0, 0, 0, 0, 0, 0, 0
                 ])
     
     # Write treatment comparison statistics
