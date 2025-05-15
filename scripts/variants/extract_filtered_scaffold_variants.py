@@ -20,6 +20,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
+import bisect
 
 def parse_arguments():
     """Parse command line arguments."""
@@ -644,6 +645,118 @@ def generate_summary_statistics(variants, categories, genes, scaffold_genes, out
                 counts['modifier']
             ])
 
+def load_full_gene_mapping(mapping_file):
+    """Load the full gene mapping for genome-wide nearest gene calculation."""
+    genes = {}
+    scaffold_genes = defaultdict(list)
+    with open(mapping_file, 'r') as f:
+        reader = csv.DictReader(f, delimiter='\t')
+        for row in reader:
+            gene_id = row['w303_gene_id']
+            genes[gene_id] = {
+                'sc_gene_id': row.get('sc_gene_id', ''),
+                'erg_name': row.get('erg_name', ''),
+                'locus_tag': row.get('locus_tag', ''),
+                'scaffold': row['w303_scaffold'],
+                'start': int(row['start']),
+                'end': int(row['end']),
+                'strand': row['strand'],
+                'product': row.get('product', '')
+            }
+            scaffold_genes[row['w303_scaffold']].append(gene_id)
+    return genes, scaffold_genes
+
+def find_nearest_gene_full(scaffold, position, full_genes, full_scaffold_genes):
+    """Find the nearest gene (by distance) from the full mapping for a given variant."""
+    min_distance = float('inf')
+    nearest_gene = None
+    position_relative = None
+    if scaffold not in full_scaffold_genes:
+        return None, None, None
+    for gene_id in full_scaffold_genes[scaffold]:
+        gene_info = full_genes[gene_id]
+        gene_start = gene_info['start']
+        gene_end = gene_info['end']
+        if gene_start <= position <= gene_end:
+            distance = 0
+            rel = 'within'
+        elif position < gene_start:
+            distance = gene_start - position
+            rel = 'upstream'
+        else:
+            distance = position - gene_end
+            rel = 'downstream'
+        if distance < min_distance:
+            min_distance = distance
+            nearest_gene = gene_id
+            position_relative = rel
+    return nearest_gene, min_distance, position_relative
+
+def write_expanded_variant_annotation_table(variants, erg_genes, erg_scaffold_genes, full_genes, full_scaffold_genes, output_path):
+    """Write one row per (variant, annotation) pair, with all annotation gene IDs, nearest ERG gene, and nearest genome-wide gene."""
+    with open(output_path, 'w') as f:
+        writer = csv.writer(f, delimiter='\t')
+        writer.writerow([
+            'Sample', 'Treatment', 'Scaffold', 'Position', 'Ref', 'Alt', 'Quality', 'Variant_Type',
+            'Effect', 'Impact', 'Annotation_Gene_ID', 'All_Annotation_Gene_IDs',
+            'Nearest_ERG_Gene', 'Nearest_ERG_Gene_SC_ID', 'Nearest_ERG_Gene_ERG', 'Distance_to_ERG', 'ERG_Position_Relative',
+            'Nearest_Genomewide_Gene', 'Nearest_Genomewide_Gene_SC_ID', 'Nearest_Genomewide_Gene_Name', 'Distance_to_Genomewide', 'Genomewide_Position_Relative',
+            'Annotation_Matches_Nearest_Genomewide'
+        ])
+        for variant in variants:
+            scaffold = variant['scaffold']
+            position = variant['position']
+            # Nearest ERG gene (from previous logic)
+            erg_gene_id = variant.get('nearest_gene', '')
+            erg_gene_info = erg_genes.get(erg_gene_id, {})
+            erg_sc_id = erg_gene_info.get('sc_gene_id', '')
+            erg_name = erg_gene_info.get('erg_name', '')
+            distance_to_erg = variant.get('distance_to_nearest_gene', '')
+            erg_pos_rel = variant.get('position_relative', '')
+            # Nearest genome-wide gene
+            genome_gene_id, genome_distance, genome_pos_rel = find_nearest_gene_full(
+                scaffold, position, full_genes, full_scaffold_genes)
+            genome_gene_info = full_genes.get(genome_gene_id, {}) if genome_gene_id else {}
+            genome_sc_id = genome_gene_info.get('sc_gene_id', '')
+            genome_name = genome_gene_info.get('erg_name', '') or genome_gene_info.get('locus_tag', '')
+            # All annotation gene IDs
+            all_ann_gene_ids = []
+            for ann in variant.get('annotations', []):
+                if ann['gene_id']:
+                    all_ann_gene_ids.append(ann['gene_id'])
+            all_ann_gene_ids_str = ','.join(sorted(set(all_ann_gene_ids)))
+            # One row per annotation
+            for ann in variant.get('annotations', []):
+                ann_gene_id = ann['gene_id']
+                effect = ann['effect']
+                impact = ann['impact']
+                matches_genome = (ann_gene_id == genome_gene_id)
+                writer.writerow([
+                    variant['sample'],
+                    variant['treatment'],
+                    scaffold,
+                    position,
+                    variant['ref'],
+                    variant['alt'],
+                    variant['quality'],
+                    variant['variant_type'],
+                    effect,
+                    impact,
+                    ann_gene_id,
+                    all_ann_gene_ids_str,
+                    erg_gene_id,
+                    erg_sc_id,
+                    erg_name,
+                    distance_to_erg,
+                    erg_pos_rel,
+                    genome_gene_id,
+                    genome_sc_id,
+                    genome_name,
+                    genome_distance,
+                    genome_pos_rel,
+                    matches_genome
+                ])
+
 def main():
     """Main function to extract and analyze scaffold variants."""
     args = parse_arguments()
@@ -655,6 +768,11 @@ def main():
     print(f"Loading gene mapping from {args.gene_mapping}")
     genes, scaffolds_of_interest, scaffold_genes, sample_treatment = load_gene_mapping(args.gene_mapping)
     print(f"Loaded information for {len(genes)} target genes on {len(scaffolds_of_interest)} scaffolds")
+    
+    # Load full gene mapping
+    print(f"Loading full gene mapping from reference/gene_mapping_full.tsv")
+    full_genes, full_scaffold_genes = load_full_gene_mapping('reference/gene_mapping_full.tsv')
+    print(f"Loaded {len(full_genes)} genes from full mapping")
     
     # Create output directories
     print(f"Creating output directories in {args.output_dir}")
@@ -685,6 +803,13 @@ def main():
     # Generate summary statistics
     print("Generating summary statistics...")
     generate_summary_statistics(treatment_specific_variants, categories, genes, scaffold_genes, output_paths)
+    
+    # Write expanded annotation table
+    print("Writing expanded variant annotation table with all annotation gene IDs and nearest genome-wide gene...")
+    expanded_output = os.path.join(output_paths['base'], 'treatment_specific_variant_annotation_expanded.tsv')
+    write_expanded_variant_annotation_table(
+        treatment_specific_variants, genes, scaffold_genes, full_genes, full_scaffold_genes, expanded_output
+    )
     
     print(f"Analysis complete. Results are in {args.output_dir}")
 
