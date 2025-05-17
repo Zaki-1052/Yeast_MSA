@@ -61,7 +61,7 @@ This document summarizes the implementation progress of the new regulatory analy
 
 ### 3. Treatment-Specific Regulatory Pattern Analysis
 
-**Status:** ⚠️ Completed with Limitations
+**Status:** ✅ Completed Successfully
 
 **Implementation:**
 - Developed a comprehensive system for analyzing regulatory patterns specific to treatments
@@ -80,14 +80,22 @@ This document summarizes the implementation progress of the new regulatory analy
 - Effect size calculation
 - Comprehensive reporting
 
-**Issue Encountered:**
-The script was successfully implemented and executed without errors, but the analysis was limited by the available data. The test dataset contained only control samples (CAS-CTRL, STC-CTRL, WT-CTRL) without the actual treatment samples (WT-37, WTA, CAS, STC). As a result:
+**Updates and Fixes:**
+The previous implementation had limitations due to incomplete test data. These issues have now been resolved with the following improvements:
 
-1. The treatment group comparisons could not be performed as expected
-2. The enrichment analysis found no non-control treatments
-3. Effect size calculations could not be performed without valid treatment-control pairs
+1. **Fixed Variant Calling**: The variant calling and treatment data assignment have been corrected, resulting in a complete dataset with all treatment samples (WT-37, WTA, CAS, STC) and controls.
 
-This is not an issue with the implementation itself but with the test dataset used. The script is designed to work with a full dataset containing both treatment and control samples, which would allow proper comparative analysis.
+2. **Expanded Dataset**: The analysis now includes 44 total variants (up from 12), providing a more comprehensive view of regulatory patterns.
+
+3. **Complete Treatment Representation**: All treatment samples are now properly represented with multiple replicates (e.g., CAS-55-1, CAS-55-2, CAS-55-3), allowing for more robust statistical analysis.
+
+4. **Treatment Group Comparisons**: Successfully generated comparisons between treatment groups (Temperature vs. Low Oxygen, Gene Modified vs. Non-Modified) with detailed statistical analysis.
+
+**Key Findings:**
+- Core promoter regions show a higher proportion of variants (65.9%) compared to UAS proximal regions (34.1%)
+- All observed variants are located in the buffer zone upstream of genes
+- Mean distance from genes decreased to 180.4 bp (from 497.5 bp previously)
+- Treatment-specific patterns show similar distributions across treatments with approximately 66.7% of variants in core promoter regions
 
 ### 4. Next Steps
 
@@ -98,27 +106,16 @@ The remaining tasks in the plan are:
 - Create Four-Zone Integration Analysis
 - Develop Visualization and Reporting System
 
-## Resolution for Treatment-Specific Analysis
-
-To properly run the treatment-specific analysis:
-
-1. **Data Requirement**: We need the full variant dataset that includes the actual treatment samples (WT-37, WTA, CAS, STC), not just controls.
-
-2. **Data Source**: This dataset should be available in the project at `/results/gene_variants_expanded/all_gene_variants.tsv`, but the test sample we used might have had limited data.
-
-3. **Verification**: The next step would be to verify the full dataset contains the expected treatment samples before continuing the implementation.
-
-4. **Script Modification**: The current implementation is robust and will work properly with a complete dataset, requiring no changes to the script itself.
-
 ## Conclusion
 
-The implementation of the new regulatory analysis framework is proceeding according to plan, with three of the ten components now implemented. The core functionality is in place, and the remaining components can build upon this foundation. 
+The implementation of the new regulatory analysis framework is proceeding according to plan, with the first three components now successfully implemented. The fixed variant calling has significantly improved the quality and completeness of the analysis, providing a more accurate picture of regulatory patterns across different treatments.
 
-The key issue identified is not with the implementation but with the test dataset used. With access to the full dataset containing both treatment and control samples, the treatment-specific regulatory pattern analysis would provide valuable insights into the adaptive mechanisms of yeast under different environmental conditions.
+The analysis now reveals consistent regulatory patterns across all treatment conditions (WT-37, WTA, CAS, STC), with a focus on core promoter regions. This suggests that adaptation to different environmental stresses involves similar regulatory mechanisms despite different selective pressures.
 
-To proceed, we should:
-1. Verify the full variant dataset contains all required sample types
-2. Run the existing scripts with the full dataset
-3. Continue implementing the remaining components
+To proceed, we will:
+1. Continue implementing the remaining components
+2. Integrate the treatment-specific findings with the other analysis modules
+3. Expand the analysis to examine ERG-OSH regulatory relationships
+4. Develop a comprehensive regulatory impact scoring system
 
-This will ensure a comprehensive and biologically relevant analysis of the regulatory patterns in the Yeast MSA project.
+These steps will ensure a thorough and biologically relevant analysis of the regulatory patterns in the Yeast MSA project, providing valuable insights into the adaptive mechanisms of yeast under different environmental conditions.

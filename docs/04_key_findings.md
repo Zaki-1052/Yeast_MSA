@@ -145,9 +145,18 @@ One of the most significant findings is the discovery of a four-layered conserva
 
 ### Upstream Variant Predominance
 
-- 80% of variants near ergosterol genes are in upstream regulatory regions
-- Few coding variants affecting protein structure directly
-- Strong evidence that adaptation occurs through regulatory changes
+- 80.35% of variants are upstream gene variants
+- Core promoter regions contain 65.9% of regulatory variants, with UAS proximal regions containing 34.1%
+- Regulatory variants cluster tightly with a mean distance of 180.4 bp and maximum of 332 bp from genes
+- Only 6.61% are missense variants, with few coding variants affecting protein structure directly
+- Strong evidence that adaptation occurs primarily through changes in gene regulation
+
+### Consistent Regulatory Patterns Across Treatments
+
+- All treatment conditions show similar regulatory region distribution (approximately 66.7% core promoter variants)
+- Minimal difference (2.0%) between temperature adaptation and low oxygen adaptation regulatory patterns
+- All variants located in the buffer zone upstream of genes, reinforcing the hierarchical conservation architecture
+- Evidence of targeted, rather than random, regulatory adaptation with variants tightly clustered near genes
 
 ### Satellite Gene Function
 

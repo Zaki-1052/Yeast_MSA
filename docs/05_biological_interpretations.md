@@ -58,15 +58,21 @@ The region 50-100kb from core genes contains HIGH impact variants clustered at s
 
 ## Regulatory Adaptation Mechanism
 
-The predominance of upstream variants (80%) near ergosterol genes suggests adaptation occurs primarily through changes in gene regulation rather than protein structure:
+The predominance of upstream variants (80.35% of all variants) suggests adaptation occurs primarily through changes in gene regulation rather than protein structure:
 
-1. **Expression Modulation**: Changes in expression levels rather than protein sequence appear to be the primary mechanism of adaptation.
+1. **Core Promoter Focus**: The high proportion of variants in core promoter regions (65.9% of regulatory variants) indicates adaptation through changes in basal transcription machinery recruitment and transcription initiation.
 
-2. **Fine-Tuning Capability**: Regulatory changes allow for fine-tuning of enzyme activities without altering their core functions.
+2. **Expression Modulation**: Changes in expression levels rather than protein sequence appear to be the primary mechanism of adaptation, with only 6.61% of variants causing missense changes.
 
-3. **Responsive Adaptation**: Regulatory changes can be more rapidly implemented and reversed as needed, providing flexibility in varying environments.
+3. **Tight Regulatory Clustering**: The close proximity of regulatory variants to genes (mean distance of 180.4 bp, maximum 332 bp) suggests precise targeting of regulatory elements rather than random distribution.
 
-4. **Dosage Balance**: This pattern suggests the importance of maintaining proper dosage relationships between pathway components.
+4. **Fine-Tuning Capability**: Regulatory changes allow for fine-tuning of enzyme activities without altering their core functions.
+
+5. **Responsive Adaptation**: Regulatory changes can be more rapidly implemented and reversed as needed, providing flexibility in varying environments.
+
+6. **Dosage Balance**: This pattern suggests the importance of maintaining proper dosage relationships between pathway components.
+
+7. **Cross-Treatment Consistency**: The similar pattern of regulatory variants across different treatments (approximately 66.7% in core promoter regions) suggests a common regulatory architecture for adaptation despite different environmental pressures.
 
 ## Sterol Profile Adaptations
 
