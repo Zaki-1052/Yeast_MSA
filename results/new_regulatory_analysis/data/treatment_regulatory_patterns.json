@@ -1,0 +1,45 @@
+{
+  "treatment_patterns": {
+    "count_table": {
+      "UAS_distal": {
+        "CAS-CTRL": 1,
+        "STC-CTRL": 1,
+        "WT-CTRL": 1
+      },
+      "UAS_proximal": {
+        "CAS-CTRL": 1,
+        "STC-CTRL": 1,
+        "WT-CTRL": 1
+      },
+      "core_promoter": {
+        "CAS-CTRL": 2,
+        "STC-CTRL": 2,
+        "WT-CTRL": 2
+      }
+    },
+    "percent_table": {
+      "UAS_distal": {
+        "CAS-CTRL": 25.0,
+        "STC-CTRL": 25.0,
+        "WT-CTRL": 25.0
+      },
+      "UAS_proximal": {
+        "CAS-CTRL": 25.0,
+        "STC-CTRL": 25.0,
+        "WT-CTRL": 25.0
+      },
+      "core_promoter": {
+        "CAS-CTRL": 50.0,
+        "STC-CTRL": 50.0,
+        "WT-CTRL": 50.0
+      }
+    }
+  },
+  "treatment_comparison": {
+    "group_region_counts": {},
+    "group_region_percents": {},
+    "group_comparisons": {}
+  },
+  "enrichment_results": {},
+  "effect_sizes": {}
+}

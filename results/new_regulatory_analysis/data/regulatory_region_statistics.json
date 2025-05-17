@@ -1,0 +1,109 @@
+{
+  "gene_types": {
+    "total": 6078,
+    "erg": 12,
+    "osh": 8,
+    "other": 6058
+  },
+  "region_counts": {
+    "core_promoter": 6078,
+    "TATA_box_region": 6078,
+    "tss_proximal": 6078,
+    "UAS_proximal": 6078,
+    "UAS_distal": 6078,
+    "URS_region": 6078,
+    "far_upstream": 6078,
+    "five_prime_UTR": 6078,
+    "terminator": 6078,
+    "three_prime_UTR": 6078,
+    "downstream_element": 6078
+  },
+  "zone_counts": {
+    "core_zone": 20,
+    "buffer_zone_upstream": 20,
+    "buffer_zone_downstream": 20,
+    "intermediate_zone_upstream": 20,
+    "intermediate_zone_downstream": 20,
+    "satellite_zone_upstream": 20,
+    "satellite_zone_downstream": 20
+  },
+  "region_stats": {
+    "core_promoter": {
+      "count": 6078,
+      "mean_size": 151.0,
+      "median_size": 151.0,
+      "min_size": 151.0,
+      "max_size": 151.0
+    },
+    "TATA_box_region": {
+      "count": 6078,
+      "mean_size": 81.0,
+      "median_size": 81.0,
+      "min_size": 81.0,
+      "max_size": 81.0
+    },
+    "tss_proximal": {
+      "count": 6078,
+      "mean_size": 41.0,
+      "median_size": 41.0,
+      "min_size": 41.0,
+      "max_size": 41.0
+    },
+    "UAS_proximal": {
+      "count": 6078,
+      "mean_size": 351.0,
+      "median_size": 351.0,
+      "min_size": 351.0,
+      "max_size": 351.0
+    },
+    "UAS_distal": {
+      "count": 6078,
+      "mean_size": 1001.0,
+      "median_size": 1001.0,
+      "min_size": 1001.0,
+      "max_size": 1001.0
+    },
+    "URS_region": {
+      "count": 6078,
+      "mean_size": 651.0,
+      "median_size": 651.0,
+      "min_size": 651.0,
+      "max_size": 651.0
+    },
+    "far_upstream": {
+      "count": 6078,
+      "mean_size": 8501.0,
+      "median_size": 8501.0,
+      "min_size": 8501.0,
+      "max_size": 8501.0
+    },
+    "five_prime_UTR": {
+      "count": 6078,
+      "mean_size": 61.0,
+      "median_size": 61.0,
+      "min_size": 61.0,
+      "max_size": 61.0
+    },
+    "terminator": {
+      "count": 6078,
+      "mean_size": 251.0,
+      "median_size": 251.0,
+      "min_size": 251.0,
+      "max_size": 251.0
+    },
+    "three_prime_UTR": {
+      "count": 6078,
+      "mean_size": 121.0,
+      "median_size": 121.0,
+      "min_size": 121.0,
+      "max_size": 121.0
+    },
+    "downstream_element": {
+      "count": 6078,
+      "mean_size": 751.0,
+      "median_size": 751.0,
+      "min_size": 751.0,
+      "max_size": 751.0
+    }
+  }
+}

@@ -1,0 +1,317 @@
+{
+  "upstream_regions": {
+    "core_promoter": {
+      "range": [0, 150],
+      "description": "Core promoter region containing essential transcription elements",
+      "importance": "high",
+      "examples": ["TATA box", "Initiator element", "Transcription start site"]
+    },
+    "TATA_box_region": {
+      "range": [40, 120],
+      "description": "Region containing TATA box elements in ~20% of yeast genes",
+      "importance": "high",
+      "consensus": "TATA[AT]A[AT]"
+    },
+    "tss_proximal": {
+      "range": [0, 40],
+      "description": "Region immediately upstream of transcription start site",
+      "importance": "high",
+      "examples": ["Initiator element"]
+    },
+    "UAS_proximal": {
+      "range": [150, 500],
+      "description": "Proximal Upstream Activating Sequences (enhancer-like elements)",
+      "importance": "medium",
+      "examples": ["GCN4 binding sites", "Gal4 binding sites"]
+    },
+    "UAS_distal": {
+      "range": [500, 1500],
+      "description": "Distal Upstream Activating Sequences",
+      "importance": "medium",
+      "examples": ["Stress response elements", "Cell cycle elements"]
+    },
+    "URS_region": {
+      "range": [150, 800],
+      "description": "Upstream Repressing Sequences (silencer elements)",
+      "importance": "medium",
+      "examples": ["Mig1 binding sites", "Negative regulatory elements"]
+    },
+    "far_upstream": {
+      "range": [1500, 10000],
+      "description": "Distant regulatory elements",
+      "importance": "low",
+      "examples": ["Long-range enhancers", "Insulator elements"]
+    }
+  },
+  "downstream_regions": {
+    "five_prime_UTR": {
+      "range": [-60, 0],
+      "description": "5' Untranslated Region (before CDS start)",
+      "importance": "high",
+      "examples": ["Translation regulation", "mRNA stability elements"]
+    },
+    "terminator": {
+      "range": [0, 250],
+      "description": "Transcription termination region",
+      "importance": "medium",
+      "examples": ["Poly-A signals", "Termination signals"]
+    },
+    "three_prime_UTR": {
+      "range": [0, 120],
+      "description": "3' Untranslated Region",
+      "importance": "high",
+      "examples": ["AU-rich elements", "miRNA binding sites"]
+    },
+    "downstream_element": {
+      "range": [250, 1000],
+      "description": "Other downstream control elements",
+      "importance": "low",
+      "examples": ["Gene looping elements", "Chromatin organization"]
+    }
+  },
+  "special_elements": {
+    "TATA_box": {
+      "consensus": "TATA[AT]A[AT]",
+      "region": [40, 120],
+      "description": "Canonical TATA box element",
+      "importance": "high",
+      "binding_factors": ["TBP", "TFIID"]
+    },
+    "initiator": {
+      "consensus": "YYANWYY",
+      "region": [0, 40],
+      "description": "Initiator element at transcription start site",
+      "importance": "high",
+      "binding_factors": ["RNA Polymerase II", "TFIID"]
+    },
+    "STRE": {
+      "consensus": "AGGGG",
+      "region": [100, 700],
+      "description": "Stress Response Element",
+      "importance": "high",
+      "binding_factors": ["Msn2", "Msn4"]
+    },
+    "HSE": {
+      "consensus": "NGAAN",
+      "region": [100, 800],
+      "description": "Heat Shock Element",
+      "importance": "high",
+      "binding_factors": ["Hsf1"]
+    },
+    "URS": {
+      "consensus": "[ACG]CCCC[ACT]",
+      "region": [150, 800],
+      "description": "Upstream Repressing Sequence",
+      "importance": "medium",
+      "binding_factors": ["Mig1", "Rgt1"]
+    },
+    "sterol_regulatory": {
+      "consensus": "TCGTATA",
+      "region": [100, 700],
+      "description": "Sterol Regulatory Element",
+      "importance": "high",
+      "binding_factors": ["Ecm22", "Upc2"]
+    },
+    "CSRE": {
+      "consensus": "CCNNNNNNGG",
+      "region": [150, 600],
+      "description": "Carbon Source Response Element",
+      "importance": "medium",
+      "binding_factors": ["Cat8", "Sip4"]
+    },
+    "UASPHR": {
+      "consensus": "GCGATGAGATGAGCT",
+      "region": [150, 700],
+      "description": "Phosphate-regulated UAS",
+      "importance": "medium",
+      "binding_factors": ["Pho4"]
+    },
+    "ARE": {
+      "consensus": "TTGCACGT",
+      "region": [100, 700],
+      "description": "Antioxidant Response Element",
+      "importance": "medium",
+      "binding_factors": ["Yap1"]
+    },
+    "PDR": {
+      "consensus": "TCCGCGGA",
+      "region": [150, 700],
+      "description": "Pleiotropic Drug Resistance Element",
+      "importance": "medium",
+      "binding_factors": ["Pdr1", "Pdr3"]
+    },
+    "Oxygen_responsive": {
+      "consensus": "YYNATTGTTY",
+      "region": [100, 700],
+      "description": "Oxygen responsive element",
+      "importance": "high",
+      "binding_factors": ["Rox1", "Hap1"]
+    }
+  },
+  "promoter_classes": {
+    "TATA_containing": {
+      "description": "Contains canonical TATA box (20% of yeast genes)",
+      "features": ["TATA box", "Variable expression", "Stress-responsive"],
+      "examples": ["Stress genes", "Environmental response genes"]
+    },
+    "TATA_less": {
+      "description": "No TATA box, often housekeeping genes (80% of yeast genes)",
+      "features": ["Initiator element", "Constitutive expression", "High expression"],
+      "examples": ["Ribosomal proteins", "Metabolic enzymes"]
+    },
+    "constitutive": {
+      "description": "Consistently expressed genes",
+      "features": ["TATA-less", "High expression", "Low noise"],
+      "examples": ["Ribosomal proteins", "Glycolytic enzymes"]
+    },
+    "regulated": {
+      "description": "Genes regulated by environmental conditions",
+      "features": ["TATA-containing", "UAS elements", "Variable expression"],
+      "examples": ["GAL genes", "PHO genes"]
+    },
+    "stress_responsive": {
+      "description": "Induced under stress conditions",
+      "features": ["TATA-containing", "STRE elements", "HSE elements"],
+      "examples": ["Heat shock proteins", "Oxidative stress response genes"]
+    }
+  },
+  "nucleosome_positioning": {
+    "depleted_regions": {
+      "description": "Nucleosome depleted regions (NDRs)",
+      "typical_location": "Upstream of TSS (-200 to -50bp)",
+      "importance": "high",
+      "features": ["High accessibility", "TF binding sites", "Low GC content"]
+    },
+    "positioned_nucleosomes": {
+      "description": "Well-positioned nucleosomes",
+      "typical_location": "Around TSS (-50 to +50bp)",
+      "importance": "high",
+      "features": ["Barrier function", "Transcription regulation", "High GC content"]
+    },
+    "fuzzy_nucleosomes": {
+      "description": "Fuzzy or delocalized nucleosomes",
+      "typical_location": "Gene body",
+      "importance": "medium",
+      "features": ["Variable positioning", "Transcription elongation", "Mixed GC content"]
+    }
+  },
+  "chromatin_features": {
+    "histone_marks": {
+      "H3K4me3": {
+        "description": "Histone H3 lysine 4 trimethylation",
+        "typical_location": "Around TSS",
+        "importance": "high",
+        "association": "Active transcription"
+      },
+      "H3K36me3": {
+        "description": "Histone H3 lysine 36 trimethylation",
+        "typical_location": "Gene body",
+        "importance": "medium",
+        "association": "Transcription elongation"
+      },
+      "H3K79me3": {
+        "description": "Histone H3 lysine 79 trimethylation",
+        "typical_location": "Gene body",
+        "importance": "medium",
+        "association": "Active transcription"
+      },
+      "H4K16ac": {
+        "description": "Histone H4 lysine 16 acetylation",
+        "typical_location": "Active genes",
+        "importance": "medium",
+        "association": "Active transcription"
+      }
+    },
+    "chromatin_remodelers": {
+      "SWI/SNF": {
+        "description": "Switch/Sucrose Non-Fermentable complex",
+        "function": "Nucleosome repositioning",
+        "importance": "high",
+        "targets": ["Regulated genes", "Stress-responsive genes"]
+      },
+      "ISWI": {
+        "description": "Imitation Switch complex",
+        "function": "Nucleosome spacing",
+        "importance": "medium",
+        "targets": ["Constitutive genes", "Housekeeping genes"]
+      },
+      "RSC": {
+        "description": "Remodels the Structure of Chromatin complex",
+        "function": "Nucleosome eviction",
+        "importance": "high",
+        "targets": ["TATA-less promoters", "Highly expressed genes"]
+      }
+    }
+  },
+  "conservation_zones": {
+    "core_zone": {
+      "range": [0, 0],
+      "description": "The gene itself - absolute conservation",
+      "importance": "critical",
+      "features": ["No tolerance for mutation", "Strong purifying selection", "Essential function"]
+    },
+    "buffer_zone": {
+      "range": [0, 5000],
+      "description": "Buffer zone around gene (<5kb)",
+      "importance": "high",
+      "features": ["Minimal variation", "Regulatory elements", "Expression control"]
+    },
+    "intermediate_zone": {
+      "range": [5000, 50000],
+      "description": "Intermediate zone (5-50kb)",
+      "importance": "medium",
+      "features": ["Moderate variation", "Secondary regulators", "Pathway modulators"]
+    },
+    "satellite_zone": {
+      "range": [50000, 100000],
+      "description": "Satellite zone (50-100kb)",
+      "importance": "medium-low",
+      "features": ["Higher variation", "Adaptive flexibility", "Evolutionary innovation"]
+    }
+  },
+  "erg_pathway_specific": {
+    "sterol_regulatory_elements": {
+      "SRE": {
+        "consensus": "TCGTATA",
+        "binding_factors": ["Ecm22", "Upc2"],
+        "function": "Sterol biosynthesis regulation",
+        "importance": "critical",
+        "typical_location": "ERG gene promoters"
+      },
+      "oxygen_responsive": {
+        "consensus": "YYNATTGTTY",
+        "binding_factors": ["Rox1", "Hap1"],
+        "function": "Oxygen-dependent regulation",
+        "importance": "high",
+        "typical_location": "ERG gene promoters"
+      },
+      "HMRE": {
+        "consensus": "TGTACGGA",
+        "binding_factors": ["Hap1"],
+        "function": "HMG-CoA reductase expression",
+        "importance": "high",
+        "typical_location": "HMG1 and ERG13 promoters"
+      }
+    },
+    "regulatory_interactions": {
+      "Hap1_oxygen": {
+        "description": "Hap1-mediated oxygen sensing",
+        "target_genes": ["ERG11", "ERG5", "ERG3"],
+        "condition": "Low oxygen",
+        "effect": "Repression"
+      },
+      "Upc2_sterols": {
+        "description": "Upc2-mediated sterol sensing",
+        "target_genes": ["ERG2", "ERG3", "ERG11", "ERG25"],
+        "condition": "Sterol depletion",
+        "effect": "Activation"
+      },
+      "temperature_responsive": {
+        "description": "Temperature-responsive regulation",
+        "target_genes": ["ERG3", "ERG6", "ERG4"],
+        "condition": "Temperature stress",
+        "effect": "Activation"
+      }
+    }
+  }
+}
