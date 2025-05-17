@@ -4,7 +4,7 @@
 # Script to run promoter element analysis on ergosterol pathway gene variants
 
 # Set default values
-VARIANT_FILE="results/gene_variants_expanded/all_gene_variants.tsv"
+VARIANT_FILE="results/gene_variants/all_gene_variants.tsv"
 GENE_MAPPING="reference/genes_of_interest_mapping.tsv"
 OUTPUT_DIR="results/regulatory_analysis/promoters"
 

@@ -1,24 +1,27 @@
 {
-  "total_variants": 12,
-  "variants_with_tss_distance": 12,
-  "genes_analyzed": 3,
+  "total_variants": 44,
+  "variants_with_tss_distance": 44,
+  "genes_analyzed": 2,
   "variants_in_sre": 0,
   "position_categories": {
-    "Proximal Promoter": 6,
+    "Proximal Promoter": 29,
     "Core Promoter": 0,
-    "TATA Box Region": 6,
-    "Upstream Activating Sequence": 3,
+    "TATA Box Region": 29,
+    "Upstream Activating Sequence": 15,
     "Far Upstream": 0,
     "Downstream": 0
   },
   "gene_counts": {
-    "ERG1": 6,
-    "ERG25": 3,
-    "ERG2": 3
+    "ERG1": 29,
+    "ERG2": 15
   },
   "treatment_counts": {
-    "CAS-CTRL": 4,
-    "STC-CTRL": 4,
-    "WT-CTRL": 4
+    "CAS": 9,
+    "STC": 9,
+    "WTA": 9,
+    "WT-37": 8,
+    "CAS-CTRL": 3,
+    "STC-CTRL": 3,
+    "WT-CTRL": 3
   }
 }

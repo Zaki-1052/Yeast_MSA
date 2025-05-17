@@ -2,43 +2,59 @@
 
 ## Overview
 
-Total variants analyzed: 12
-Regulatory variants: 12 (100.0%)
-Ergosterol gene regulatory variants: 12 (100.0%)
+Total variants analyzed: 44
+Regulatory variants: 44 (100.0%)
+Ergosterol gene regulatory variants: 44 (100.0%)
 
 ## Regulatory Region Distribution
 
-core_promoter: 6 variants (50.0%)
-distal_UAS: 3 variants (25.0%)
-proximal_UAS: 3 variants (25.0%)
+core_promoter: 29 variants (65.9%)
+proximal_UAS: 15 variants (34.1%)
 
 ## Treatment Distribution
 
-CAS-CTRL: 4 variants (33.3%)
-STC-CTRL: 4 variants (33.3%)
-WT-CTRL: 4 variants (33.3%)
+CAS: 9 variants (20.5%)
+STC: 9 variants (20.5%)
+WTA: 9 variants (20.5%)
+WT-37: 8 variants (18.2%)
+CAS-CTRL: 3 variants (6.8%)
+STC-CTRL: 3 variants (6.8%)
+WT-CTRL: 3 variants (6.8%)
 
 ## Key Findings
 
-- Most common regulatory region: core_promoter (50.0% of variants)
-- Core promoter variants: 50.0% of regulatory variants
-- UAS region variants: 50.0% of regulatory variants
+- Most common regulatory region: core_promoter (65.9% of variants)
+- Core promoter variants: 65.9% of regulatory variants
+- UAS region variants: 34.1% of regulatory variants
 - Ergosterol gene regulatory variants: 100.0% of all regulatory variants
-- Most common ERG gene regulatory region: core_promoter (50.0% of ERG variants)
+- Most common ERG gene regulatory region: core_promoter (65.9% of ERG variants)
 
 ## Treatment-Specific Patterns
 
+### WT-37
+- core_promoter: 62.5%
+- proximal_UAS: 37.5%
+
+### WTA
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
+
+### CAS
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
+
+### STC
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
+
 ### WT-CTRL
-- core_promoter: 50.0%
-- distal_UAS: 25.0%
-- proximal_UAS: 25.0%
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
 
 ### CAS-CTRL
-- core_promoter: 50.0%
-- distal_UAS: 25.0%
-- proximal_UAS: 25.0%
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
 
 ### STC-CTRL
-- core_promoter: 50.0%
-- distal_UAS: 25.0%
-- proximal_UAS: 25.0%
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%

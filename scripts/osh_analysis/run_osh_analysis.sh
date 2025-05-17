@@ -42,7 +42,7 @@ echo "Step 2: Analyzing variants in and around OSH genes..."
 echo "========================================================"
 python3 "$SCRIPT_DIR/osh_variants.py" \
   --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
-  --variant-dir "$PROJECT_DIR/results/gene_variants_expanded" \
+  --variant-dir "$PROJECT_DIR/results/gene_variants" \
   --output-dir "$OUTPUT_DIR" \
   --distance-threshold 25000
 
@@ -58,7 +58,7 @@ echo "========================================================"
 python3 "$SCRIPT_DIR/osh_erg_distance.py" \
   --gene-mapping "$PROJECT_DIR/reference/gene_mapping_full.tsv" \
   --genome-file "$PROJECT_DIR/reference/w303_chromosomal.fasta" \
-  --variant-dir "$PROJECT_DIR/results/gene_variants_expanded" \
+  --variant-dir "$PROJECT_DIR/results/gene_variants" \
   --output-dir "$OUTPUT_DIR"
 
 if [ $? -ne 0 ]; then

@@ -2,48 +2,57 @@
 
 ## Overview
 
-Total variants in dataset: 12
-Unique variants: 4
-Variants near ERG genes: 12
+Total variants in dataset: 44
+Unique variants: 3
+Variants near ERG genes: 44
 
 ## Unique Regulatory Variants
 
-- Gene: W3030G02990, Distance: 1453bp -> distal_UAS
 - Gene: W3030G04090, Distance: 89bp -> core_promoter
 - Gene: W3030G04090, Distance: 116bp -> core_promoter
 - Gene: W3030P03320, Distance: 332bp -> proximal_UAS
 
 ## Regulatory Region Distribution
 
-core_promoter: 6 variants (50.0%)
-distal_UAS: 3 variants (25.0%)
-proximal_UAS: 3 variants (25.0%)
+core_promoter: 29 variants (65.9%)
+proximal_UAS: 15 variants (34.1%)
 
 ## Treatment-Specific Patterns
 
+### CAS
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
+
 ### CAS-CTRL
-- core_promoter: 50.0%
-- distal_UAS: 25.0%
-- proximal_UAS: 25.0%
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
+
+### STC
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
 
 ### STC-CTRL
-- core_promoter: 50.0%
-- distal_UAS: 25.0%
-- proximal_UAS: 25.0%
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
+
+### WT-37
+- core_promoter: 62.5%
+- proximal_UAS: 37.5%
 
 ### WT-CTRL
-- core_promoter: 50.0%
-- distal_UAS: 25.0%
-- proximal_UAS: 25.0%
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
+
+### WTA
+- core_promoter: 66.7%
+- proximal_UAS: 33.3%
 
 
 ## ERG Gene Regulatory Analysis
 
-core_promoter: 6 variants (50.0%)
-distal_UAS: 3 variants (25.0%)
-proximal_UAS: 3 variants (25.0%)
+core_promoter: 29 variants (65.9%)
+proximal_UAS: 15 variants (34.1%)
 
 ## Biological Interpretations
 
-- **UAS Region Preference**: A higher proportion of variants occur in Upstream Activating Sequence regions, suggesting adaptation through changes in transcription factor binding and regulatory protein interactions.
-- **Distal Regulation**: The presence of variants in distal UAS regions suggests long-range regulatory mechanisms, potentially involving chromatin looping or insulator elements.
+- **Core Promoter Preference**: A higher proportion of variants occur in core promoter regions, suggesting adaptation through changes in basal transcription machinery and RNA polymerase II recruitment.

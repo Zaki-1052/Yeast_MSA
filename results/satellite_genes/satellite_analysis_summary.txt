@@ -8,7 +8,7 @@ This analysis examined genes located in the satellite zone (50-100kb)
 around the 11 ergosterol pathway genes as part of Step 2 of the 
 analysis plan: "Enhanced Satellite Gene Characterization".
 
-Date: Sat May 10 22:24:24 PDT 2025
+Date: Fri May 16 23:23:39 PDT 2025
 
 Analysis Components:
 -------------------
@@ -20,9 +20,9 @@ Key Statistics:
 --------------
 - Total ergosterol (ERG) pathway genes analyzed: 11
 - Total satellite genes identified: 593
-- Total variants analyzed: 12
+- Total variants analyzed: 44
 - Total variants found in satellite genes: 0
-- Common scaffolds between variants and satellite genes: {'w303_scaffold_7', 'w303_scaffold_16'}
+- Common scaffolds between variants and satellite genes: {'w303_scaffold_16', 'w303_scaffold_7'}
 318 (53.6% of total)
 
 Key Finding:
@@ -71,26 +71,26 @@ Functional Category Distribution by ERG Gene:
 Variant Position Analysis:
 -------------------------
 Analyzing variant positions relative to satellite genes:
-  Scaffold w303_scaffold_7:
-    Satellite genes positions: 368605 - 949104
-    Variants positions: 606238 - 848101
-    OVERLAP: Some variants may fall within satellite gene positions
-    ERG gene YGR060W position: 607692 - 608621
-    Variants near this ERG gene: 3
-    Confirming these variants are in the buffer zone, not satellite zone
-    ERG gene YGR175C position: 846496 - 847986
-    Variants near this ERG gene: 6
-    Confirming these variants are in the buffer zone, not satellite zone
   Scaffold w303_scaffold_16:
     Satellite genes positions: 147759 - 768126
     Variants positions: 667515 - 667515
     OVERLAP: Some variants may fall within satellite gene positions
     ERG gene YMR202W position: 667848 - 668516
-    Variants near this ERG gene: 3
+    Variants near this ERG gene: 15
+    Confirming these variants are in the buffer zone, not satellite zone
+  Scaffold w303_scaffold_7:
+    Satellite genes positions: 368605 - 949104
+    Variants positions: 848074 - 848101
+    OVERLAP: Some variants may fall within satellite gene positions
+    ERG gene YGR175C position: 846496 - 847986
+    Variants near this ERG gene: 29
     Confirming these variants are in the buffer zone, not satellite zone
 
 Identifying variants in satellite genes...
 Looking for satellite gene with ID: nan or name: YML059C
+Looking for satellite gene with ID: nan or name: YML058W
+Looking for satellite gene with ID: nan or name: YLR437C
+Looking for satellite gene with ID: nan or name: YLR433C
 
 Files Generated:
 ---------------

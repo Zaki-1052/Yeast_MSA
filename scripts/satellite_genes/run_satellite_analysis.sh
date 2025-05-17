@@ -14,7 +14,7 @@ set -e
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 OUTPUT_DIR="$PROJECT_DIR/results/satellite_genes"
-VARIANTS_FILE="$PROJECT_DIR/results/gene_variants_expanded/all_gene_variants.tsv"
+VARIANTS_FILE="$PROJECT_DIR/results/gene_variants/all_gene_variants.tsv"
 SUMMARY_FILE="$OUTPUT_DIR/satellite_gene_identification_summary.txt"
 ANNOTATION_SUMMARY="$OUTPUT_DIR/satellite_annotation_summary.txt"
 VARIANT_LOG="$OUTPUT_DIR/variant_profiling.log"
@@ -67,7 +67,7 @@ echo "========================================================"
 # Capture the output of the variant profiling script to analyze what happened
 python3 "$SCRIPT_DIR/satellite_variant_profiling.py" \
   --satellite-genes "$OUTPUT_DIR/satellite_genes_annotated.tsv" \
-  --variant-dir "$PROJECT_DIR/results/gene_variants_expanded" \
+  --variant-dir "$PROJECT_DIR/results/gene_variants" \
   --output-dir "$OUTPUT_DIR" 2>&1 | tee "$VARIANT_LOG"
 
 # Note: We don't exit on error here since no variants is a biological finding, not a technical error

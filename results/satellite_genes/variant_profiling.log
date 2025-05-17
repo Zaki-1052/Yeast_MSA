@@ -2,38 +2,35 @@
 Satellite Gene Variant Profiling
 ======================================================
 Loaded 593 satellite genes from file
-Loaded 12 variants from file
+Loaded 44 variants from file
 Columns in variants file: ['Sample', 'Treatment', 'Scaffold', 'Position', 'Ref', 'Alt', 'Quality', 'Gene_ID', 'ERG_Name', 'SC_Gene_ID', 'Effect', 'Impact', 'Codon_Change', 'Amino_Acid_Change', 'Distance', 'Variant_Type']
-Sample row: {'Sample': 'CAS-CTRL', 'Treatment': 'CAS-CTRL', 'Scaffold': 'w303_scaffold_7', 'Position': 606238, 'Ref': 'T', 'Alt': 'TA', 'Quality': 228.187, 'Gene_ID': 'W3030G02990', 'ERG_Name': 'ERG25', 'SC_Gene_ID': 'YGR060W', 'Effect': 'upstream_gene_variant', 'Impact': 'MODIFIER', 'Codon_Change': 'c.-1454_-1453insA', 'Amino_Acid_Change': nan, 'Distance': 1453, 'Variant_Type': 'INSERTION'}
+Sample row: {'Sample': 'CAS-55-1', 'Treatment': 'CAS', 'Scaffold': 'w303_scaffold_7', 'Position': 848074, 'Ref': 'G', 'Alt': 'GAT', 'Quality': 205.155, 'Gene_ID': 'W3030G04090', 'ERG_Name': 'ERG1', 'SC_Gene_ID': 'YGR175C', 'Effect': 'upstream_gene_variant', 'Impact': 'MODIFIER', 'Codon_Change': 'c.-89_-88insAT', 'Amino_Acid_Change': nan, 'Distance': 89, 'Variant_Type': 'INSERTION'}
 Unique scaffolds in variants: ['w303_scaffold_7' 'w303_scaffold_16']
 Variants per scaffold:
-  w303_scaffold_7: 9 variants
-  w303_scaffold_16: 3 variants
+  w303_scaffold_7: 29 variants
+  w303_scaffold_16: 15 variants
 
 Scaffold analysis:
 Satellite genes found on 5 unique scaffolds
 Variants found on 2 unique scaffolds
 Scaffolds in common: 2
-Common scaffolds: {'w303_scaffold_7', 'w303_scaffold_16'}
+Common scaffolds: {'w303_scaffold_16', 'w303_scaffold_7'}
 Satellite genes on common scaffolds: 318 (53.6% of total)
 
 Analyzing variant positions relative to satellite genes:
-  Scaffold w303_scaffold_7:
-    Satellite genes positions: 368605 - 949104
-    Variants positions: 606238 - 848101
-    OVERLAP: Some variants may fall within satellite gene positions
-    ERG gene YGR060W position: 607692 - 608621
-    Variants near this ERG gene: 3
-    Confirming these variants are in the buffer zone, not satellite zone
-    ERG gene YGR175C position: 846496 - 847986
-    Variants near this ERG gene: 6
-    Confirming these variants are in the buffer zone, not satellite zone
   Scaffold w303_scaffold_16:
     Satellite genes positions: 147759 - 768126
     Variants positions: 667515 - 667515
     OVERLAP: Some variants may fall within satellite gene positions
     ERG gene YMR202W position: 667848 - 668516
-    Variants near this ERG gene: 3
+    Variants near this ERG gene: 15
+    Confirming these variants are in the buffer zone, not satellite zone
+  Scaffold w303_scaffold_7:
+    Satellite genes positions: 368605 - 949104
+    Variants positions: 848074 - 848101
+    OVERLAP: Some variants may fall within satellite gene positions
+    ERG gene YGR175C position: 846496 - 847986
+    Variants near this ERG gene: 29
     Confirming these variants are in the buffer zone, not satellite zone
 
 Identifying variants in satellite genes...

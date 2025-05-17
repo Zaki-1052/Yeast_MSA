@@ -1037,7 +1037,7 @@ def main():
     
     # Required arguments
     parser.add_argument('--variants', 
-                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/gene_variants_expanded/all_gene_variants.tsv',
+                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/gene_variants/all_gene_variants.tsv',
                        help='Variants TSV file')
     parser.add_argument('--regulatory-map', 
                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/new_regulatory_analysis/data/gene_regulatory_map.json',

@@ -492,7 +492,7 @@ def main():
                        default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/regulatory_analysis/accurate_mapping',
                        help='Output directory for results')
     parser.add_argument('--variants', 
-                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/gene_variants_expanded/all_gene_variants.tsv',
+                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/gene_variants/all_gene_variants.tsv',
                        help='Variants TSV file')
     parser.add_argument('--gene-mapping', 
                        default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/reference/gene_mapping_full.tsv',
