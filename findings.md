@@ -84,7 +84,18 @@ Comprehensive SNP effect analysis was performed using snpEff to annotate and pre
 - Treatment-specific network patterns identified
 - HIGH impact variants consistently found at specific distances from pathway genes
 
-### 9. Sterol Profile Analysis
+### 9. OSH Gene Family Analysis
+
+- 8 OSH family gene annotations identified in the W303 reference genome
+- 140 variants identified within 25kb of OSH genes across all treatments
+- No variants found within OSH gene coding regions, indicating strong purifying selection similar to ERG genes
+- OSH gene variants exhibit balanced distribution across treatments: WT-37 (27), WTA (26), STC (29), CAS (31)
+- Higher proportion of HIGH impact variants near OSH genes (21.4%) compared to ERG genes (4.4%)
+- Close proximity of certain OSH-ERG pairs identified (e.g., OSH3-ERG7 at 742 bp, OSH7-ERG11 at ~13kb)
+- OSH-ERG gene relationships support the four-zone conservation architecture
+- OSH gene analysis suggests coordinated evolution between sterol synthesis and transport mechanisms
+
+### 10. Sterol Profile Analysis
 
 - Temperature adaptation shows significantly higher ergosterol levels (10.25 mean concentration) compared to low oxygen adaptation (2.73 mean concentration, p=0.0109)
 - Gene-modified strains have 1.5× more diverse sterol profiles than non-modified strains
@@ -185,7 +196,17 @@ Detailed narrative analysis with embedded visualizations:
      - Pathway distance models
      - Network statistics and interpretations
 
-2. **Integrated Findings Report**:
+2. **OSH Gene Analysis Report**:
+   - **Path**: `results/osh_analysis/OSH_Results.md`
+   - **Contents**:
+     - OSH gene family mapping and analysis
+     - OSH variant patterns and conservation
+     - OSH-ERG gene distance analysis
+     - Biological interpretation of OSH gene findings
+     - Integration with four-zone conservation model
+     - Visualizations of OSH gene relationships
+
+3. **Integrated Findings Report**:
    - **Path**: `results/sterol_analysis/correlation/integrated_findings_report.md`
    - **Contents**:
      - Integration of sterol and genomic findings
@@ -194,7 +215,7 @@ Detailed narrative analysis with embedded visualizations:
      - Four-zone conservation architecture
      - Comprehensive adaptation model
 
-3. **High Impact Variants Report**:
+4. **High Impact Variants Report**:
    - **Path**: `results/functional_impact/high_impact/high_impact_variants_report.md`
    - **Contents**:
      - Analysis of high impact variants
@@ -287,7 +308,23 @@ Organized collections of visualizations by analysis type:
      - Treatment-specific purifying selection plots
      - `fold_change_by_gene_status.png`: Gene expression fold changes
 
-7. **Sterol Profile Visualizations**:
+7. **Variant Proximity Impact Analysis**:
+   - **Directory**: `results/filtered_scaffold_variants/impact/`
+   - **Key Visualizations**:
+     - `variant_count_heatmap.png`: Heatmap of variant counts by ERG gene and treatment
+     - `distance_distribution_heatmap.png`: Distribution of distances to ERG genes
+     - `variant_proximity_impact_summary.html`: Interactive summary of variant proximity and impact
+     - `variant_proximity_impact_summary.tsv`: Tabular data of variant proximity and impact
+
+8. **OSH Gene Analysis Visualizations**:
+   - **Directory**: `results/osh_analysis/`
+   - **Key Visualizations**:
+     - `osh_erg_variant_comparison.png`: Comparison of variants near OSH and ERG genes
+     - `osh_erg_distance_distribution.png`: Distribution of distances between OSH and ERG genes
+     - `osh_erg_network.png`: Network visualization of OSH-ERG relationships
+     - `osh_treatment_heatmap.png`: Heatmap of OSH gene variants by treatment
+
+9. **Sterol Profile Visualizations**:
    - **Directory**: `results/sterol_analysis/visualizations/`
    - **Key Visualizations**:
      - `sterol_composition_by_treatment.png`: Treatment comparison

@@ -427,6 +427,42 @@ The network analysis module is a new addition that maps relationships between ge
   - Network statistics (centrality, connectivity)
   - Network analysis report
 
+#### 2. Variant Proximity Impact Analysis
+
+- **Script**: `variant_proximity_impact_summary.py`
+- **Purpose**: Analyzes the relationship between variant impact and distance to ergosterol genes
+- **Features**:
+  - Measures minimum distances between variants and ERG genes
+  - Groups variants by treatment, impact, and position relative to ERG genes
+  - Correlates variant impact with genomic distance
+  - Generates visualization of distance-impact relationships
+- **Outputs**:
+  - Variant proximity impact summary table
+  - Variant count heatmap by ERG gene and treatment
+  - Distance distribution boxplots
+  - Interactive HTML report with distance-impact visualizations
+
+### OSH Gene Family Analysis
+
+The OSH gene family analysis module examines the relationship between sterol synthesis and transport:
+
+#### 1. OSH Gene Analysis
+
+- **Script Directory**: `scripts/osh_analysis/`
+- **Run Script**: `run_osh_analysis.sh`
+- **Purpose**: Investigates the OSH (OxySterol binding Homology) gene family and its relationship to ergosterol genes
+- **Components**:
+  - `analyze_osh_genes.py`: Maps OSH family genes in the reference genome
+  - `osh_variants.py`: Analyzes variants in and around OSH genes in all treatment conditions
+  - `osh_erg_distance.py`: Calculates genomic distances between OSH and ergosterol pathway genes
+  - `count_variant_locations.py`: Analyzes the distribution of variants relative to OSH genes
+- **Outputs**:
+  - OSH gene summary table
+  - OSH variant analysis results
+  - OSH-ERG distance calculations
+  - Visualizations of OSH-ERG relationships
+  - OSH gene analysis report (OSH_Results.md)
+
 ### Sterol Profile Analysis
 
 The sterol profile analysis module connects genomic findings with biochemical data on yeast membrane composition:

@@ -214,8 +214,21 @@ Extract and report on variants:
 ```
 scripts/variants/run_extract_variants.sh                     # Extract variants
 scripts/variants/verify_gene_coordinates.sh                  # Verify gene coordinates
+scripts/variants/variant_proximity_impact_summary.py         # Analyze variant proximity and impact
 scripts/utils/generate_ergosterol_variant_report.py          # Generate variant report
 scripts/utils/generate_functional_impact_report.py           # Generate impact report
+```
+
+#### 10. OSH Gene Analysis
+
+Analyze OSH gene family and its relationship to ergosterol pathway:
+
+```
+scripts/osh_analysis/run_osh_analysis.sh                    # Run complete OSH analysis
+scripts/osh_analysis/analyze_osh_genes.py                   # Map OSH genes in reference genome
+scripts/osh_analysis/osh_variants.py                        # Analyze variants near OSH genes
+scripts/osh_analysis/osh_erg_distance.py                    # Calculate OSH-ERG distances
+scripts/osh_analysis/count_variant_locations.py             # Analyze variant distribution
 ```
 
 For simplicity, the master scripts for each major module can be run in this order:
@@ -227,6 +240,7 @@ For simplicity, the master scripts for each major module can be run in this orde
 5. `scripts/functional_impact/run_extended_network_analysis.sh` (Network analysis)
 6. `scripts/sterols/run_sterol_analysis.sh` (Sterol analysis)
 7. `scripts/variants/run_extract_variants.sh` (Variant extraction and reporting)
+8. `scripts/osh_analysis/run_osh_analysis.sh` (OSH gene family analysis)
 
 ### Analysis Output Examination Guide
 
@@ -368,7 +382,34 @@ results/network_analysis/erg_subnetworks/                 # Individual pathway g
 
 Network analysis reveals relationships between ergosterol pathway genes and affected genes.
 
-#### 12. Sterol Profile Analysis
+#### 12. Variant Proximity Impact Analysis
+
+Examine the relationship between variant impact and distance to ergosterol genes:
+
+```
+results/filtered_scaffold_variants/impact/variant_proximity_impact_summary.html  # Interactive HTML report
+results/filtered_scaffold_variants/impact/variant_proximity_impact_summary.tsv   # Tabular summary data
+results/filtered_scaffold_variants/impact/variant_count_heatmap.png             # Variant count visualization
+results/filtered_scaffold_variants/impact/distance_distribution_heatmap.png     # Distance distribution visualization
+```
+
+This analysis reveals patterns in how variant impact relates to genomic distance from ergosterol genes.
+
+#### 13. OSH Gene Analysis
+
+Examine the OSH gene family and its relationship to ergosterol pathway genes:
+
+```
+results/osh_analysis/OSH_Results.md                       # Complete OSH gene analysis report
+results/osh_analysis/osh_gene_summary.tsv                 # OSH gene details and locations
+results/osh_analysis/osh_variants.tsv                     # Variants near OSH genes
+results/osh_analysis/osh_erg_distances.tsv                # Distances between OSH and ERG genes
+results/osh_analysis/osh_erg_network.png                  # Network visualization of OSH-ERG relationships
+```
+
+This analysis provides insights into the coordination between sterol synthesis and transport.
+
+#### 14. Sterol Profile Analysis
 
 Examine biochemical adaptations in sterol profiles:
 
@@ -381,7 +422,7 @@ results/sterol_analysis/visualizations/              # Sterol visualizations dir
 
 Sterol profile analysis connects genomic findings to biochemical adaptations.
 
-#### 13. Integrated Analysis
+#### 15. Integrated Analysis
 
 Finally, review the integrated findings:
 
@@ -391,6 +432,7 @@ results/reports/combined_analysis_results.txt                     # Complete ana
 results/reports/ergosterol_variant_analysis.html                  # Interactive ergosterol report
 results/reports/functional_impact.html                            # Interactive functional impact report
 results/reports/sterols.html                                      # Interactive sterol report
+results/filtered_scaffold_variants/visualizations/filtered_variants_report.html  # Filtered variants report
 ```
 
 These comprehensive reports integrate findings across all analysis modules, providing a complete picture of adaptation mechanisms.
