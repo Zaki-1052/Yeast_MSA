@@ -23,7 +23,7 @@ We have implemented the first step of the 10-Step Analysis Plan, focusing on OSH
 
 - **Objective**: Map all OSH family genes in the reference genome
 - **Methods**: Systematic search for OSH family genes (OSH1-OSH7) in the W303 reference genome
-- **Results**: Identified 8 OSH gene annotations in the reference genome
+- **Results**: Identified 8 OSH gene annotations in the reference genome (with some genes present on multiple scaffolds)
 - **Output**: `osh_gene_summary.tsv` containing gene details and chromosomal locations
 
 ### 2. OSH Variant Analysis (`osh_variants.py`)
@@ -44,7 +44,7 @@ We have implemented the first step of the 10-Step Analysis Plan, focusing on OSH
 
 ### OSH Gene Distribution
 
-- Found 8 OSH family gene annotations in the W303 reference genome
+- Found 8 OSH family gene annotations in the W303 reference genome (some genes present on multiple scaffolds)
 - OSH genes are distributed across different scaffolds (chromosomes)
 - Some OSH genes are present on the same scaffolds as ERG pathway genes, enabling direct genomic distance analysis
 
@@ -60,21 +60,18 @@ We have implemented the first step of the 10-Step Analysis Plan, focusing on OSH
    - OSH gene variants by treatment: WT-37 (27), WTA (26), STC (29), CAS (31)
    - ERG gene variants by treatment: WT-37 (70), WTA (64), STC (68), CAS (77)
    - Slightly higher variant counts in temperature adaptation (WT-37, CAS) compared to low oxygen (WTA, STC)
+   - By adaptation type: Temperature (WT-37, CAS): 58 OSH variants, 147 ERG variants; Low Oxygen (WTA, STC): 55 OSH variants, 132 ERG variants
+   - By gene modification: Modified (CAS, STC): 60 OSH variants, 145 ERG variants; Non-modified (WT-37, WTA): 53 OSH variants, 134 ERG variants
 
 3. **Statistical Significance**:
    - Fisher's exact test p-value: 0.7860
    - Odds ratio: 0.8953
    - Conclusion: No significant difference in variant counts between OSH and ERG genes
 
-4. **Variant Location**:
-   - OSH genes: 13.6% of variants within 5kb, 31.4% upstream, 68.6% downstream
-   - ERG genes: 43.6% of variants within 5kb, 49.4% upstream, 50.6% downstream
-   - No variants were found within either OSH or ERG genes (0%)
-
-5. **Variant Impact**:
+4. **Variant Impact**:
    - OSH genes: HIGH impact (21.4%), MODIFIER impact (78.6%)
    - ERG genes: HIGH impact (4.4%), MODERATE impact (6.1%), MODIFIER impact (89.5%)
-   - OSH genes have significantly higher proportion of HIGH impact variants
+   - OSH genes have a significantly higher proportion of HIGH impact variants
 
 ### OSH-ERG Distance Analysis
 
@@ -94,11 +91,18 @@ We have implemented the first step of the 10-Step Analysis Plan, focusing on OSH
    - YHR073W (OSH3) - YHR072W (ERG7): 1,289 bp (downstream)
    - YHR001W (OSH7) - YHR007C (ERG11): 12,900 bp (upstream)
    - YHR001W (OSH7) - YHR007C (ERG11): 13,654 bp (upstream)
+   - YHR073W (OSH3) - YHR007C (ERG11): 133,310 bp (downstream)
 
-4. **Network Analysis**:
+4. **OSH Genes with No ERG Genes on Same Scaffold**:
+   - YDL019C (scaffold w303_scaffold_1)
+   - YDL019C (scaffold w303_scaffold_4)
+   - YOR237W (scaffold w303_scaffold_19)
+   - YOR237W (scaffold w303_scaffold_18)
+
+5. **Network Analysis**:
    - Created network visualization of OSH-ERG gene relationships
    - OSH3 and OSH7 form hub connections with ERG genes on the same scaffold
-   - Some OSH genes have no ERG genes on the same scaffold (YDL019C, YOR237W)
+   - Some OSH genes have no ERG genes on the same scaffold
 
 ## Biological Interpretation
 
@@ -107,7 +111,7 @@ We have implemented the first step of the 10-Step Analysis Plan, focusing on OSH
 The analysis reveals that OSH genes, like ERG genes, show signs of conservation:
 
 1. **Similar Conservation Level**: No significant difference in variant counts between OSH and ERG genes suggests similar evolutionary constraints
-2. **No Within-Gene Variants**: Both OSH and ERG genes have no variants within their coding regions, indicating strong purifying selection
+2. **Variant Impact**: OSH genes have a higher proportion of HIGH impact variants (21.4% vs. 4.4% for ERG genes), but both have no variants within their coding regions, indicating strong purifying selection
 3. **Proximity Constraints**: OSH genes on the same scaffold as ERG genes tend to maintain specific distances, with some in the buffer zone (1-5,000 bp)
 
 ### Functional Implications
