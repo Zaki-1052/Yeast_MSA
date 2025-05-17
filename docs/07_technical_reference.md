@@ -160,6 +160,24 @@ This document provides technical details on the tools, methods, and parameters u
 - **Scripts**:
   - `scripts/functional_impact/analyze_high_impact_variants.py`
   - `scripts/functional_impact/analyze_high_impact_variants_by_distance.py`
+  - `scripts/variants/variant_proximity_impact_summary.py`
+
+### Variant Proximity Impact Analysis
+
+- **Method**: Analyze relationships between variant impact and distance to ERG genes
+- **Distance Categories**: within gene, 0-1kb, 1-5kb, 5-10kb, 10-50kb, >50kb
+- **Visualization**: Heatmaps, boxplots, and interactive HTML reports
+- **Statistical Analysis**: Chi-square test for independence between impact and distance
+- **Script**: `scripts/variants/variant_proximity_impact_summary.py`
+- **Parameters**:
+  - Maximum distance: 100kb from ergosterol genes
+  - Impact categories: HIGH, MODERATE, LOW, MODIFIER
+  - Treatment grouping: WT-37, WTA, CAS, STC
+- **Outputs**: 
+  - Variant count heatmap by ERG gene and treatment
+  - Distance distribution heatmap
+  - Interactive HTML report
+  - Tabular data for further analysis
 
 ### Network Analysis
 
@@ -169,6 +187,33 @@ This document provides technical details on the tools, methods, and parameters u
 - **Metrics**: Degree centrality, betweenness centrality, clustering coefficient
 - **Software**: NetworkX Python package
 - **Script**: `scripts/functional_impact/build_extended_erg_network.py`
+
+### OSH Gene Analysis
+
+- **Method**: Map and analyze OSH gene family and relationship to ERG genes
+- **Gene Identification**: Based on gene annotations and homology
+- **Distance Calculation**: Compute genomic distances between OSH and ERG genes
+- **Variant Analysis**: Examine variants near OSH genes across treatments
+- **Software**: BioPython, Pandas, Matplotlib
+- **Scripts**:
+  - `scripts/osh_analysis/analyze_osh_genes.py`
+  - `scripts/osh_analysis/osh_variants.py`
+  - `scripts/osh_analysis/osh_erg_distance.py`
+  - `scripts/osh_analysis/count_variant_locations.py`
+
+### Enhanced Annotation Approach
+
+- **Method**: Comprehensive annotation with genome-wide gene proximity
+- **Proximity Categories**: Distance-based categorization to nearest genes
+- **Gene Context**: Functional categories based on gene proximity
+- **Integration**: Combines variant data with gene annotations, treatments, and impacts
+- **Script**: `scripts/variants/extract_filtered_scaffold_variants.py`
+- **Key Features**:
+  - Maps variants to nearest genes and calculates distances
+  - Enhances standard snpEff annotations with gene proximity data
+  - Categorizes variants by distance from genes of interest
+  - Creates expanded annotation for treatment-specific variants
+  - Generates statistical summaries of proximity-impact relationships
 
 ## Statistical Methods
 
@@ -234,6 +279,21 @@ This document provides technical details on the tools, methods, and parameters u
   - `scripts/utils/generate_ergosterol_variant_report.py`
   - `scripts/utils/generate_functional_impact_report.py`
   - `scripts/sterols/generate_html_report.py`
+  - `scripts/variants/variant_proximity_impact_summary.py`
+  - `scripts/variants/generate_filtered_variants_visualizations.py`
+
+### Regulatory Analysis
+
+- **Framework**: Custom Python scripts for regulatory region analysis
+- **Features**:
+  - Maps variants relative to transcription start sites (TSS)
+  - Identifies variants in promoter regions
+  - Analyzes potential transcription factor binding site impacts
+  - Creates distribution visualizations for regulatory variants
+- **Generation Scripts**:
+  - `scripts/regulatory_analysis/regulatory_region_mapping.py`
+  - `scripts/regulatory_analysis/regulatory_motif_analysis.py`
+  - `scripts/regulatory_analysis/accurate_regulatory_analysis.py`
 
 ## File Formats
 

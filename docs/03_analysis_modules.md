@@ -315,6 +315,8 @@ The Yeast MSA project employs several specialized analysis modules, each focusin
   - `scripts/utils/generate_ergosterol_variant_report.py`
   - `scripts/utils/generate_functional_impact_report.py`
   - `scripts/sterols/generate_html_report.py`
+  - `scripts/variants/variant_proximity_impact_summary.py`
+  - `scripts/variants/generate_filtered_variants_visualizations.py`
 - **Purpose**: Create interactive visualizations
 - **Methodology**:
   - Integrates data into interactive format
@@ -326,6 +328,8 @@ The Yeast MSA project employs several specialized analysis modules, each focusin
   - Functional impact analysis dashboard
   - Sterol profile analysis dashboard
   - Variant analysis dashboard
+  - Variant proximity impact dashboard
+  - Filtered variants visualization report
 - **Results Location**: `results/reports/`
 
 Each of these modules contributes to a comprehensive understanding of yeast adaptation mechanisms, from raw variant identification to biological interpretation and integration with biochemical data.

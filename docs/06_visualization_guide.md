@@ -70,6 +70,38 @@ The project includes several interactive HTML dashboards that provide rich visua
   - Compare samples side-by-side
   - Export filtered variant lists
 
+### 5. Variant Proximity Impact Dashboard
+
+- **Path**: `results/filtered_scaffold_variants/impact/variant_proximity_impact_summary.html`
+- **Generator**: `scripts/variants/variant_proximity_impact_summary.py`
+- **Contents**:
+  - Visualizations of variant proximity to ERG genes
+  - Impact distribution by distance from ERG genes
+  - Treatment-specific distance patterns
+  - ERG gene-specific variant counts and distances
+  - Statistical summary of variant-gene relationships
+- **How to Use**:
+  - Examine heatmaps to understand ERG gene-treatment relationships
+  - Review distance distribution plots for impact patterns
+  - Compare impact categories across different distance zones
+  - Identify gene-specific variant patterns
+
+### 6. Filtered Variants Report
+
+- **Path**: `results/filtered_scaffold_variants/visualizations/filtered_variants_report.html`
+- **Generator**: `scripts/variants/generate_filtered_variants_visualizations.py`
+- **Contents**:
+  - Treatment-specific variant visualizations
+  - Distribution of variants by distance categories
+  - Gene-proximity analysis visualizations
+  - Scaffold-specific variant patterns
+  - Impact distribution by treatment
+- **How to Use**:
+  - Review treatment-specific variant distributions
+  - Analyze gene-proximity patterns
+  - Compare variant distributions across scaffolds
+  - Examine impact distributions by treatment
+
 ## Key Visualization Galleries
 
 Organized collections of visualizations by analysis type are available in the analysis directory:
@@ -128,7 +160,27 @@ Organized collections of visualizations by analysis type are available in the an
   - `fold_change_by_gene_status.png`: Fold changes in variant frequency by gene status
   - Treatment-specific purifying selection plots (e.g., `CAS_purifying_selection.png`)
 
-### 7. Sterol Profile Visualizations
+### 7. OSH Gene Analysis Visualizations
+
+- **Directory**: `results/osh_analysis/`
+- **Key Visualizations**:
+  - `osh_erg_variant_comparison.png`: Comparison of variants near OSH and ERG genes
+  - `osh_erg_distance_distribution.png`: Distribution of distances between OSH and ERG genes
+  - `osh_erg_proximity_heatmap.png`: Heatmap showing proximity between OSH and ERG genes
+  - `osh_treatment_heatmap.png`: Heatmap of OSH gene variants by treatment
+  - `osh_erg_network.png`: Network visualization of OSH-ERG relationships
+  - `osh_min_distance_barplot.png`: Minimal distances between OSH and ERG genes
+
+### 8. Variant Proximity Impact Visualizations
+
+- **Directory**: `results/filtered_scaffold_variants/impact/`
+- **Key Visualizations**:
+  - `variant_count_heatmap.png`: Heatmap of variant counts by ERG gene and treatment
+  - `distance_distribution_heatmap.png`: Distribution of distances to ERG genes
+  - Interactive visualizations in `variant_proximity_impact_summary.html`
+  - Tabular data in `variant_proximity_impact_summary.tsv`
+
+### 9. Sterol Profile Visualizations
 
 - **Directory**: `results/sterol_analysis/visualizations/`
 - **Key Visualizations**:
@@ -138,6 +190,16 @@ Organized collections of visualizations by analysis type are available in the an
   - `four_zone_conservation_model.png`: Visualization of the hierarchical conservation model
 
 ## Specialized Visualization Types
+
+### Regulatory Analysis Visualizations
+
+- **Directory**: `results/regulatory_analysis/`
+- **Key Visualizations**:
+  - Promoter analysis: Distance distribution plots showing variant distribution relative to transcription start sites
+  - Position-specific enrichment heatmaps displaying where variants concentrate in regulatory regions
+  - Transcription factor binding site (TFBS) visualizations showing potential impact on gene regulation
+  - Treatment-specific regulatory pattern heatmaps
+  - ERG gene regulatory region distributions
 
 ### Sequence Logos
 
@@ -189,18 +251,22 @@ PCA plots in `analysis/population_structure_results/` and other directories:
 1. Check `analysis/genes_of_interest/` for ergosterol pathway gene analysis
 2. Examine `results/gene_variants/` for detailed variant information by gene
 3. Look at `results/network_analysis/` for gene interaction networks
+4. Explore `results/osh_analysis/` for OSH gene family analysis
 
 ### For Sterol-Genomic Integration
 
 1. Start with the sterol HTML report in `results/reports/sterols.html`
 2. Look at `results/sterol_analysis/correlation/` for genomic-sterol correlations
 3. Check `results/sterol_analysis/pathway/` for pathway analysis
+4. Examine `results/filtered_scaffold_variants/impact/` for variant proximity analysis
+5. Review `results/osh_analysis/` for OSH gene and sterol transport insights
 
 ### For Treatment Comparisons
 
 1. Examine `analysis/population_structure_results/` for genetic relationships
 2. Look at `analysis/treatment_control_analysis/` for direct treatment comparisons
-3. Check treatment-specific visualizations throughout the analysis directories
+3. Explore `results/filtered_scaffold_variants/` for treatment-specific scaffold variants
+4. Check treatment-specific visualizations throughout the analysis directories
 
 ## Tips for Interpretation
 

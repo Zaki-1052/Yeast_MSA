@@ -626,7 +626,18 @@ Comprehensive SNP effect analysis was performed using snpEff to annotate and pre
 - Treatment-specific network patterns identified
 - HIGH impact variants consistently found at specific distances from pathway genes
 
-### 9. Sterol Profile Analysis
+### 9. OSH Gene Family Analysis
+
+- 8 OSH family gene annotations identified in the W303 reference genome
+- 140 variants identified within 25kb of OSH genes across all treatments
+- No variants found within OSH gene coding regions, indicating strong purifying selection similar to ERG genes
+- OSH gene variants exhibit balanced distribution across treatments: WT-37 (27), WTA (26), STC (29), CAS (31)
+- Higher proportion of HIGH impact variants near OSH genes (21.4%) compared to ERG genes (4.4%)
+- Close proximity of certain OSH-ERG pairs identified (e.g., OSH3-ERG7 at 742 bp, OSH7-ERG11 at ~13kb)
+- OSH-ERG gene relationships support the four-zone conservation architecture
+- OSH gene analysis suggests coordinated evolution between sterol synthesis and transport mechanisms
+
+### 10. Sterol Profile Analysis
 
 - Temperature adaptation shows significantly higher ergosterol levels (10.25 mean concentration) compared to low oxygen adaptation (2.73 mean concentration, p=0.0109)
 - Gene-modified strains have 1.5× more diverse sterol profiles than non-modified strains
@@ -727,7 +738,17 @@ Detailed narrative analysis with embedded visualizations:
      - Pathway distance models
      - Network statistics and interpretations
 
-2. **Integrated Findings Report**:
+2. **OSH Gene Analysis Report**:
+   - **Path**: `results/osh_analysis/OSH_Results.md`
+   - **Contents**:
+     - OSH gene family mapping and analysis
+     - OSH variant patterns and conservation
+     - OSH-ERG gene distance analysis
+     - Biological interpretation of OSH gene findings
+     - Integration with four-zone conservation model
+     - Visualizations of OSH gene relationships
+
+3. **Integrated Findings Report**:
    - **Path**: `results/sterol_analysis/correlation/integrated_findings_report.md`
    - **Contents**:
      - Integration of sterol and genomic findings
@@ -736,7 +757,7 @@ Detailed narrative analysis with embedded visualizations:
      - Four-zone conservation architecture
      - Comprehensive adaptation model
 
-3. **High Impact Variants Report**:
+4. **High Impact Variants Report**:
    - **Path**: `results/functional_impact/high_impact/high_impact_variants_report.md`
    - **Contents**:
      - Analysis of high impact variants
@@ -829,7 +850,23 @@ Organized collections of visualizations by analysis type:
      - Treatment-specific purifying selection plots
      - `fold_change_by_gene_status.png`: Gene expression fold changes
 
-7. **Sterol Profile Visualizations**:
+7. **Variant Proximity Impact Analysis**:
+   - **Directory**: `results/filtered_scaffold_variants/impact/`
+   - **Key Visualizations**:
+     - `variant_count_heatmap.png`: Heatmap of variant counts by ERG gene and treatment
+     - `distance_distribution_heatmap.png`: Distribution of distances to ERG genes
+     - `variant_proximity_impact_summary.html`: Interactive summary of variant proximity and impact
+     - `variant_proximity_impact_summary.tsv`: Tabular data of variant proximity and impact
+
+8. **OSH Gene Analysis Visualizations**:
+   - **Directory**: `results/osh_analysis/`
+   - **Key Visualizations**:
+     - `osh_erg_variant_comparison.png`: Comparison of variants near OSH and ERG genes
+     - `osh_erg_distance_distribution.png`: Distribution of distances between OSH and ERG genes
+     - `osh_erg_network.png`: Network visualization of OSH-ERG relationships
+     - `osh_treatment_heatmap.png`: Heatmap of OSH gene variants by treatment
+
+9. **Sterol Profile Visualizations**:
    - **Directory**: `results/sterol_analysis/visualizations/`
    - **Key Visualizations**:
      - `sterol_composition_by_treatment.png`: Treatment comparison
@@ -1056,8 +1093,21 @@ Extract and report on variants:
 ```
 scripts/variants/run_extract_variants.sh                     # Extract variants
 scripts/variants/verify_gene_coordinates.sh                  # Verify gene coordinates
+scripts/variants/variant_proximity_impact_summary.py         # Analyze variant proximity and impact
 scripts/utils/generate_ergosterol_variant_report.py          # Generate variant report
 scripts/utils/generate_functional_impact_report.py           # Generate impact report
+```
+
+#### 10. OSH Gene Analysis
+
+Analyze OSH gene family and its relationship to ergosterol pathway:
+
+```
+scripts/osh_analysis/run_osh_analysis.sh                    # Run complete OSH analysis
+scripts/osh_analysis/analyze_osh_genes.py                   # Map OSH genes in reference genome
+scripts/osh_analysis/osh_variants.py                        # Analyze variants near OSH genes
+scripts/osh_analysis/osh_erg_distance.py                    # Calculate OSH-ERG distances
+scripts/osh_analysis/count_variant_locations.py             # Analyze variant distribution
 ```
 
 For simplicity, the master scripts for each major module can be run in this order:
@@ -1069,6 +1119,8 @@ For simplicity, the master scripts for each major module can be run in this orde
 5. `scripts/functional_impact/run_extended_network_analysis.sh` (Network analysis)
 6. `scripts/sterols/run_sterol_analysis.sh` (Sterol analysis)
 7. `scripts/variants/run_extract_variants.sh` (Variant extraction and reporting)
+8. `scripts/osh_analysis/run_osh_analysis.sh` (OSH gene family analysis)
+8. `scripts/osh_analysis/run_osh_analysis.sh` (OSH gene family analysis)
 
 ### Analysis Output Examination Guide
 
@@ -1223,7 +1275,30 @@ results/sterol_analysis/visualizations/              # Sterol visualizations dir
 
 Sterol profile analysis connects genomic findings to biochemical adaptations.
 
-#### 13. Integrated Analysis
+#### 13. Variant Proximity Impact Analysis
+
+Examine the relationship between variant impact and distance to ergosterol genes:
+
+```
+results/filtered_scaffold_variants/impact/variant_proximity_impact_summary.html  # Interactive HTML report
+results/filtered_scaffold_variants/impact/variant_proximity_impact_summary.tsv   # Tabular summary data
+results/filtered_scaffold_variants/impact/variant_count_heatmap.png             # Variant count visualization
+results/filtered_scaffold_variants/impact/distance_distribution_heatmap.png     # Distance distribution visualization
+```
+
+#### 14. OSH Gene Analysis
+
+Examine the OSH gene family and its relationship to ergosterol pathway genes:
+
+```
+results/osh_analysis/OSH_Results.md                       # Complete OSH gene analysis report
+results/osh_analysis/osh_gene_summary.tsv                 # OSH gene details and locations
+results/osh_analysis/osh_variants.tsv                     # Variants near OSH genes
+results/osh_analysis/osh_erg_distances.tsv                # Distances between OSH and ERG genes
+results/osh_analysis/osh_erg_network.png                  # Network visualization of OSH-ERG relationships
+```
+
+#### 15. Integrated Analysis
 
 Finally, review the integrated findings:
 
@@ -1233,6 +1308,7 @@ results/reports/combined_analysis_results.txt                     # Complete ana
 results/reports/ergosterol_variant_analysis.html                  # Interactive ergosterol report
 results/reports/functional_impact.html                            # Interactive functional impact report
 results/reports/sterols.html                                      # Interactive sterol report
+results/filtered_scaffold_variants/visualizations/filtered_variants_report.html  # Filtered variants report
 ```
 
 These comprehensive reports integrate findings across all analysis modules, providing a complete picture of adaptation mechanisms.
