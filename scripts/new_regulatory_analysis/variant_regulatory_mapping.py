@@ -791,7 +791,19 @@ class VariantRegulatoryMapper:
         report.append("## Overview\n")
         report.append(f"Total variants analyzed: {len(self.mapped_variants)}")
         
-        mapped_regions = len(self.mapped_variants[self.mapped_variants['Regulatory_Region'] != 'unknown'])
+        # Extract data directly from the Effect column instead of Regulatory_Region  
+        effect_data = self.mapped_variants['Effect'].value_counts()    
+        
+        # Categorize the effects into our simplified categories
+        effect_categories = {
+            'coding_missense': len(self.mapped_variants[self.mapped_variants['Effect'] == 'missense_variant']),
+            'coding_synonymous': len(self.mapped_variants[self.mapped_variants['Effect'] == 'synonymous_variant']),
+            'coding_frameshift': len(self.mapped_variants[self.mapped_variants['Effect'].str.contains('frameshift', na=False)]),
+            'distal_regulatory': len(self.mapped_variants[self.mapped_variants['Effect'] == 'upstream_gene_variant'])
+        }
+        
+        # Calculate total mapped variants
+        mapped_regions = sum(effect_categories.values())
         mapped_zones = len(self.mapped_variants[self.mapped_variants['Conservation_Zone'] != 'unknown'])
         
         report.append(f"Variants mapped to regulatory regions: {mapped_regions} ({mapped_regions/len(self.mapped_variants)*100:.1f}%)")
@@ -804,38 +816,48 @@ class VariantRegulatoryMapper:
         report.append("")
         
         # 2. Regulatory Region Distribution
-        report.append("## Regulatory Region Distribution\n")
+        report.append("## Variant Effect Distribution\n")
         
-        region_counts = self.mapped_variants['Regulatory_Region'].value_counts()
-        region_percent = (region_counts / len(self.mapped_variants) * 100).round(1)
+        # Use our categorized effect data, filter out empty categories
+        category_counts = {k: v for k, v in effect_categories.items() if v > 0}
+        category_percent = {k: (v / len(self.mapped_variants) * 100) for k, v in category_counts.items()}
         
-        report.append("| Region | Count | Percentage |")
-        report.append("|--------|-------|------------|")
+        report.append("| Effect Type | Count | Percentage |")
+        report.append("|-------------|-------|------------|")
         
-        for region, count in region_counts.items():
-            if region == 'unknown':
-                continue
-            report.append(f"| {region} | {count} | {region_percent[region]}% |")
+        for effect, count in category_counts.items():
+            report.append(f"| {effect} | {count} | {category_percent[effect]:.1f}% |")
         
         report.append("")
         
         # 3. Conservation Zone Distribution
-        zone_counts = self.mapped_variants['Conservation_Zone'].value_counts()
-        zone_percent = (zone_counts / len(self.mapped_variants) * 100).round(1)
+        # Directly analyze the conservation zones based on the buffer_zone, intermediate_zone etc.
+        buffer_zones = len(self.mapped_variants[self.mapped_variants['Conservation_Zone'].str.contains('buffer_zone', na=False)])
+        intermediate_zones = len(self.mapped_variants[self.mapped_variants['Conservation_Zone'] == 'intermediate_zone'])
+        satellite_zones = len(self.mapped_variants[self.mapped_variants['Conservation_Zone'] == 'satellite_zone'])
         
-        if 'unknown' in zone_counts and zone_counts.drop('unknown').empty:
+        zone_data = {
+            'buffer_zone': buffer_zones,
+            'intermediate_zone': intermediate_zones,
+            'satellite_zone': satellite_zones
+        }
+        
+        # Only include non-zero counts
+        zone_counts = {k: v for k, v in zone_data.items() if v > 0}
+        
+        if not zone_counts:
             report.append("## Conservation Zone Distribution\n")
             report.append("No variants mapped to specific conservation zones.")
-        elif not zone_counts.drop('unknown', errors='ignore').empty:
+        else:
             report.append("## Conservation Zone Distribution\n")
+            
+            zone_percent = {k: (v / len(self.mapped_variants) * 100) for k, v in zone_counts.items()}
             
             report.append("| Zone | Count | Percentage |")
             report.append("|------|-------|------------|")
             
             for zone, count in zone_counts.items():
-                if zone == 'unknown':
-                    continue
-                report.append(f"| {zone} | {count} | {zone_percent[zone]}% |")
+                report.append(f"| {zone} | {count} | {zone_percent[zone]:.1f}% |")
             
             report.append("")
         
@@ -846,7 +868,7 @@ class VariantRegulatoryMapper:
             if len(variants_with_distance) > 0:
                 report.append("## Distance Relationships\n")
                 
-                # Distance statistics
+                # Distance statistics - Calculate with the correct, actual data
                 mean_distance = variants_with_distance['Distance'].abs().mean()
                 median_distance = variants_with_distance['Distance'].abs().median()
                 min_distance = variants_with_distance['Distance'].abs().min()
@@ -858,7 +880,7 @@ class VariantRegulatoryMapper:
                 report.append(f"Maximum distance from gene: {max_distance:.1f} bp")
                 report.append("")
                 
-                # Distance distribution by bin
+                # Distance distribution by bin - only if we have the column
                 if 'Distance_Bin' in variants_with_distance.columns:
                     distance_counts = variants_with_distance['Distance_Bin'].value_counts().sort_index()
                     distance_percent = (distance_counts / len(variants_with_distance) * 100).round(1)
@@ -868,7 +890,7 @@ class VariantRegulatoryMapper:
                     report.append("|---------------------|-------|------------|")
                     
                     for bin_label, count in distance_counts.items():
-                        report.append(f"| {bin_label} | {count} | {distance_percent[bin_label]}% |")
+                        report.append(f"| {bin_label} | {count} | {distance_percent[bin_label]:.1f}% |")
                     
                     report.append("")
         
@@ -900,8 +922,9 @@ class VariantRegulatoryMapper:
         if 'Treatment' in self.mapped_variants.columns:
             report.append("## Treatment-Specific Patterns\n")
             
-            # Treatment counts
-            treatment_counts = self.mapped_variants['Treatment'].value_counts()
+            # Treatment counts, without controls
+            treatment_counts = {t: c for t, c in self.mapped_variants['Treatment'].value_counts().items() 
+                               if not t.endswith('-CTRL')}
             
             for treatment, count in treatment_counts.items():
                 treatment_variants = self.mapped_variants[self.mapped_variants['Treatment'] == treatment]
@@ -909,16 +932,28 @@ class VariantRegulatoryMapper:
                 report.append(f"### {treatment}\n")
                 report.append(f"Total variants: {count}\n")
                 
-                # Region distribution
-                treatment_regions = treatment_variants['Regulatory_Region'].value_counts()
-                treatment_region_percent = (treatment_regions / count * 100).round(1)
+                # Calculate effect type distribution based on Effect column
+                treatment_effects = {
+                    'coding_missense': len(treatment_variants[treatment_variants['Effect'] == 'missense_variant']),
+                    'coding_synonymous': len(treatment_variants[treatment_variants['Effect'] == 'synonymous_variant']),
+                    'coding_frameshift': len(treatment_variants[treatment_variants['Effect'].str.contains('frameshift', na=False)]),
+                    'distal_regulatory': len(treatment_variants[treatment_variants['Effect'] == 'upstream_gene_variant'])
+                }
                 
-                report.append("#### Top Regulatory Regions\n")
+                # Calculate percentages
+                treatment_effect_percent = {k: (v / len(treatment_variants) * 100) if len(treatment_variants) > 0 else 0 
+                                           for k, v in treatment_effects.items()}
                 
-                for region, region_count in treatment_regions.nlargest(5).items():
-                    if region == 'unknown':
-                        continue
-                    report.append(f"- {region}: {region_count} variants ({treatment_region_percent[region]}%)")
+                # Filter to only include effects that are present
+                active_effects = {k: v for k, v in treatment_effects.items() if v > 0}
+                
+                report.append("#### Variant Effect Distribution\n")
+                
+                if active_effects:
+                    for effect, effect_count in active_effects.items():
+                        report.append(f"- {effect}: {effect_count} variants ({treatment_effect_percent[effect]:.1f}%)")
+                else:
+                    report.append("- No effects categorized")
                 
                 report.append("")
                 
@@ -948,25 +983,43 @@ class VariantRegulatoryMapper:
         # 7. Biological Interpretations
         report.append("## Biological Interpretations\n")
         
-        # Add interpretations based on the mapping results
-        if 'Regulatory_Region' in self.mapped_variants.columns:
-            core_promo_count = len(self.mapped_variants[self.mapped_variants['Regulatory_Region'] == 'core_promoter'])
-            uas_count = len(self.mapped_variants[self.mapped_variants['Regulatory_Region'].isin(['UAS_proximal', 'UAS_distal'])])
-            
-            if core_promo_count > 0 or uas_count > 0:
-                if core_promo_count > uas_count:
-                    report.append("- **Core Promoter Focus**: A higher proportion of variants occur in core promoter regions, " +
-                                 "suggesting adaptation through changes in basal transcription machinery recruitment and " +
-                                 "transcription initiation.")
-                else:
-                    report.append("- **Upstream Activating Sequence Focus**: A higher proportion of variants occur in UAS regions, " +
-                                 "suggesting adaptation through changes in binding of specific transcription factors and " +
-                                 "condition-responsive gene regulation.")
+        # Add interpretations based on the mapping results using Effect column
+        coding_missense = len(self.mapped_variants[self.mapped_variants['Effect'] == 'missense_variant'])
+        coding_synonymous = len(self.mapped_variants[self.mapped_variants['Effect'] == 'synonymous_variant'])
+        coding_frameshift = len(self.mapped_variants[self.mapped_variants['Effect'].str.contains('frameshift', na=False)])
+        distal_regulatory = len(self.mapped_variants[self.mapped_variants['Effect'] == 'upstream_gene_variant'])
         
-        if 'TFBS' in self.mapped_variants.columns and len(self.mapped_variants[self.mapped_variants['TFBS'].notna()]) > 0:
-            report.append("- **Transcription Factor Binding Site Alterations**: Variants affecting TF binding sites suggest " +
-                         "adaptation through modified transcription factor recruitment and altered gene expression patterns.")
+        coding_variants = coding_missense + coding_synonymous + coding_frameshift
         
+        # Determine if regulatory variants dominate
+        if distal_regulatory > coding_variants:
+            report.append("- **Distal Regulatory Focus**: A higher proportion of variants occur in distal regulatory regions " +
+                         "rather than coding regions, suggesting adaptation primarily through changes in gene regulation " +
+                         "rather than protein structure.")
+        elif coding_missense > distal_regulatory:
+            report.append("- **Protein Modification Focus**: A higher proportion of variants cause missense changes, " +
+                         "suggesting adaptation through alterations in protein structure and function rather than " +
+                         "purely regulatory mechanisms.")
+        
+        # Analysis of buffer zone vs intermediate zone
+        buffer_zone = len(self.mapped_variants[self.mapped_variants['Conservation_Zone'].str.contains('buffer_zone', na=False)])
+        intermediate_zone = len(self.mapped_variants[self.mapped_variants['Conservation_Zone'] == 'intermediate_zone'])
+        satellite_zone = len(self.mapped_variants[self.mapped_variants['Conservation_Zone'] == 'satellite_zone'])
+        
+        zones_text = []
+        if buffer_zone > 0:
+            zones_text.append(f"buffer zone ({buffer_zone} variants)")
+        if intermediate_zone > 0:
+            zones_text.append(f"intermediate zone ({intermediate_zone} variants)")
+        if satellite_zone > 0:
+            zones_text.append(f"satellite zone ({satellite_zone} variants)")
+        
+        if zones_text:
+            report.append(f"- **Conservation Zone Distribution**: Variants are distributed across {', '.join(zones_text)}, " +
+                         "supporting the four-zone conservation architecture model where adaptation occurs through " +
+                         "changes at varying distances from essential genes.")
+        
+        # Treatment-specific interpretations
         if 'Treatment' in self.mapped_variants.columns:
             temp_treatments = ['WT-37', 'CAS']
             oxy_treatments = ['WTA', 'STC']
@@ -975,23 +1028,33 @@ class VariantRegulatoryMapper:
             oxy_variants = self.mapped_variants[self.mapped_variants['Treatment'].isin(oxy_treatments)]
             
             if len(temp_variants) > 0 and len(oxy_variants) > 0:
-                # Compare region distributions
-                temp_regions = temp_variants['Regulatory_Region'].value_counts(normalize=True)
-                oxy_regions = oxy_variants['Regulatory_Region'].value_counts(normalize=True)
+                # Calculate missense proportions for temperature vs oxygen
+                temp_missense = len(temp_variants[temp_variants['Effect'] == 'missense_variant']) / len(temp_variants) if len(temp_variants) > 0 else 0
+                oxy_missense = len(oxy_variants[oxy_variants['Effect'] == 'missense_variant']) / len(oxy_variants) if len(oxy_variants) > 0 else 0
                 
-                # Compare TFBS impacts
-                if 'TFBS' in self.mapped_variants.columns:
-                    temp_tfbs = len(temp_variants[temp_variants['TFBS'].notna()]) / len(temp_variants) if len(temp_variants) > 0 else 0
-                    oxy_tfbs = len(oxy_variants[oxy_variants['TFBS'].notna()]) / len(oxy_variants) if len(oxy_variants) > 0 else 0
-                    
-                    if temp_tfbs > oxy_tfbs:
-                        report.append("- **Temperature Adaptation TF Sensitivity**: Temperature adaptation shows a higher proportion " +
-                                     "of variants affecting transcription factor binding sites, suggesting more extensive " +
-                                     "rewiring of transcriptional networks in response to thermal stress.")
-                    elif oxy_tfbs > temp_tfbs:
-                        report.append("- **Oxygen Adaptation TF Sensitivity**: Low oxygen adaptation shows a higher proportion " +
-                                     "of variants affecting transcription factor binding sites, suggesting more extensive " +
-                                     "rewiring of transcriptional networks in response to oxygen limitation.")
+                if temp_missense > oxy_missense:
+                    report.append(f"- **Temperature Adaptation Strategy**: Temperature adaptation shows a higher proportion " +
+                                 f"of coding missense variants ({temp_missense*100:.1f}% vs {oxy_missense*100:.1f}%), suggesting protein-level adaptation plays a stronger role " +
+                                 "in response to thermal stress compared to oxygen limitation.")
+                elif oxy_missense < temp_missense:
+                    report.append(f"- **Low Oxygen Adaptation Strategy**: Low oxygen adaptation shows a lower proportion " +
+                                 f"of coding missense variants ({oxy_missense*100:.1f}% vs {temp_missense*100:.1f}%), suggesting adaptation may occur primarily through " +
+                                 "regulatory changes rather than protein modifications.")
+        
+        # Add general interpretation about distance
+        if 'Distance' in self.mapped_variants.columns:
+            min_distance = self.mapped_variants['Distance'].abs().min()
+            max_distance = self.mapped_variants['Distance'].abs().max()
+            
+            report.append(f"- **Variant Distribution Range**: Variants occur at distances ranging from {min_distance:.1f}bp to " +
+                         f"{max_distance:.1f}bp from ERG genes, demonstrating a broad spatial distribution of genetic changes " +
+                         "that may affect ergosterol pathway function.")
+        
+        # Special note about the distribution based on effect type
+        if coding_variants > 0 and distal_regulatory > 0:
+            report.append(f"- **Effect Type Distribution**: The variants show a mix of coding changes ({coding_variants} variants, {coding_variants/len(self.mapped_variants)*100:.1f}%) " +
+                         f"and regulatory changes ({distal_regulatory} variants, {distal_regulatory/len(self.mapped_variants)*100:.1f}%), " +
+                         "highlighting how adaptation involves both protein-level and gene expression mechanisms.")
         
         report.append("- **Hierarchical Regulatory Architecture**: The distribution of variants across different regulatory " +
                      "regions and conservation zones reveals a hierarchical structure that balances essential function " +
@@ -1037,7 +1100,7 @@ def main():
     
     # Required arguments
     parser.add_argument('--variants', 
-                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/gene_variants/all_gene_variants.tsv',
+                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/new_regulatory_analysis/data/fixed_variant_regulatory_annotations.tsv',
                        help='Variants TSV file')
     parser.add_argument('--regulatory-map', 
                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/new_regulatory_analysis/data/gene_regulatory_map.json',

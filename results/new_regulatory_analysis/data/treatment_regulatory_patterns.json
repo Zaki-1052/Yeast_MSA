@@ -1,45 +1,87 @@
 {
   "treatment_patterns": {
     "count_table": {
-      "UAS_distal": {
-        "CAS-CTRL": 1,
-        "STC-CTRL": 1,
-        "WT-CTRL": 1
+      "coding_missense": {
+        "CAS": 3,
+        "STC": 1,
+        "WT-37": 7,
+        "WTA": 0
       },
-      "UAS_proximal": {
-        "CAS-CTRL": 1,
-        "STC-CTRL": 1,
-        "WT-CTRL": 1
+      "coding_synonymous": {
+        "CAS": 0,
+        "STC": 1,
+        "WT-37": 0,
+        "WTA": 0
       },
-      "core_promoter": {
-        "CAS-CTRL": 2,
-        "STC-CTRL": 2,
-        "WT-CTRL": 2
+      "distal_regulatory": {
+        "CAS": 12,
+        "STC": 6,
+        "WT-37": 11,
+        "WTA": 4
       }
     },
     "percent_table": {
-      "UAS_distal": {
-        "CAS-CTRL": 25.0,
-        "STC-CTRL": 25.0,
-        "WT-CTRL": 25.0
+      "coding_missense": {
+        "CAS": 20.0,
+        "STC": 12.5,
+        "WT-37": 38.88888888888889,
+        "WTA": 0.0
       },
-      "UAS_proximal": {
-        "CAS-CTRL": 25.0,
-        "STC-CTRL": 25.0,
-        "WT-CTRL": 25.0
+      "coding_synonymous": {
+        "CAS": 0.0,
+        "STC": 12.5,
+        "WT-37": 0.0,
+        "WTA": 0.0
       },
-      "core_promoter": {
-        "CAS-CTRL": 50.0,
-        "STC-CTRL": 50.0,
-        "WT-CTRL": 50.0
+      "distal_regulatory": {
+        "CAS": 80.0,
+        "STC": 75.0,
+        "WT-37": 61.111111111111114,
+        "WTA": 100.0
       }
     }
   },
   "treatment_comparison": {
     "group_region_counts": {},
     "group_region_percents": {},
-    "group_comparisons": {}
+    "group_comparisons": {
+      "Gene Modified_vs_Non-Modified": {
+        "comparison": {
+          "Gene Modified": {
+            "coding_missense": 17.391304347826086,
+            "coding_synonymous": 4.3478260869565215,
+            "distal_regulatory": 78.26086956521739
+          },
+          "Non-Modified": {
+            "coding_missense": 31.818181818181817,
+            "coding_synonymous": 0.0,
+            "distal_regulatory": 68.18181818181817
+          },
+          "Difference": {
+            "coding_missense": 14.42687747035573,
+            "coding_synonymous": 4.3478260869565215,
+            "distal_regulatory": 10.079051383399218
+          }
+        },
+        "statistics": [
+          {
+            "Region": "distal_regulatory",
+            "Group1_Count": 18,
+            "Group1_Percent": 78.26086956521739,
+            "Group2_Count": 15,
+            "Group2_Percent": 68.18181818181817,
+            "Odds_Ratio": 1.68,
+            "P_Value": 0.5136330885621868,
+            "Effect_Size": 0.1139324206651478,
+            "Adjusted_P_Value": 0.5136330885621868,
+            "Significant": false
+          }
+        ]
+      }
+    }
   },
-  "enrichment_results": {},
+  "enrichment_results": {
+    "region_enrichment": {}
+  },
   "effect_sizes": {}
 }

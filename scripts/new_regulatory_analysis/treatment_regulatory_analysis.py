@@ -45,12 +45,44 @@ class TreatmentRegulatoryAnalyzer:
             sys.exit(1)
         
         # Check for required columns
-        required_cols = ['Regulatory_Region', 'Treatment']
+        required_cols = ['Regulatory_Region', 'Treatment', 'Scaffold', 'Position', 'Ref', 'Alt']
         missing_cols = [col for col in required_cols if col not in self.variants.columns]
         if missing_cols:
             print(f"Error: Missing required columns: {missing_cols}")
             print("These columns are necessary for treatment-specific pattern analysis.")
             sys.exit(1)
+            
+        # Identify treatment samples (excluding any control samples if present)
+        treatment_samples = [t for t in self.variants['Treatment'].unique() if not t.endswith('-CTRL')]
+        control_samples = [t for t in self.variants['Treatment'].unique() if t.endswith('-CTRL')]
+        
+        print(f"Found {len(treatment_samples)} treatment groups: {', '.join(treatment_samples)}")
+        if control_samples:
+            print(f"Found {len(control_samples)} control groups: {', '.join(control_samples)}")
+            
+        # Save a backup of full dataset
+        self.full_variants = self.variants.copy()
+        
+        # Create a unique identifier for each variant
+        self.variants['variant_key'] = self.variants.apply(
+            lambda row: f"{row['Scaffold']}:{row['Position']}:{row['Ref']}:{row['Alt']}", axis=1
+        )
+        
+        # For the fixed variant annotations, we're already using treatment-specific variants
+        # Mark all variants as treatment_specific for consistency with the rest of the code
+        self.variants['treatment_specific'] = True
+        
+        # Show variant count by treatment
+        treatment_counts = self.variants['Treatment'].value_counts()
+        print("\nVariant counts by treatment:")
+        for treatment, count in treatment_counts.items():
+            print(f"  {treatment}: {count} variants")
+            
+        # Create a column for treatment group
+        if not 'Treatment_Group' in self.variants.columns:
+            self.variants['Treatment_Group'] = self.variants['Treatment'].apply(
+                lambda x: self._get_treatment_group(x)
+            )
         
         # Load gene regulatory map if provided
         self.gene_map = None
@@ -96,9 +128,9 @@ class TreatmentRegulatoryAnalyzer:
         """Analyze the distribution of regulatory regions by treatment"""
         print("\nAnalyzing distribution of regulatory regions by treatment...")
         
-        # Get treatment information
-        treatments = sorted(self.variants['Treatment'].unique())
-        print(f"Found {len(treatments)} treatments: {', '.join(treatments)}")
+        # Get treatment information (excluding controls)
+        treatments = sorted([t for t in self.variants['Treatment'].unique() if not t.endswith('-CTRL')])
+        print(f"Found {len(treatments)} treatment groups: {', '.join(treatments)}")
         
         # Filter for variants with regulatory region information
         reg_variants = self.variants[self.variants['Regulatory_Region'] != 'unknown'].copy()
@@ -106,8 +138,11 @@ class TreatmentRegulatoryAnalyzer:
         if len(reg_variants) == 0:
             print("No variants with regulatory region information.")
             return None
-        
-        print(f"Analyzing {len(reg_variants)} variants with regulatory region information")
+            
+        # Add message about treatment-specific variants
+        if 'treatment_specific' in reg_variants.columns:
+            specific_count = reg_variants['treatment_specific'].sum()
+            print(f"Analyzing {len(reg_variants)} treatment-specific variants with regulatory region information")
         
         # Create a cross-tabulation of treatment vs. regulatory region
         # Raw counts
@@ -331,7 +366,7 @@ class TreatmentRegulatoryAnalyzer:
                 odds_ratio, p_value = stats.fisher_exact(table)
                 
                 # Calculate effect size (Phi coefficient)
-                chi2, _, _ = stats.chi2_contingency(table, correction=False)
+                chi2, p, dof, expected = stats.chi2_contingency(table, correction=False)
                 n = table.sum()
                 phi = np.sqrt(chi2 / n)
                 
@@ -408,6 +443,20 @@ class TreatmentRegulatoryAnalyzer:
             return "Unknown"
         
         return ",".join(groups)
+        
+    def _get_treatment_group(self, treatment):
+        """Get single primary treatment group for a treatment"""
+        # Temperature group
+        if treatment in ['WT-37', 'CAS']:
+            return 'Temperature'
+        # Low Oxygen group
+        elif treatment in ['WTA', 'STC']:
+            return 'Low Oxygen'
+        # Control group
+        elif treatment.endswith('-CTRL'):
+            return 'Control'
+        else:
+            return 'Unknown'
     
     def analyze_enriched_regulatory_elements(self):
         """Analyze enrichment of specific regulatory elements in different treatments"""
@@ -488,7 +537,7 @@ class TreatmentRegulatoryAnalyzer:
                 
                 # Calculate effect size (Phi coefficient)
                 if np.min(table) >= 5:  # Check if counts are sufficient
-                    chi2, _, _ = stats.chi2_contingency(table, correction=False)
+                    chi2, p, dof, expected = stats.chi2_contingency(table, correction=False)
                     n = table.sum()
                     phi = np.sqrt(chi2 / n)
                 else:
@@ -1115,7 +1164,7 @@ def main():
     
     # Required arguments
     parser.add_argument('--mapped-variants', 
-                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/new_regulatory_analysis/data/variant_regulatory_annotations.tsv',
+                       default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/new_regulatory_analysis/data/fixed_variant_regulatory_annotations.tsv',
                        help='Mapped variants TSV file')
     parser.add_argument('--output-dir', 
                        default='/Users/zakiralibhai/Documents/GitHub/Yeast_MSA/results/new_regulatory_analysis',

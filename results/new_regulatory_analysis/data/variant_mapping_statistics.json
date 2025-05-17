@@ -1,19 +1,23 @@
 {
-  "total_variants": 44,
-  "mapped_to_region": 44,
-  "mapped_to_zone": 44,
+  "total_variants": 45,
+  "mapped_to_region": 34,
+  "mapped_to_zone": 0,
   "region_counts": {
-    "core_promoter": 29,
-    "UAS_proximal": 15
+    "far_upstream": 20,
+    "unknown": 11,
+    "UAS_distal": 8,
+    "terminator": 3,
+    "UAS_proximal": 2,
+    "five_prime_UTR": 1
   },
   "region_percent": {
-    "core_promoter": 65.9,
-    "UAS_proximal": 34.1
+    "far_upstream": 44.4,
+    "unknown": 24.4,
+    "UAS_distal": 17.8,
+    "terminator": 6.7,
+    "UAS_proximal": 4.4,
+    "five_prime_UTR": 2.2
   },
-  "zone_counts": {
-    "buffer_zone_upstream": 44
-  },
-  "zone_percent": {
-    "buffer_zone_upstream": 100.0
-  }
+  "zone_counts": {},
+  "zone_percent": {}
 }
