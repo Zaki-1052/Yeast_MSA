@@ -1,0 +1,287 @@
+{
+  "treatment_patterns": {
+    "count_table": {
+      "UAS_proximal": {
+        "CAS": 3,
+        "CAS-CTRL": 1,
+        "STC": 3,
+        "STC-CTRL": 1,
+        "WT-37": 3,
+        "WT-CTRL": 1,
+        "WTA": 3
+      },
+      "core_promoter": {
+        "CAS": 6,
+        "CAS-CTRL": 2,
+        "STC": 6,
+        "STC-CTRL": 2,
+        "WT-37": 5,
+        "WT-CTRL": 2,
+        "WTA": 6
+      }
+    },
+    "percent_table": {
+      "UAS_proximal": {
+        "CAS": 33.33333333333333,
+        "CAS-CTRL": 33.33333333333333,
+        "STC": 33.33333333333333,
+        "STC-CTRL": 33.33333333333333,
+        "WT-37": 37.5,
+        "WT-CTRL": 33.33333333333333,
+        "WTA": 33.33333333333333
+      },
+      "core_promoter": {
+        "CAS": 66.66666666666666,
+        "CAS-CTRL": 66.66666666666666,
+        "STC": 66.66666666666666,
+        "STC-CTRL": 66.66666666666666,
+        "WT-37": 62.5,
+        "WT-CTRL": 66.66666666666666,
+        "WTA": 66.66666666666666
+      }
+    }
+  },
+  "treatment_comparison": {
+    "group_effect_counts": {},
+    "group_effect_percents": {},
+    "group_comparisons": {}
+  },
+  "enrichment_results": {
+    "region_enrichment": {
+      "CAS": [
+        {
+          "Treatment": "CAS",
+          "Control": "CAS-CTRL",
+          "Region": "core_promoter",
+          "Treatment_Count": 6,
+          "Control_Count": 2,
+          "Treatment_Frequency": 0.6666666666666666,
+          "Control_Frequency": 0.6666666666666666,
+          "Fold_Change": 1.0,
+          "P_Value": 1.0,
+          "Odds_Ratio": 1.0,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        },
+        {
+          "Treatment": "CAS",
+          "Control": "CAS-CTRL",
+          "Region": "UAS_proximal",
+          "Treatment_Count": 3,
+          "Control_Count": 1,
+          "Treatment_Frequency": 0.3333333333333333,
+          "Control_Frequency": 0.3333333333333333,
+          "Fold_Change": 1.0,
+          "P_Value": 1.0,
+          "Odds_Ratio": 1.0,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        }
+      ],
+      "STC": [
+        {
+          "Treatment": "STC",
+          "Control": "STC-CTRL",
+          "Region": "core_promoter",
+          "Treatment_Count": 6,
+          "Control_Count": 2,
+          "Treatment_Frequency": 0.6666666666666666,
+          "Control_Frequency": 0.6666666666666666,
+          "Fold_Change": 1.0,
+          "P_Value": 1.0,
+          "Odds_Ratio": 1.0,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        },
+        {
+          "Treatment": "STC",
+          "Control": "STC-CTRL",
+          "Region": "UAS_proximal",
+          "Treatment_Count": 3,
+          "Control_Count": 1,
+          "Treatment_Frequency": 0.3333333333333333,
+          "Control_Frequency": 0.3333333333333333,
+          "Fold_Change": 1.0,
+          "P_Value": 1.0,
+          "Odds_Ratio": 1.0,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        }
+      ],
+      "WT-37": [
+        {
+          "Treatment": "WT-37",
+          "Control": "WT-CTRL",
+          "Region": "core_promoter",
+          "Treatment_Count": 5,
+          "Control_Count": 2,
+          "Treatment_Frequency": 0.625,
+          "Control_Frequency": 0.6666666666666666,
+          "Fold_Change": 0.9375,
+          "P_Value": 1.0,
+          "Odds_Ratio": 0.8333333333333334,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        },
+        {
+          "Treatment": "WT-37",
+          "Control": "WT-CTRL",
+          "Region": "UAS_proximal",
+          "Treatment_Count": 3,
+          "Control_Count": 1,
+          "Treatment_Frequency": 0.375,
+          "Control_Frequency": 0.3333333333333333,
+          "Fold_Change": 1.125,
+          "P_Value": 1.0,
+          "Odds_Ratio": 1.2,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        }
+      ],
+      "WTA": [
+        {
+          "Treatment": "WTA",
+          "Control": "WT-CTRL",
+          "Region": "core_promoter",
+          "Treatment_Count": 6,
+          "Control_Count": 2,
+          "Treatment_Frequency": 0.6666666666666666,
+          "Control_Frequency": 0.6666666666666666,
+          "Fold_Change": 1.0,
+          "P_Value": 1.0,
+          "Odds_Ratio": 1.0,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        },
+        {
+          "Treatment": "WTA",
+          "Control": "WT-CTRL",
+          "Region": "UAS_proximal",
+          "Treatment_Count": 3,
+          "Control_Count": 1,
+          "Treatment_Frequency": 0.3333333333333333,
+          "Control_Frequency": 0.3333333333333333,
+          "Fold_Change": 1.0,
+          "P_Value": 1.0,
+          "Odds_Ratio": 1.0,
+          "Effect_Size": null,
+          "Adjusted_P_Value": 1.0,
+          "Significant": false
+        }
+      ]
+    }
+  },
+  "effect_sizes": {
+    "CAS_vs_CAS-CTRL": [
+      {
+        "Treatment": "CAS",
+        "Control": "CAS-CTRL",
+        "Region": "UAS_proximal",
+        "Treatment_Count": 3,
+        "Control_Count": 1,
+        "Treatment_Percent": 33.33333333333333,
+        "Control_Percent": 33.33333333333333,
+        "Percent_Difference": 0.0,
+        "Odds_Ratio": 1.0,
+        "Phi_Coefficient": null
+      },
+      {
+        "Treatment": "CAS",
+        "Control": "CAS-CTRL",
+        "Region": "core_promoter",
+        "Treatment_Count": 6,
+        "Control_Count": 2,
+        "Treatment_Percent": 66.66666666666666,
+        "Control_Percent": 66.66666666666666,
+        "Percent_Difference": 0.0,
+        "Odds_Ratio": 1.0,
+        "Phi_Coefficient": null
+      }
+    ],
+    "STC_vs_STC-CTRL": [
+      {
+        "Treatment": "STC",
+        "Control": "STC-CTRL",
+        "Region": "UAS_proximal",
+        "Treatment_Count": 3,
+        "Control_Count": 1,
+        "Treatment_Percent": 33.33333333333333,
+        "Control_Percent": 33.33333333333333,
+        "Percent_Difference": 0.0,
+        "Odds_Ratio": 1.0,
+        "Phi_Coefficient": null
+      },
+      {
+        "Treatment": "STC",
+        "Control": "STC-CTRL",
+        "Region": "core_promoter",
+        "Treatment_Count": 6,
+        "Control_Count": 2,
+        "Treatment_Percent": 66.66666666666666,
+        "Control_Percent": 66.66666666666666,
+        "Percent_Difference": 0.0,
+        "Odds_Ratio": 1.0,
+        "Phi_Coefficient": null
+      }
+    ],
+    "WT-37_vs_WT-CTRL": [
+      {
+        "Treatment": "WT-37",
+        "Control": "WT-CTRL",
+        "Region": "UAS_proximal",
+        "Treatment_Count": 3,
+        "Control_Count": 1,
+        "Treatment_Percent": 37.5,
+        "Control_Percent": 33.33333333333333,
+        "Percent_Difference": 4.166666666666671,
+        "Odds_Ratio": 1.2,
+        "Phi_Coefficient": null
+      },
+      {
+        "Treatment": "WT-37",
+        "Control": "WT-CTRL",
+        "Region": "core_promoter",
+        "Treatment_Count": 5,
+        "Control_Count": 2,
+        "Treatment_Percent": 62.5,
+        "Control_Percent": 66.66666666666666,
+        "Percent_Difference": 4.166666666666657,
+        "Odds_Ratio": 0.8333333333333334,
+        "Phi_Coefficient": null
+      }
+    ],
+    "WTA_vs_WT-CTRL": [
+      {
+        "Treatment": "WTA",
+        "Control": "WT-CTRL",
+        "Region": "UAS_proximal",
+        "Treatment_Count": 3,
+        "Control_Count": 1,
+        "Treatment_Percent": 33.33333333333333,
+        "Control_Percent": 33.33333333333333,
+        "Percent_Difference": 0.0,
+        "Odds_Ratio": 1.0,
+        "Phi_Coefficient": null
+      },
+      {
+        "Treatment": "WTA",
+        "Control": "WT-CTRL",
+        "Region": "core_promoter",
+        "Treatment_Count": 6,
+        "Control_Count": 2,
+        "Treatment_Percent": 66.66666666666666,
+        "Control_Percent": 66.66666666666666,
+        "Percent_Difference": 0.0,
+        "Odds_Ratio": 1.0,
+        "Phi_Coefficient": null
+      }
+    ]
+  }
+}
